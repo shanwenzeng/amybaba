@@ -1,0 +1,15 @@
+<view class="container">
+    <view class='about-wrap'>
+        <view class='title'>鲜果之家</view>
+        <view class='content'>
+            微信小程序商城
+        </view>
+        <view class="line"></view>
+        <view class="content">开发者：xxxx</view>
+        <view class="content">微信：xxxxxx</view>
+        <view class="line"></view>
+        <view class='content'>
+            xxxxxxxxxx
+        </view>
+    </view>
+</view>
