@@ -13,7 +13,9 @@ Page({
         showBanner: 0,
         showBannerImg: 0,
         goodsCount: 0,
+        recommendShops:[],
         banner: [],
+        channel: [],
         index_banner_img: 0,
         userInfo: {},
         imgurl: '',
@@ -52,7 +54,7 @@ Page({
     onShareAppMessage: function () {
         let info = wx.getStorageSync('userInfo');
         return {
-            title: '鲜果之家',
+            title: '艾米巴巴',
             desc: '',
             path: '/pages/index/index?id=' + info.id
         }
@@ -67,11 +69,47 @@ Page({
         util.request(api.IndexUrl).then(function (res) {
             if (res.errno === 0) {
                 that.setData({
-                    floorGoods: res.data.categoryList,
-                    banner: res.data.banner,
-                    channel: res.data.channel,
-                    notice: res.data.notice,
+                    // floorGoods: res.data.categoryList,
+                    // banner: res.data.banner,
+                    //channel: res.data.channel,
+                    // notice: res.data.notice,
                     loading: 1,
+                });
+            }
+        });
+        //商品轮播
+        util.request(api.GoodsCarouselUrl,{},'POST').then(function (res) {
+            if (res.data.length> 0) {
+               that.setData({
+                   banner: res.data,
+                   loading: 1
+               });
+           }
+       });
+       //推荐好物
+       util.request(api.recommendGoods,{},'POST').then(function (res) {
+            if (res.data.length> 0) {
+                that.setData({
+                    channel: res.data,
+                    loading: 1
+                });
+            } 
+        });
+        //推荐好物
+        util.request(api.RecommendShops,{},'POST').then(function (res) {
+            if (res.data.length> 0) {
+                that.setData({
+                    recommendShops: res.data,
+                    loading: 1
+                });
+            }
+        });
+        //广告
+        util.request(api.Advert,{},'POST').then(function (res) {
+            if (res.data.length> 0) {
+                that.setData({
+                    notice: res.data,
+                    loading: 1
                 });
             }
         });

@@ -48,8 +48,31 @@ Page({
             // wx.hideLoading();
         });
     },
+    getBrowserHistory() {
+        let that = this;
+        util.request(api.BrowserHistory, {},'POST').then(function (res) {
+            console.log(res.data)
+            if (res.data.length > 0) {
+                let count = res.data.length;
+                let f1 = that.data.footprintList;
+                that.setData({
+                    allCount: count,
+                    allPage: 1,
+                    footprintList: res.data,
+                    size:count
+                });
+                if (count == 0) {
+                    that.setData({
+                        hasPrint: 0,
+                        showNoMore: 1
+                    });
+                }
+            }
+        });
+    },
     onLoad: function (options) {
-        this.getFootprintList();
+        // this.getFootprintList();
+        this.getBrowserHistory();//页面加载时，查询浏览历史
     },
     deletePrint: function (e) {
         let that = this;

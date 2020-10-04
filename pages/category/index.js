@@ -10,6 +10,8 @@ Page({
         nowIndex: 0,
         nowId: 0,
         list: [],
+        shops:[],
+        good: [],
         allPage: 1,
         allCount: 0,
         size: 8,
@@ -18,8 +20,43 @@ Page({
         loading:0,
         index_banner_img:0,
     },
-    onLoad: function(options) {
+    onLoad: function () {
+        let that = this;
+        util.request(api.messageproduct, {}, 'POST').then(function(res) {
+            var ids = new Array(); //商店id
+            var shop = new Array();//商店信息
+            var goods = new Array(); //商品信息
+            for(var i = 0;i <res.length; i++){
+                 if(ids.indexOf(res[i].goods.shop.id) == -1){
+                     ids.push(res[i].goods.shop.id);
+                     shop.push(res[i].goods.shop);
+                 }
+            }
+           that.setData({
+                    shops:shop
+                     })
+            for(var i = 0;i < ids.length;i++){
+                
+                that.shops[i]=new Array();
+                 goods.length=0;//清空数组
+                for(var j = 0;j < res.length; j++){
+                    if(ids[i] == res[j].goods.shop.id){
+                       that.shops[i][j]= goods.push(res[j]); 
+                    }  
+                    // that.setData({
+                    //     good:goods,
+                    // })             
+                }
+                console.log(i+":"+that.shops);
+                console.log(i+":"+goods);
+                 
+                 
+            }
+    });
     },
+    // onLoad: function(options) {
+        
+    // },
     getChannelShowInfo: function (e) {
         let that = this;
         util.request(api.ShowSettings).then(function (res) {
@@ -73,7 +110,7 @@ Page({
                 that.setData({
                     allCount: count,
                     allPage: res.data.currentPage,
-                    list: that.data.list.concat(res.data.data),
+                    // list: that.data.list.concat(res.data.data),
                     showNoMore: 1,
                     loading: 0,
                 });

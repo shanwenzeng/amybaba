@@ -13,6 +13,7 @@ page {
     display: flex;
     flex-direction: column;
     padding: 30rpx;
+    margin-bottom: 100rpx;
 }
 
 .has-info .info-item {
@@ -220,4 +221,5 @@ page {
     text-align: center;
     height: 110rpx;
     line-height: 100rpx;
+    margin-top: 50px;
 }

@@ -44,7 +44,7 @@
                 "pagePath": "pages/category/index",
                 "iconPath": "images/nav/icon-cate-off.png",
                 "selectedIconPath": "images/nav/icon-cate-on.png",
-                "text": "分类"
+                "text": "商家"
             },
             {
                 "pagePath": "pages/cart/cart",

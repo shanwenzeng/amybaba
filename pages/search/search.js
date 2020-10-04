@@ -33,12 +33,34 @@ Page({
     },
     getSearchKeyword() {
         let that = this;
-        util.request(api.SearchIndex).then(function (res) {
-            if (res.errno === 0) {
+        util.request(api.SearchIndex,{},'POST').then(function (res) {
+            // if (res.errno === 0) {
+            //     that.setData({
+            //         historyKeyword: res.data.historyKeywordList,
+            //         defaultKeyword: res.data.defaultKeyword,
+            //         hotKeyword: res.data.hotKeywordList
+            //     });
+            // }
+            if (res.data.length> 0) {
+                let history=new Array();//历史记录
+                let hot=new Array();//热门记录
+                let def=new Array();//默认记录
+                for (let index = 0; index < res.data.length; index++) {
+                   if(res.data[index].type=="热门搜索"){
+                       hot.push(res.data[index].keyword)
+                   }else if(res.data[index].type=="默认搜索"){
+                    def.push(res.data[index].keyword)
+                    }else{
+                        history.push(res.data[index].keyword)
+                    }
+                 }
+                 console.log(history)
+                 console.log(def)
+                 console.log(hot)
                 that.setData({
-                    historyKeyword: res.data.historyKeywordList,
-                    defaultKeyword: res.data.defaultKeyword,
-                    hotKeyword: res.data.hotKeywordList
+                    historyKeyword:history,
+                    defaultKeyword: def,
+                    hotKeyword: hot
                 });
             }
         });

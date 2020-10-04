@@ -66,7 +66,7 @@ function testMobile(num) {
 /**
  * 封封微信的的request
  */
-function request(url, data = {}, method = "GET") {
+function request(url, data = {}, method = "POST") {
     return new Promise(function(resolve, reject) {
         wx.request({
             url: url,

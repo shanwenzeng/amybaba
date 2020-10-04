@@ -44,7 +44,13 @@ page {
     padding-left: 10rpx;
     font-size: 28rpx;
 }
-
+.cata{
+    width: 100%;
+    background: #fff;
+    height: 100rpx;
+    position: relative;
+    top: 100rpx;
+}
 .catalog {
     flex: 1;
     width: 100%;
@@ -55,21 +61,23 @@ page {
     margin-top: 90rpx;
 }
 
-.catalog .nav {
-    width: 162rpx;
-    height: 100%;
+.cata .nav {
+    width: 100%;
+    height: 100rpx;
+    position: absolute;
 }
 
-.catalog .nav .item {
+.cata .nav .item {
+    float: left;
     text-align: center;
     line-height: 90rpx;
-    width: 162rpx;
+    width: 120rpx;
     height: 90rpx;
     color: #333;
     font-size: 28rpx;
 }
 
-.catalog .nav .item.active {
+.cata .nav .item.active {
     color: #ff3456;
     font-size: 32rpx;
     font-weight: 500;
@@ -229,9 +237,9 @@ page {
 }
 
 .list-wrap .goods-box {
-    width: 256rpx;
+    width: 100%;
     /* height: 330rpx; */
-    float: left;
+    /* float: left; */
     margin: 0 20rpx 20rpx 0;
 }
 
@@ -246,15 +254,16 @@ page {
 }
 
 .goods-box .navi-url .image {
-    width: 256rpx;
-    height: 256rpx;
+    width: 170rpx;
+    height: 200rpx;
     border-radius: 8rpx;
     background: #f9f9f9
 }
 
 .goods-box .navi-url .box {
-    height: 256rpx;
-    width: 256rpx;
+    float: left;
+    height: 200rpx;
+    width: 200rpx;
     position: relative;
     margin-bottom: 10rpx;
 }
@@ -272,9 +281,16 @@ page {
     color: #fff;
     border-radius: 0 40rpx 40rpx 0;
 }
-
+.goods-box .navi-url .goods-info{
+    float:left;
+    width: 350rpx;
+    padding-top: 30rpx;
+    position: absolute;
+    left: 220rpx;
+    
+}
 .goods-box .navi-url .goods-info .goods-title {
-    font-size: 24rpx;
+    font-size: 34rpx;
     color: #222;
     margin-bottom: 6rpx;
     display: -webkit-box;
@@ -286,7 +302,7 @@ page {
 }
 
 .goods-box .navi-url .goods-info .goods-intro {
-    font-size: 16rpx;
+    font-size: 26rpx;
     color: #888;
     margin-bottom: 6rpx;
     /* height: 64rpx; */
@@ -367,6 +383,44 @@ page {
     margin-bottom: 4rpx;
     /* font-weight: bold; */
 }
+
+.goods-news{
+    width: 100%;
+    height: 260rpx;
+    /* position: relative; */
+}
+.goods-news .message{
+    /* position: absolute; */
+    margin-left: 15rpx;
+    width: 150rpx;
+    height: 230rpx;
+    display: inline-block;
+}
+
+.goods-news .message .photo{
+    width: 150rpx;
+    height: 150rpx;
+}
+.goods-news .message .photo .pto{
+    width: 150rpx;
+    height: 150rpx;
+    border-radius: 8rpx;
+
+}
+
+.goods-news .message .text{
+    width: 100%;
+}
+.goods-news .message .text .title{
+    font-size: 25rpx;
+    line-height: 30rpx;
+    color: #888;
+}
+.goods-news .message .text .money{
+    font-size: 20rpx;
+    color: #ca2a1d;
+}
+
 
 .no-goods-mask {
     position: absolute;

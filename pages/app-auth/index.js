@@ -21,6 +21,7 @@ Page({
         
         app.globalData.userInfo = e.detail.userInfo
         user.loginByWeixin().then(res => {
+            
             console.log("您已经是老用户啦！");
             
             app.globalData.userInfo = res.data.userInfo;
