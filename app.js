@@ -2,7 +2,9 @@ var util = require('utils/util.js');
 var api = require('config/api.js');
 App({
     data: {
-        deviceInfo: {}
+        deviceInfo: {},
+        longitude:'',
+        latitude:'',
     },
     onLaunch: function() {
         this.data.deviceInfo = wx.getSystemInfoSync();

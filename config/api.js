@@ -12,7 +12,11 @@ module.exports = {
     RecommendShops:ApiRootUrlTwo + 'shop/findRecommendShop',//推荐商家（前10条）
     Advert:ApiRootUrlTwo + 'advert/findAdvert',//广告（前5条）
     // 分类
-    CatalogList: ApiRootUrl + 'catalog/index', //分类目录全部分类数据接口
+    // CatalogList: ApiRootUrl + 'catalog/index', //分类目录全部分类数据接口
+    CatalogList: ApiRootUrlTwo + 'dictionary/fastFind', //分类目录全部分类数据接口
+    ProductCatalog: ApiRootUrlTwo + 'category/find', //商家中的商品分类
+    GetProduct: ApiRootUrlTwo + 'product/find', //商家中的商品信息
+    FindProduct: ApiRootUrlTwo + 'product/findProduct', //根据商家id和分类进行商品查询
     CatalogCurrent: ApiRootUrl + 'catalog/current', //分类目录当前分类数据接口
     GetCurrentList: ApiRootUrl + 'catalog/currentlist',
     // 购物车
@@ -26,12 +30,14 @@ module.exports = {
     messageproduct: ApiRootUrlTwo + 'product/messageproduct', //商家
     //商家
     RecommendShop: ApiRootUrlTwo + 'shop/findRecommendShop',
+    findShopBySale: ApiRootUrlTwo + 'shop/findShopBySale',//按销量查询商家，由高到底排序
     // 商品
     GoodsCount: ApiRootUrl + 'goods/count', //统计商品总数
     GoodsDetail: ApiRootUrl + 'goods/detail', //获得商品的详情
     GoodsList: ApiRootUrl + 'goods/list', //获得商品列表
     GoodsShare: ApiRootUrl + 'goods/goodsShare', //获得商品的详情
     SaveUserId: ApiRootUrl + 'goods/saveUserId',
+    ProductCarousel: ApiRootUrlTwo + 'enclosure/findById', //产品轮播图
     // 收货地址
     // AddressDetail: ApiRootUrl + 'address/addressDetail', //收货地址详情
     AddressDetail: ApiRootUrlTwo + 'address/getMe', //收货地址详情

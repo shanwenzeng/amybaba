@@ -15,7 +15,7 @@
         <block wx:if="{{gallery.length > 0}}">
             <swiper bindchange="bindchange" class="banner banner-style1" indicator-dots="{{false}}" autoplay="{{false}}" current="{{current}}" circular="{{true}}" interval="3000" duration="1000" display-multiple-items="1">
                 <swiper-item class="item" wx:for="{{gallery}}" wx:key="id">
-                    <image bindtap="previewImage" data-src="{{item.img_url}}" src="{{item.img_url}}" class="slide-image" mode="aspectFill" />
+                    <image bindtap="previewImage" data-src="../../upload/image/{{item.path}}" src="../../upload/image/{{item.path}}" class="slide-image" mode="aspectFill" />
                 </swiper-item>
             </swiper>
         </block>
@@ -41,16 +41,16 @@
         <view class="l">
             <view class="now-price">
                 <view class="sym">¥</view>
-                <view class="num">{{goods.retail_price}}</view>
+                <view class="num">{{goods[0].price}}</view>
             </view>
         </view>
         <view class="r">
-            <view class='stock'>库存{{goods.goods_number}}</view>
-            <view class='sales'>已售{{goods.sell_volume}}份</view>
+            <view class='stock'>库存{{goods[0].stock}}</view>
+            <view class='sales'>已售{{goods[0].sell}}份</view>
         </view>
     </view>
     <view class='section-nav' bindtap="switchAttrPop">
-        <view class="t">{{checkedSpecText}}</view>
+        <view class="t">请选择规格和数量</view>
         <view class="arrow"></view>
     </view>
     <view class='details-wrap'>
@@ -69,20 +69,20 @@
             </view>
             <view class="img-info">
                 <view class="img-wrap">
-                    <image class="img" src="{{gallery[0].img_url}}"></image>
+                    <image class="img" src="../../{{goods[0].photo}}"></image>
                 </view>
                 <view class="info">
                     <view class='price-range' wx:if="{{priceChecked == false}}">
                         <!-- todo 原价不等于0的时候要补充 -->
                         <view class='retail-price'>
                             <view class='p-title'>零售价：</view>
-                            <view class='g-price'>{{goods.retail_price}}元</view>
+                            <view class='g-price'>{{goods[0].price}}元</view>
                         </view>
                     </view>
                     <view class='price-range' wx:elif="{{priceChecked == true}}">
                         <view class='retail-price'>
                             <view class='p-title'>零售价：</view>
-                            <view class='g-price'>{{checkedSpecPrice}}元</view>
+                            <view class='g-price'>{{goods[0].price}}元</view>
                         </view>
                     </view>
                     <view class="a" wx:if="{{productList.length>0}}">{{tmpSpecText}}</view>
@@ -97,10 +97,10 @@
                 </view>
                 <view class="number-item">
                     <view class="name">库存</view>
-                    <view class='stock-num'>{{goodsNumber}}</view>
+                    <view class='stock-num'>{{goods[0].stock}}</view>
                 </view>
                 <view class="number-item">
-                    <view class="name">数量 ({{goods.goods_unit}})</view>
+                    <view class="name">数量 ({{goods[0].goods.unit}})</view>
                     <view class="selnum">
                         <button class="cut" bindtap="cutNumber">-</button>
                         <input value="{{number}}" class="number" type="number" cursor-spacing="100" bindblur="inputNumber" />
@@ -130,13 +130,12 @@
                 <view class='icon-text'>购物车</view>
             </view>
         </view>
-        <block wx:if="{{goods.goods_number > 0 && goods.is_on_sale == 1}}">
-            <block wx:if="{{goodsNumber > 0}}">
+             <block wx:if="{{goods[0].isSale == '是'}}">
+            <block wx:if="{{goods[0].stock > 0}}">
                 <view class="to-cart-btn" bindtap='addToCart'>加入购物车</view>
                 <view class="to-pay-btn" bindtap='fastToCart'>立即购买</view>
-
             </block>
-            <block wx:if="{{goodsNumber <= 0 }}">
+            <block wx:if="{{goods[0].stock <= 0 }}">
                 <view class="cart-empty">商品已售罄</view>
             </block>
         </block>

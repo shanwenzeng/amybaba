@@ -1,0 +1,44 @@
+<view class="container">
+    <view class="search">
+        <navigator url="/pages/search/search" class="input">
+            <image class="icon" src="/images/icon/search.png"></image>
+            <text class="txt">搜索</text>
+        </navigator>
+    </view>
+    <view class="cata">
+    <scroll-view class="nav" scroll-y="true">
+            <view class="item {{ nowId == 0 ?'active' : ''}}" bindtap="switchCate" data-id="0">全部</view>
+            <view class="item {{ nowId == item.id?'active' : ''}}" wx:for="{{navList}}" wx:key="id" data-id="{{item.id}}" bindtap="switchCate" data-value="{{item.value}}">{{item.value}}</view>
+    </scroll-view>
+    </view>
+    <view class="catalog">
+        <scroll-view class="cate" scroll-y="true" bindscrolltolower="onBottom">
+            <block wx:if="{{loading == 0}}">              
+                <view class='list-wrap clearfix'>
+                    <view class="goods-box {{(index+1)%2 == 0?'no-margin':''}}" wx:for="{{shops}}" wx:for-index="index" wx:for-item="item" wx:key="id" >
+                        <navigator hover-class='none' class='navi-url' url="/pages/category/index?id={{item.id}}">
+                            <view class="box">
+                                <image src="../../{{item.photo}}" class="image">
+                                </image>
+                            </view>
+                            <view class="goods-info {{item.goods_number <= 0?'fast-out-status':''}}">
+                                <view class="goods-title">{{item.name}}</view>
+                                <view class="goods-intro">{{item.address}}，{{}}千米</view>
+                                <view class="goods-star">{{item.star}}星</view>
+                                <view wx:if="{{item.shopSell>0}}" class="goods-intro">(已售{{item.shopSell}}份)</view>
+                            </view>
+                        </navigator>
+                    </view>
+                </view>
+                <view class="show-more" bindtap="onBottom" wx:if="{{showNoMore == 1}}">加载更多</view>
+                <view class="no-more" wx:else>没有更多了...</view>
+            </block>
+            <block wx:else>
+                <view class="loading-wrap">
+                    <image class="img" src="/images/icon/loading.gif"></image>
+                    <view class="text">正在加载...</view>
+                </view>
+            </block>
+        </scroll-view>
+    </view>
+</view>

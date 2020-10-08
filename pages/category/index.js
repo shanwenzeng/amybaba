@@ -10,8 +10,6 @@ Page({
         nowIndex: 0,
         nowId: 0,
         list: [],
-        shops:[],
-        good: [],
         allPage: 1,
         allCount: 0,
         size: 8,
@@ -19,44 +17,13 @@ Page({
         showNoMore: 0,
         loading:0,
         index_banner_img:0,
+        shopId:0
     },
-    onLoad: function () {
-        let that = this;
-        util.request(api.messageproduct, {}, 'POST').then(function(res) {
-            var ids = new Array(); //商店id
-            var shop = new Array();//商店信息
-            var goods = new Array(); //商品信息
-            for(var i = 0;i <res.length; i++){
-                 if(ids.indexOf(res[i].goods.shop.id) == -1){
-                     ids.push(res[i].goods.shop.id);
-                     shop.push(res[i].goods.shop);
-                 }
-            }
-           that.setData({
-                    shops:shop
-                     })
-            for(var i = 0;i < ids.length;i++){
-                
-                that.shops[i]=new Array();
-                 goods.length=0;//清空数组
-                for(var j = 0;j < res.length; j++){
-                    if(ids[i] == res[j].goods.shop.id){
-                       that.shops[i][j]= goods.push(res[j]); 
-                    }  
-                    // that.setData({
-                    //     good:goods,
-                    // })             
-                }
-                console.log(i+":"+that.shops);
-                console.log(i+":"+goods);
-                 
-                 
-            }
-    });
+    onLoad: function(options) {
+        this.data.shopId=options.id;//保存商家id
+        this.getCatalog();//查询商品类别
+        this.findProduct(options.id);//根据商家id和分类进行商品查询
     },
-    // onLoad: function(options) {
-        
-    // },
     getChannelShowInfo: function (e) {
         let that = this;
         util.request(api.ShowSettings).then(function (res) {
@@ -74,17 +41,12 @@ Page({
         wx.hideNavigationBarLoading() //完成停止加载
         wx.stopPullDownRefresh() //停止下拉刷新
     },
+    //查询商品类别
     getCatalog: function() {
-        //CatalogList
         let that = this;
-        util.request(api.CatalogList).then(function(res) {
+        util.request(api.ProductCatalog).then(function(res) {
             that.setData({
-                navList: res.data.categoryList,
-            });
-        });
-        util.request(api.GoodsCount).then(function(res) {
-            that.setData({
-                goodsCount: res.data.goodsCount
+                navList: res.data
             });
         });
     },
@@ -100,17 +62,13 @@ Page({
     },
     getCurrentList: function(id) {
         let that = this;
-        util.request(api.GetCurrentList, {
-            size: that.data.size,
-            page: that.data.allPage,
-            id: id
-        }, 'POST').then(function(res) {
-            if (res.errno === 0) {
-                let count = res.data.count;
+        util.request(api.GetProduct).then(function(res) {
+            if (res.data.length > 0) {
+                let count = res.data.length;
                 that.setData({
                     allCount: count,
-                    allPage: res.data.currentPage,
-                    // list: that.data.list.concat(res.data.data),
+                    allPage: 1,
+                    list: that.data.list.concat(res.data),
                     showNoMore: 1,
                     loading: 0,
                 });
@@ -123,46 +81,86 @@ Page({
             }
         });
     },
+    //根据商家id和分类进行商品查询
+    findProduct: function(shopId,categoryId) {
+        let that = this;
+        let obj={id:shopId};
+        if(categoryId!=undefined && categoryId!=0){//categoryId不等于0，代表按分类进行查询
+            obj={id:shopId,categoryId:categoryId};
+        }
+        util.request(api.FindProduct,obj).then(function(res) {
+            if (res.data.length > 0) {//查询到产品
+                let count = res.data.length;
+                that.setData({
+                    allCount: count,
+                    allPage: 1,
+                    list: res.data,
+                    showNoMore: 1,
+                    loading: 0,
+                });
+            }else{//没有查询到商品
+                that.setData({
+                        hasInfo: 0,
+                        showNoMore: 0,
+                        list:[], 
+                    });
+            }
+        });
+    },
     onShow: function() {
-        this.getChannelShowInfo();
+        // this.getChannelShowInfo();
+        // this.getCurrentList(0);
         let id = this.data.nowId;
         let nowId = wx.getStorageSync('categoryId');
         if(id == 0 && nowId === 0){
             return false
         }
-        else if (nowId == 0 && nowId === '') {
-            this.setData({
-                list: [],
-                allPage: 1,
-                allCount: 0,
-                size: 8,
-                loading: 1
-            })
-            this.getCurrentList(0);
-            this.setData({
-                nowId: 0,
-                currentCategory: {}
-            })
-            wx.setStorageSync('categoryId', 0)
-        } else if(id != nowId) {
-            this.setData({
-                list: [],
-                allPage: 1,
-                allCount: 0,
-                size: 8,
-                loading: 1
-            })
-            this.getCurrentList(nowId);
-            this.getCurrentCategory(nowId);
-            this.setData({
-                nowId: nowId
-            })
+        // else if (nowId == 0 && nowId === '') {
+        //     this.setData({
+        //         list: [],
+        //         allPage: 1,
+        //         allCount: 0,
+        //         size: 8,
+        //         loading: 1
+        //     })
+        //     this.getCurrentList(0);
+        //     this.setData({
+        //         nowId: 0,
+        //         currentCategory: {}
+        //     })
+        //     wx.setStorageSync('categoryId', 0)
+        // } else if(id != nowId) {
+        //     this.setData({
+        //         list: [],
+        //         allPage: 1,
+        //         allCount: 0,
+        //         size: 8,
+        //         loading: 1
+        //     })
+        //     this.getCurrentList(nowId);
+        //     this.getCurrentCategory(nowId);
+        //     this.setData({
+        //         nowId: nowId
+        //     })
             wx.setStorageSync('categoryId', nowId)
-        }
+        // }
         
-        this.getCatalog();
     },
+    //按分类查询产品
     switchCate: function(e) {
+        let shopId = this.data.shopId;//商家id
+        let categoryId = e.currentTarget.dataset.id;//分类id
+        let nowId = this.data.nowId;//当前选中的分类id
+        if (categoryId == nowId) {//当前选中的分类id与你单击的分类id相同，则不再进行查询
+            return false;
+        } else{
+            this.findProduct(shopId,categoryId);
+            this.setData({
+                nowId: categoryId
+            })
+        }
+    },
+    switchCate2: function(e) {
         let id = e.currentTarget.dataset.id;
         let nowId = this.data.nowId;
         if (id == nowId) {

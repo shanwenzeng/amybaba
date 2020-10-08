@@ -1,7 +1,6 @@
 const util = require('../../utils/util.js');
 const api = require('../../config/api.js');
 const user = require('../../services/user.js');
-
 //获取应用实例
 const app = getApp()
 
@@ -21,7 +20,10 @@ Page({
         imgurl: '',
         sysHeight: 0,
         loading: 0,
-        autoplay:true
+        autoplay:true,
+        longitude:'',
+        latitude:'',
+        distance:'',
     },
     onHide:function(){
         this.setData({
@@ -95,13 +97,21 @@ Page({
                 });
             } 
         });
-        //推荐好物
-        util.request(api.RecommendShops,{},'POST').then(function (res) {
+        //推荐商家
+        
+        util.request(api.RecommendShops,{isRecommend:'是',star:'5'}).then(function (res) {
             if (res.data.length> 0) {
-                that.setData({
-                    recommendShops: res.data,
-                    loading: 1
-                });
+                //向数组中添加距离
+                for (let i = 0; i < res.data.length; i++) {
+                    util.findDistance(28.4178,115.3753, function(dis) {
+                        res.data[i].distance=dis;
+                    })
+                }
+                setTimeout(function(){
+                    that.setData({
+                        recommendShops: res.data,
+                    });
+                },500)
             }
         });
         //广告
@@ -117,7 +127,6 @@ Page({
     onLoad: function (options) {
         let systemInfo = wx.getStorageSync('systemInfo');
         var scene = decodeURIComponent(options.scene);
-        this.getCatalog();
     },
     onShow: function () {
         this.getCartNum();
@@ -180,4 +189,5 @@ Page({
         wx.hideNavigationBarLoading() //完成停止加载
         wx.stopPullDownRefresh() //停止下拉刷新
     },
+
 })

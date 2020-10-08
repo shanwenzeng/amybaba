@@ -13,7 +13,7 @@ Page({
             full_region: '',
             name: '',
             mobile: '',
-            is_default: '否'
+            is_default: 0
         },
         addressId: 0,
         openSelectRegion: false,
@@ -66,24 +66,23 @@ Page({
     },
     switchChange(e) {
         let status = e.detail.value;
-        let is_default = '否';
+        let is_default = 0;
         if (status == true) {
-            is_default = '是';
+            is_default = 1;
         }
         let address = 'address.is_default';
         this.setData({
             [address]: is_default
         });
     },
-    // 获得地址
     getAddressDetail() {
         let that = this;
         util.request(api.AddressDetail, {
-            id: that.data.addressId.toString()
-        },'POST').then(function(res) {
-            if(res!=null){
+            id: that.data.addressId
+        }).then(function(res) {
+            if (res.errno === 0) {
                 that.setData({
-                    address: res
+                    address: res.data
                 });
             }
         });
@@ -95,13 +94,15 @@ Page({
             content: '您确定要删除么？',
             success: function(res) {
                 if (res.confirm) {
-                    util.request(api.DeleteAddress, {id: id}).then(function(res) {
-                        if (res > 0) {
+                    util.request(api.DeleteAddress, {
+                        id: id
+                    }, 'POST').then(function(res) {
+                        if (res.errno === 0) {
                             wx.removeStorageSync('addressId');
                             util.showErrorToast('删除成功');
                             wx.navigateBack();
                         } else {
-                            util.showErrorToast('删除失败');
+                            util.showErrorToast(res.errmsg);
                         }
                     });
                 }
@@ -184,7 +185,7 @@ Page({
             });
             this.getAddressDetail();
         }
-        // this.getRegionList(1);
+        this.getRegionList(1);
     },
     onReady: function() {
 
@@ -297,7 +298,7 @@ Page({
         let regionType = that.data.regionType;
         util.request(api.RegionList, {
             parentId: regionId
-        }).then(function(res) {
+        },'GET').then(function(res) {
             if (res.errno === 0) {
                 that.setData({
                     regionList: res.data.map(item => {
@@ -333,23 +334,18 @@ Page({
             util.showErrorToast('请输入详细地址');
             return false;
         }
-        let isDef='否';
-        if(address.is_default=='是'){
-            isDef='是'
-        }
         let that = this;
         util.request(api.SaveAddress, {
-            customer:{
-                id:'10'
-            },
-            phone:  address.mobile,
-            province: address.province_name,
-            city: address.city_name,
-            district: address.district_name,
-            detailAddress: address.address,
-            isDefault:isDef
+            id: address.id,
+            name: address.name,
+            mobile: address.mobile,
+            province_id: address.province_id,
+            city_id: address.city_id,
+            district_id: address.district_id,
+            address: address.address,
+            is_default: address.is_default,
         }, 'POST').then(function(res) {
-            if (res.code > 0) {
+            if (res.errno === 0) {
                 wx.navigateBack()
             }
         });

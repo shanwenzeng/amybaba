@@ -2,17 +2,14 @@
     <view class="search">
         <navigator url="/pages/search/search" class="input">
             <image class="icon" src="/images/icon/search.png"></image>
-            <text class="txt">搜索, 共{{goodsCount}}款好味</text>
+            <text class="txt">搜索</text>
         </navigator>
     </view>
-    <view class="cata">
-    <scroll-view class="nav" scroll-y="true">
+    <view class="catalog">
+        <scroll-view class="nav" scroll-y="true">
             <view class="item {{ nowId == 0 ?'active' : ''}}" bindtap="switchCate" data-id="0">全部</view>
             <view class="item {{ nowId == item.id?'active' : ''}}" wx:for="{{navList}}" wx:key="id" data-id="{{item.id}}" bindtap="switchCate">{{item.name}}</view>
-    </scroll-view>
-    </view>
-    <view class="catalog">
-        
+        </scroll-view>
         <scroll-view class="cate" scroll-y="true" bindscrolltolower="onBottom">
             <block wx:if="{{loading == 0}}">
                 <view class='banner-container' wx:if="{{nowId!= 0 && index_banner_img == 1}}">
@@ -22,7 +19,7 @@
                     <view class="text" style="height:{{currentCategory.p_height}}rpx;line-height:{{currentCategory.p_height}}rpx;">{{currentCategory.name}}</view>
                 </view>
                 <view class='list-wrap clearfix'>
-                    <view class="goods-box {{(index+1)%2 == 0?'no-margin':''}}" wx:for="{{shops}}" wx:for-index="index" wx:for-item="item" wx:key="id" >
+                    <view class="goods-box {{(index+1)%2 == 0?'no-margin':''}}" wx:for="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="id">
                         <navigator hover-class='none' class='navi-url' url="/pages/goods/goods?id={{item.id}}">
                             <view class="box">
                                 <image src="../../{{item.photo}}" class="image">
@@ -36,47 +33,13 @@
                                 </block>
                             </view>
                             <view class="goods-info {{item.goods_number <= 0?'fast-out-status':''}}">
-                                <view class="goods-title">{{item.name}}</view>
-                                <view class="goods-intro">{{item.address}}</view>
-                                <!-- <view class='price-container'>
+                                <view class="goods-title">{{item.goods.name}}</view>
+                                <view class="goods-intro">{{item.standard}}</view>
+                                <view class='price-container'>
                                     <view class='l'>
-                                        <view class='h'>￥{{item.min_retail_price}}</view>
+                                        <view class='h'>￥{{item.price}}</view>
                                     </view>
-                                </view> -->
-                            </view>
-                            <!--  wx:for="{{good}}" wx:for-index="index" wx:for-item="item" wx:key="id" -->
-                            <view class="goods-news">
-                                <scroll-view scroll-x style="white-space:nowrap">
-                                    <view class="message"></view>
-                                    <view class="message" wx:for="{{good}}" wx:for-index="index" wx:for-item="item" wx:key="id">
-                                        <view class="photo">
-                                        <!-- ../ucenter/upload/image/1600821568305.jpg -->
-                                            <image src="../../{{item.photo}}" class="pto"></image>
-                                        </view>
-                                        <view class="text">
-                                            <view class="title">{{item.goods.name}}</view>
-                                            <view class="money">￥{{item.price}}</view>
-                                        </view>
-                                    </view>
-                                    <!-- <view class="message me2">
-                                        <view class="photo">
-                                            <image src="../ucenter/upload/image/1600825361272.jpg" class="pto"></image>
-                                        </view>
-                                        <view class="text">
-                                            <view class="title">商品分享到动态</view>
-                                            <view class="money">￥20</view>
-                                        </view>
-                                    </view>
-                                    <view class="message me3">
-                                        <view class="photo">
-                                            <image src="../ucenter/upload/image/1600825333139.jpg" class="pto"></image>
-                                        </view>
-                                        <view class="text">
-                                            <view class="title">商品分享到动态</view>
-                                            <view class="money">￥10</view>
-                                        </view>
-                                    </view> -->
-                                </scroll-view>    
+                                </view>
                             </view>
                         </navigator>
                     </view>

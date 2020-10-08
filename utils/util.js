@@ -1,5 +1,6 @@
 var api = require('../config/api.js');
-
+// 引入SDK核心类(腾讯位置)
+var QQMapWX = require('../lib/qqmap/qqmap-wx-jssdk.js');
 function formatTime(date) {
     var year = date.getFullYear()
     var month = date.getMonth() + 1
@@ -352,9 +353,109 @@ function getUid(prefix) {
             return v.toString(16);
         })
     );
+}  
+ //利用腾讯地图的位置服务,有使用次数上的限制，每天只能用1万次，当然可以再去买配额
+function findDistance(lat,long,callback){
+       //拿到商家的地理位置，用到了腾讯地图的api
+    // 实例化API核心类
+    var _that = this
+    var demo = new QQMapWX({
+        key: 'AUFBZ-PBMW3-L343G-YPN7H-NXVK7-QKB6C' // 必填，腾讯位置服务中的key
+    });
+    // 调用接口
+    demo.calculateDistance({
+        to: [{
+            latitude: lat, //商家的纬度
+            longitude: long, //商家的经度
+        }],
+        success: function(res) {
+            let hw = res.result.elements[0].distance //拿到距离(米)
+            if (hw && hw !== -1) { //拿到正确的值
+                //转换成公里
+                hw = (hw / 2 / 500).toFixed(2) + '千米'
+            } else {
+                hw = "距离太近或请刷新重试"
+            }
+            callback(hw);
+        }
+    });
 }
-
-
+// 获取位置,得用腾讯地图
+function getLocation(){
+    var that = this
+    wx.getLocation({
+        type: 'wgs84', // 默认为 wgs84 返回 gps 坐标，gcj02 返回可用于 wx.openLocation 的坐标
+        success: function (res) {
+            console.log(res)
+            that.setData({
+            longitude: res.longitude,
+            latitude: res.latitude
+            })
+                app.globalData.longitude = res.longitude;
+                app.globalData.latitude = res.latitude;
+                console.log(app.globalData.longitude+":::::"+app.globalData.latitude )
+            var qqmapsdk = new QQMapWX({
+            key: 'AUFBZ-PBMW3-L343G-YPN7H-NXVK7-QKB6C' // 必填
+            });
+            qqmapsdk.reverseGeocoder({
+            location: {
+                latitude: that.data.latitude,
+                longitude: that.data.longitude
+            },
+            success: function (res) {
+                console.log("获取地址成功：" + res.result.ad_info.city);
+                // 
+            },
+            fail: function (res) {
+                console.log("获取地址失败" + res);
+            },
+            complete: function (res) {
+                console.log(res);
+            }
+            });
+        }
+    })
+}
+/**
+ * 距离计算
+ */
+function findXy(lati,long) { //获取用户的经纬度
+var that = this;
+    wx.getLocation({
+    type: 'wgs84',
+    success(res) {
+        console.log("您位置的经度：" + res.longitude);
+        console.log("您位置的维度：" + res.latitude)
+        let distance= that.getDistance(res.latitude, res.longitude,lati,long)
+        console.log("当前位置距离高安市：", distance, "千米")
+        return distance;
+    }
+    })
+}
+//计算距离
+/**
+ * @creator swz
+ * @data 2020/10/07
+ * @desc 由经纬度计算两点之间的距离，la为latitude缩写，lo为longitude
+ * @param la1 第一个坐标点的纬度
+ * @param lo1 第一个坐标点的经度
+ * @param la2 第二个坐标点的纬度
+ * @param lo2 第二个坐标点的经度
+ * @return (int)s   返回距离(单位千米或公里)
+ * @tips 注意经度和纬度参数别传反了，一般经度为0~180、纬度为0~90
+ * 具体算法不做解释，有兴趣可以了解一下球面两点之间最短距离的计算方式
+ */
+function getDistance(la1, lo1, la2, lo2) {
+var La1 = la1 * Math.PI / 180.0;
+var La2 = la2 * Math.PI / 180.0;
+var La3 = La1 - La2;
+var Lb3 = lo1 * Math.PI / 180.0 - lo2 * Math.PI / 180.0;
+var s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(La3 / 2), 2) + Math.cos(La1) * Math.cos(La2) * Math.pow(Math.sin(Lb3 / 2), 2)));
+s = s * 6378.137;
+s = Math.round(s * 10000) / 10000;
+s = s.toFixed(2);
+return s;
+}
 module.exports = {
     formatTime: formatTime,
     formatTimeNum: formatTimeNum,
@@ -373,5 +474,9 @@ module.exports = {
     transferColor,
     transferPadding,
     transferBoxShadow,
-    getUid
+    getUid,
+    findDistance,
+    getLocation,
+    findXy,
+    getDistance
 }

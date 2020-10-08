@@ -294,6 +294,8 @@ Page({
         });
     },
     onLoad: function(options) {
+        this.findGoodsDetail(options.id);
+        this.findProductCarousel(options.id);
         let id = 0;
         var scene = decodeURIComponent(options.scene);
         if (scene != 'undefined') {
@@ -304,6 +306,30 @@ Page({
         this.setData({
             id: id, // 这个是商品id
             valueId: id,
+        });
+    },
+    //查询商品详情
+    findGoodsDetail(productId){
+        let that = this;
+        util.request(api.GetProduct,{productId:productId}).then(function(res) {
+            if (res.data.length > 0) {
+                that.setData({
+                     goods: res.data,
+                     loading:1
+                });
+                WxParse.wxParse('goodsDetail', 'html', res.data[0].goods.detail, that);
+            }
+        });
+    },
+    //查询产品轮播图
+    findProductCarousel(productId){
+        let that = this;
+        util.request(api.ProductCarousel,{productId:productId}).then(function(res) {
+            if (res.length > 0) {
+                that.setData({
+                    gallery: res
+                });
+            }
         });
     },
     onShow: function() {
@@ -321,8 +347,8 @@ Page({
             priceChecked: false,
             sysHeight: sysHeight
         })
-        this.getGoodsInfo();
-        this.getCartCount();
+        // this.getGoodsInfo();
+        // this.getCartCount();
     },
     onHide:function(){
         this.setData({
@@ -534,13 +560,13 @@ Page({
         this.setData({
             number: Number(this.data.number) + 1
         });
-        let checkedProductArray = this.getCheckedProductItem(this.getCheckedSpecKey());
-        let checkedProduct = checkedProductArray;
-        var check_number = this.data.number + 1;
-        if (checkedProduct.goods_number < check_number) {
-            this.setData({
-                disabled: true
-            });
-        }
+        // let checkedProductArray = this.getCheckedProductItem(this.getCheckedSpecKey());
+        // let checkedProduct = checkedProductArray;
+        // var check_number = this.data.number + 1;
+        // if (checkedProduct.goods_number < check_number) {
+        //     this.setData({
+        //         disabled: true
+        //     });
+        // }
     }
 })

@@ -8,7 +8,7 @@
     </view>
     <view class="search" bindtap="goSearch">
         <image class="icon" src="/images/icon/search.png"></image>
-        <text class="txt">搜索, 共{{goodsCount}}款好物</text>
+        <text class="txt">搜索</text>
     </view>
     <view class='banner-wrap'>
         <swiper class="banner" indicator-dots="true" autoplay="{{autoplay}}" interval="3000" duration="1000"   >
@@ -56,7 +56,7 @@
     <view class="no-more-goods">推荐商家</view>
     <view class='list-wrap clearfix'>
         <view class="goods-box {{(index+1)%2 == 0?'no-margin':''}}" wx:for="{{recommendShops}}" wx:for-index="index" wx:for-item="item" wx:key="id" >
-            <navigator hover-class='none' class='navi-url' url="/pages/goods/goods?id={{item.id}}">
+            <navigator hover-class='none' class='navi-url' url="/pages/category/index?id={{item.id}}">
                 <view class="box">
                     <image src="../../{{item.photo}}" class="image">
                         <view wx:if="{{item.is_new == 1}}" class='new-tag'>新品</view>
@@ -69,8 +69,9 @@
                 </view>
                 <view class="goods-info {{item.goods_number <= 0?'fast-out-status':''}}">
                     <view class="goods-title">{{item.name}}</view>
-                    <view class="goods-intro">{{item.address}}</view>
+                    <view class="goods-intro">{{item.address}}，{{item.distance}}</view>
                     <view class="goods-star">{{item.star}}星</view>
+
                 </view>
             </navigator>
         </view>
@@ -116,7 +117,7 @@
             <view class="more-category" data-cateid="{{item.id}}" bindtap="goCategory">点击查看更多{{item.name}}</view>
         </view>
     </view>
-    <view class="no-more-goods ">没有更多商品啦</view>
+    <view class="no-more-goods ">没有更多啦</view>
 </view>
 <view class="loading" style="height:{{sysHeight}}px" wx:else>
     <image class="img" src="/images/icon/loading.gif"></image>
