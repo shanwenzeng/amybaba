@@ -44,24 +44,43 @@ Page({
     getShop:function(condition){
         let that=this;
         let obj={};//传递给后台的参数
-        if(condition=="销量")
-        {
-            util.request(api.findShopBySale,obj).then(function (res) {
-                if (res.data.length> 0) {
-                    that.setData({shops: res.data,loading:0});
-                }
-            });
-        }
-        else{
-            if(condition!=undefined && condition=="好评"){
-                obj={star:'5'};
-            }
+        let url=api.RecommendShops;//请求地址
+        if(condition=="距离"){
             util.request(api.RecommendShops,obj).then(function (res) {
                 if (res.data.length> 0) {
+                    //向数组中添加距离
+                    for (let i = 0; i < res.data.length; i++) {
+                       util.findXy(res.data[i].latitude,res.data[i].longitude,function(dis){
+                            res.data[i].distance=dis;
+                            if((i+1)==res.data.length){//最后一次循环，进行冒泡排序
+                                //冒泡排序法，按距离从近到远排序
+                                for(let index = res.data.length-1;index>0;index--){
+                                    for(let j=0;j<index;j++){
+                                        if(parseFloat(res.data[j].distance)>parseFloat(res.data[j+1].distance)){
+                                            var temp = res.data[j];
+                                            res.data.splice(j,1,res.data[j+1]);
+                                            res.data.splice(j+1,1,temp);
+                                        }
+                                    }
+                                }
+                                that.setData({shops: res.data,loading:0});
+                            }
+                       });
+                    }
+                }
+            });
+        }else{
+            if(condition=="销量"){
+                url=api.findShopBySale;
+            }else if(condition=="好评"){
+                obj={star:'5'};
+            }
+            util.request(url,obj).then(function (res) {
+                if (res.data.length> 0) {
                     that.setData({shops: res.data,loading:0});
                 }
             });
-        }
+        } 
     },
     getCurrentCategory: function(id) {
         let that = this;

@@ -96,24 +96,32 @@ Page({
                     loading: 1
                 });
             } 
-        });
-        //推荐商家
-        
+        });  
+        //推荐商家        
         util.request(api.RecommendShops,{isRecommend:'是',star:'5'}).then(function (res) {
             if (res.data.length> 0) {
                 //向数组中添加距离
-                for (let i = 0; i < res.data.length; i++) {
-                    util.findDistance(28.4178,115.3753, function(dis) {
+                 for (let i = 0; i < res.data.length; i++) {
+                    util.findXy(res.data[i].latitude,res.data[i].longitude,function(dis){
                         res.data[i].distance=dis;
-                    })
-                }
-                setTimeout(function(){
-                    that.setData({
-                        recommendShops: res.data,
+                        if((i+1)==res.data.length){//最后一次循环，进行冒泡排序
+                            //冒泡排序法，按距离从近到远排序
+                            for(let index = res.data.length-1;index>0;index--){
+                                for(let j=0;j<index;j++){
+                                    if(parseFloat(res.data[j].distance)>parseFloat(res.data[j+1].distance)){
+                                        var temp = res.data[j];
+                                        res.data.splice(j,1,res.data[j+1]);
+                                        res.data.splice(j+1,1,temp);
+                                    }
+                                }
+                            }
+                            that.setData({recommendShops: res.data,loading:0});//所有的距离计算完毕后，进行赋值
+                        }
                     });
-                },500)
+                }
             }
         });
+       
         //广告
         util.request(api.Advert,{},'POST').then(function (res) {
             if (res.data.length> 0) {

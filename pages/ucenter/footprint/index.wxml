@@ -2,8 +2,8 @@
     <view wx:if="{{hasPrint == 1}}" class="print-goods">
 
         <view class="day-item" wx:for="{{footprintList}}" wx:key="id" wx:for-index="index">
-            <view>{{item.goods.name}}</view>
-            <view class="day-hd" wx:if="{{item.length > 0}}">{{item.createTime}}</view>
+            <view class="day-hd">{{footprintList.length}}</view>
+            <view class="day-hd" wx:if="{{footprintList.length > 0}}">{{item.createTime}}</view>
             <navigator hover-class='none' data-index="{{index}}" data-iindex="{{iindex}}" wx:for="{{item}}" wx:for-index="iindex" wx:for-item="iitem" class="item {{iindex % 2 == 0 ? 'left' : 'right'}}" wx:key="iitemId" url="/pages/goods/goods?id={{iitem.id}}">
                 <image src="/images/icon/trash-9.png" data-val="{{iitem.id}}" class='cancel-print' catchtap='deletePrint'></image>
                 <view class="box">

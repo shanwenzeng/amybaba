@@ -70,7 +70,12 @@ module.exports = {
     SearchClearHistory: ApiRootUrl + 'search/clearHistory', //搜索帮助
     ShowSettings: ApiRootUrl + 'settings/showSettings',
     SaveSettings: ApiRootUrl + 'settings/save',
+    addSettings: ApiRootUrlTwo + 'consumer/add',
+    editSettings: ApiRootUrlTwo + 'consumer/edit',
+    isExist: ApiRootUrlTwo + 'consumer/isExist',
     SettingsDetail: ApiRootUrl + 'settings/userDetail',
     GetBase64: ApiRootUrl + 'qrcode/getBase64', //获取商品详情二维码
+    //我的
+    FindCustomer: ApiRootUrlTwo + 'consumer/getMe',//查找消费者
 
 };

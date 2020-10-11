@@ -38,10 +38,9 @@ function formatTimeNum(number, format) {
     return format;
 }
 
-function testMobile(num) {
-    console.log
+function testPhone(num) {
     var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1})|(16[0-9]{1})|(19[0-9]{1}))+\d{8})$/;
-    if (num.length == 0) {
+    if (num==undefined || num.length == 0) {
         wx.showToast({
             title: '手机号为空',
             image: '/images/icon/icon_error.png',
@@ -372,7 +371,7 @@ function findDistance(lat,long,callback){
             let hw = res.result.elements[0].distance //拿到距离(米)
             if (hw && hw !== -1) { //拿到正确的值
                 //转换成公里
-                hw = (hw / 2 / 500).toFixed(2) + '千米'
+                hw = (hw / 2 / 500).toFixed(2)
             } else {
                 hw = "距离太近或请刷新重试"
             }
@@ -416,22 +415,16 @@ function getLocation(){
         }
     })
 }
-/**
- * 距离计算
- */
-function findXy(lati,long) { //获取用户的经纬度
-var that = this;
-    wx.getLocation({
-    type: 'wgs84',
-    success(res) {
-        console.log("您位置的经度：" + res.longitude);
-        console.log("您位置的维度：" + res.latitude)
-        let distance= that.getDistance(res.latitude, res.longitude,lati,long)
-        console.log("当前位置距离高安市：", distance, "千米")
-        return distance;
+function findXy(lati,long,callback) { //获取用户的经纬度
+    var that = this;
+        wx.getLocation({
+        type: 'wgs84',
+        success(res) {
+            let distance= that.getDistance(res.latitude, res.longitude,lati,long)
+            callback(distance);//回调函数
+        }
+        })
     }
-    })
-}
 //计算距离
 /**
  * @creator swz
@@ -466,7 +459,7 @@ module.exports = {
     checkSession,
     login,
     getUserInfo,
-    testMobile,
+    testPhone,
     sentRes,
     loginNow,
     getTextLength,

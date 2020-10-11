@@ -9,11 +9,11 @@ Page({
             province_id: 0,
             city_id: 0,
             district_id: 0,
-            address: '',
+            detailAddress: '',
             full_region: '',
             name: '',
-            mobile: '',
-            is_default: 0
+            phone: '',
+            isDefault: 0
         },
         addressId: 0,
         openSelectRegion: false,
@@ -40,11 +40,11 @@ Page({
         regionList: [],
         selectRegionDone: false
     },
-    mobilechange(e) {
-        let mobile = e.detail.value;
+    phoneChange(e) {
+        let phone = e.detail.value;
         let address = this.data.address;
-        if (util.testMobile(mobile)) {
-            address.mobile = mobile;
+        if (util.testPhone(phone)) {
+            address.phone = phone;
             this.setData({
                 address: address
             });
@@ -59,30 +59,31 @@ Page({
     },
     bindinputAddress(event) {
         let address = this.data.address;
-        address.address = event.detail.value;
+        address. detailAddress = event.detail.value;
         this.setData({
             address: address
         });
     },
     switchChange(e) {
         let status = e.detail.value;
-        let is_default = 0;
+        let isDefault = 0;
         if (status == true) {
-            is_default = 1;
+            isDefault = 1;
         }
-        let address = 'address.is_default';
+        let address = 'address.isDefault';
         this.setData({
-            [address]: is_default
+            [address]: isDefault
         });
     },
+    //获取地址，赋值给文本框
     getAddressDetail() {
         let that = this;
         util.request(api.AddressDetail, {
             id: that.data.addressId
         }).then(function(res) {
-            if (res.errno === 0) {
+            if (res!='') {
                 that.setData({
-                    address: res.data
+                    address: res
                 });
             }
         });
@@ -96,11 +97,13 @@ Page({
                 if (res.confirm) {
                     util.request(api.DeleteAddress, {
                         id: id
-                    }, 'POST').then(function(res) {
-                        if (res.errno === 0) {
+                    }).then(function(res) {
+                        if (res > 0) {
                             wx.removeStorageSync('addressId');
-                            util.showErrorToast('删除成功');
-                            wx.navigateBack();
+                            util.showSuccessToast('删除成功');
+                            setTimeout(function(){
+                                wx.navigateBack();
+                            },2000)
                         } else {
                             util.showErrorToast(res.errmsg);
                         }
@@ -316,37 +319,42 @@ Page({
             }
         });
     },
+    //保存地址
     saveAddress() {
         let address = this.data.address;
+        console.log(address)
         if (address.name == '' || address.name == undefined) {
             util.showErrorToast('请输入姓名');
             return false;
         }
-        if (address.mobile == '' || address.mobile == undefined) {
+        if (address.phone == '' || address.phone == undefined) {
             util.showErrorToast('请输入手机号码');
             return false;
         }
-        if (address.district_id == 0 || address.district_id == undefined) {
+        if (address.district== '') {
             util.showErrorToast('请输入省市区');
             return false;
         }
-        if (address.address == '' || address.address == undefined) {
+        if (address. detailAddress == '' || address. detailAddress == undefined) {
             util.showErrorToast('请输入详细地址');
             return false;
         }
         let that = this;
         util.request(api.SaveAddress, {
-            id: address.id,
             name: address.name,
-            mobile: address.mobile,
-            province_id: address.province_id,
-            city_id: address.city_id,
-            district_id: address.district_id,
-            address: address.address,
-            is_default: address.is_default,
-        }, 'POST').then(function(res) {
-            if (res.errno === 0) {
-                wx.navigateBack()
+            phone: address.phone,
+            province: address.province_name==''?address.province:address.province_name,
+            city: address.city_name==''?address.city:address.city_name,
+            district: address.district_name==''?address.district:address.district_name,
+            detailAddress: address. detailAddress,
+            isDefault: address.isDefault==0?'否':'是',
+            customer:{id:wx.getStorageSync('openId')}
+        }).then(function(res) {
+            if (res.code > 0) {
+                util.showSuccessToast('保存成功');
+               setTimeout(function(){
+                    wx.navigateBack();
+               },2000);
             }
         });
     },

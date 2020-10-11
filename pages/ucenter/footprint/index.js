@@ -48,13 +48,12 @@ Page({
             // wx.hideLoading();
         });
     },
+    //查看浏览历史，即足迹
     getBrowserHistory() {
         let that = this;
-        util.request(api.BrowserHistory, {},'POST').then(function (res) {
-            console.log(res.data)
+        util.request(api.BrowserHistory, {customer:{id:wx.getStorageSync('openId')}}).then(function (res) {
             if (res.data.length > 0) {
                 let count = res.data.length;
-                let f1 = that.data.footprintList;
                 that.setData({
                     allCount: count,
                     allPage: 1,

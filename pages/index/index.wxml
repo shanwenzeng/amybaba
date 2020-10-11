@@ -69,7 +69,8 @@
                 </view>
                 <view class="goods-info {{item.goods_number <= 0?'fast-out-status':''}}">
                     <view class="goods-title">{{item.name}}</view>
-                    <view class="goods-intro">{{item.address}}，{{item.distance}}</view>
+                    <view class="goods-intro">{{item.address}}</view>
+                    <view class="goods-intro">距离您：{{item.distance}}千米</view>
                     <view class="goods-star">{{item.star}}星</view>
 
                 </view>

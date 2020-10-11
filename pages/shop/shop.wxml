@@ -23,7 +23,8 @@
                             </view>
                             <view class="goods-info {{item.goods_number <= 0?'fast-out-status':''}}">
                                 <view class="goods-title">{{item.name}}</view>
-                                <view class="goods-intro">{{item.address}}，{{}}千米</view>
+                                <view class="goods-intro">{{item.address}}</view>
+                                <view class="goods-intro" wx:if="{{item.distance!='' && item.distance!=undefined}}">距离您：{{item.distance}}千米</view>
                                 <view class="goods-star">{{item.star}}星</view>
                                 <view wx:if="{{item.shopSell>0}}" class="goods-intro">(已售{{item.shopSell}}份)</view>
                             </view>

@@ -16,7 +16,8 @@ Page({
     },
     getAddresses() {
         let that = this;
-        util.request(api.GetAddresses,{},'POST').then(function(res) {
+        let openId=wx.getStorageSync('openId');
+        util.request(api.GetAddresses,{customer:{id:openId}},'POST').then(function(res) {
             if (res.data.length > 0) {
                 that.setData({
                     addresses: res.data
