@@ -343,9 +343,9 @@ Page({
         util.request(api.SaveAddress, {
             name: address.name,
             phone: address.phone,
-            province: address.province_name==''?address.province:address.province_name,
-            city: address.city_name==''?address.city:address.city_name,
-            district: address.district_name==''?address.district:address.district_name,
+            province: address.province_name,
+            city: address.city_name,
+            district: address.district_name,
             detailAddress: address. detailAddress,
             isDefault: address.isDefault==0?'否':'是',
             customer:{id:wx.getStorageSync('openId')}

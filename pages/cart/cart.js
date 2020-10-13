@@ -51,22 +51,21 @@ Page({
     },
     getCartList: function() {
         let that = this;
-        util.request(api.CartList).then(function(res) {
-            if (res.errno === 0) {
-                let hasCartGoods = res.data.cartList;
+        let openId=wx.getStorageSync('openId');
+        util.request(api.GetCartList,{customer:{id:openId}}).then(function(res) {
+            console.log(res)
+            if (res.data.length > 0) {
+                let hasCartGoods = res.data.length;
                 if (hasCartGoods.length != 0) {
                     hasCartGoods = 1;
                 } else {
                     hasCartGoods = 0;
                 }
                 that.setData({
-                    cartGoods: res.data.cartList,
-                    cartTotal: res.data.cartTotal,
+                    cartGoods: res.data,
+                    cartTotal: res.data.length,
                     hasCartGoods: hasCartGoods
                 });
-                if (res.data.cartTotal.numberChange == 1) {
-                    util.showErrorToast('部分商品库存有变动');
-                }
             }
             that.setData({
                 checkedAllStatus: that.isCheckedAll()

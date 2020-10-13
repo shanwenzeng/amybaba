@@ -22,12 +22,14 @@ module.exports = {
     // 购物车
     CartAdd: ApiRootUrl + 'cart/add', // 添加商品到购物车
     CartList: ApiRootUrl + 'cart/index', //获取购物车的数据
+    GetCartList: ApiRootUrlTwo + 'shoppingcart/find', //获取购物车的数据
     CartUpdate: ApiRootUrl + 'cart/update', // 更新购物车的商品
     CartDelete: ApiRootUrl + 'cart/delete', // 删除购物车的商品
     CartChecked: ApiRootUrl + 'cart/checked', // 选择或取消选择商品
     CartGoodsCount: ApiRootUrl + 'cart/goodsCount', // 获取购物车商品件数
     CartCheckout: ApiRootUrl + 'cart/checkout', // 下单前信息确认
     messageproduct: ApiRootUrlTwo + 'product/messageproduct', //商家
+    Addshoppingcart: ApiRootUrlTwo + 'shoppingcart/add', //将商品加入购物车
     //商家
     RecommendShop: ApiRootUrlTwo + 'shop/findRecommendShop',
     findShopBySale: ApiRootUrlTwo + 'shop/findShopBySale',//按销量查询商家，由高到底排序
@@ -50,8 +52,8 @@ module.exports = {
     RegionList: ApiRootUrl + 'region/list', //获取区域列表
     PayPrepayId: ApiRootUrl + 'pay/preWeixinPay', //获取微信统一下单prepay_id
     OrderSubmit: ApiRootUrl + 'order/submit', // 提交订单
-    OrderList: ApiRootUrl + 'order/list', //订单列表
-    OrderDetail: ApiRootUrl + 'order/detail', //订单详情
+    OrderList: ApiRootUrlTwo + 'orderList/fastFind', //订单列表
+    OrderDetail: ApiRootUrlTwo + 'orderDetail/findById', //订单详情
     OrderDelete: ApiRootUrl + 'order/delete', //订单删除
     OrderCancel: ApiRootUrl + 'order/cancel', //取消订单
     OrderConfirm: ApiRootUrl + 'order/confirm', //物流详情
@@ -77,5 +79,7 @@ module.exports = {
     GetBase64: ApiRootUrl + 'qrcode/getBase64', //获取商品详情二维码
     //我的
     FindCustomer: ApiRootUrlTwo + 'consumer/getMe',//查找消费者
+    //获取openId
+    GetOpenId: ApiRootUrlTwo + 'consumer/getOpenId',//获取用户的openId
 
 };

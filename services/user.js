@@ -13,18 +13,12 @@ function loginByWeixin() {
             code = res.code;
             return util.getUserInfo();
         }).then((userInfo) => {
-            //  debugger
             wx.setStorageSync('userInfo', JSON.parse(userInfo.rawData) );
-            wx.setStorageSync('token', res.data.token);
             //登录远程服务器
-            util.request(api.AuthLoginByWeixin, {
-                code: code,
-                userInfo: userInfo
-            }, 'POST').then(res => {
-                if (res.errno === 0) {
+            util.request(api.GetOpenId,{jscode:code}).then(res => {
+                if (res.errcode === 0) {
                     //存储用户信息
-                    wx.setStorageSync('userInfo', res.data.userInfo);
-                    wx.setStorageSync('token', res.data.token);
+                    wx.setStorageSync('openId', res.openid);
                     resolve(res);
                 } else {
                     reject(res);

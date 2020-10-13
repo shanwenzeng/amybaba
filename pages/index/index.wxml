@@ -33,7 +33,7 @@
     </view>
     <swiper class="catalog-wrap" indicator-dots="{{false}}" indicator-color="#dedede" indicator-active-color="#e00000" wx:if="{{show_channel}}">
         <swiper-item class="first">
-            <!-- 居家 -->
+            <!-- 分类 -->
             <view wx:for="{{channel}}" wx:if="{{channel.length >0}}" wx:key="id" class='icon-navi' data-cateid="{{item.id}}" bindtap="goCategory">
                 <image class='icon-img' src="../../{{item.icon}}"></image>
                 <view class='icon-text'>{{item.name}}</view>
@@ -53,7 +53,7 @@
         </swiper-item>
     </swiper>
     <!-- 推荐商家 -->
-    <view class="no-more-goods">推荐商家</view>
+    <view class="no-more-goods">---推荐商家---</view>
     <view class='list-wrap clearfix'>
         <view class="goods-box {{(index+1)%2 == 0?'no-margin':''}}" wx:for="{{recommendShops}}" wx:for-index="index" wx:for-item="item" wx:key="id" >
             <navigator hover-class='none' class='navi-url' url="/pages/category/index?id={{item.id}}">

@@ -88,11 +88,22 @@ Page({
                });
            }
        });
+        //广告或通知
+        util.request(api.Advert,{},'POST').then(function (res) {
+            if (res.data.length> 0) {
+                that.setData({
+                    notice: res.data,
+                    show_notice:1,
+                    loading: 1
+                });
+            }
+        });
        //推荐好物
        util.request(api.recommendGoods,{},'POST').then(function (res) {
             if (res.data.length> 0) {
                 that.setData({
                     channel: res.data,
+                    show_channel:1,
                     loading: 1
                 });
             } 
@@ -122,24 +133,13 @@ Page({
             }
         });
        
-        //广告
-        util.request(api.Advert,{},'POST').then(function (res) {
-            if (res.data.length> 0) {
-                that.setData({
-                    notice: res.data,
-                    loading: 1
-                });
-            }
-        });
     },
     onLoad: function (options) {
         let systemInfo = wx.getStorageSync('systemInfo');
         var scene = decodeURIComponent(options.scene);
     },
-    onShow: function () {
-        this.getCartNum();
-        this.getChannelShowInfo();
-        this.getIndexData();
+    onShow: function () {        
+        this.getIndexData();//获得首页数据
         var that = this;
         let userInfo = wx.getStorageSync('userInfo');
         if (userInfo != '') {

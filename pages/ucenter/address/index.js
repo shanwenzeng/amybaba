@@ -14,6 +14,7 @@ Page({
             url: '/pages/ucenter/address-detail/index?id=' + id,
         })
     },
+    //根据openId,获取用户地址
     getAddresses() {
         let that = this;
         let openId=wx.getStorageSync('openId');

@@ -18,24 +18,11 @@ Page({
         };
     },
     getUserInfo: function (e) {
-        
         app.globalData.userInfo = e.detail.userInfo
         user.loginByWeixin().then(res => {
-            
-            console.log("您已经是老用户啦！");
-            
-            app.globalData.userInfo = res.data.userInfo;
-            app.globalData.token = res.data.token;
-            let is_new = res.data.is_new;//服务器返回的数据；
-            if (is_new == 0) {
-                util.showErrorToast('您已经是老用户啦！');
-                wx.navigateBack();
-            }
-            else if (is_new == 1) {
-                wx.navigateBack();
-            }
-
-        }).catch((err) => { });
+            //授权成功，返回前一个页面
+            wx.navigateBack();
+        }).catch((err) => {});
     },
     goBack:function(){
         wx.navigateBack();

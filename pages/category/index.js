@@ -10,6 +10,8 @@ Page({
         nowIndex: 0,
         nowId: 0,
         list: [],
+        shops:[],
+        good: [],
         allPage: 1,
         allCount: 0,
         size: 8,
@@ -24,6 +26,9 @@ Page({
         this.getCatalog();//查询商品类别
         this.findProduct(options.id);//根据商家id和分类进行商品查询
     },
+    // onLoad: function(options) {
+        
+    // },
     getChannelShowInfo: function (e) {
         let that = this;
         util.request(api.ShowSettings).then(function (res) {

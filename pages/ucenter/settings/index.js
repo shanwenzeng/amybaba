@@ -56,20 +56,26 @@ Page({
             util.showErrorToast('请输入手机号码');
             return false;
         }
-        //用户信息修改
-        util.request(api.editSettings, {
-            id:openId,
-            name: name,
-            phone: phone,
-        }).then(function(res) {
-            if(res.code>0){
-                util.showSuccessToast('保存成功');
-               setTimeout(function(){
-                    wx.navigateBack();
-               },2000);
-            }else{
-                util.showErrorToast('保存失败，请联系客服');
+        //判断是否存在
+        util.request(api.isExist,{id:openId}).then(function(res){
+            var url=api.addSettings;//默认为新增
+            if(res.code>0){//已存在，执行修改
+                url=api.editSettings
             }
+            util.request(url, {
+                    id:openId,
+                    name: name,
+                    phone: phone,
+                }).then(function(res) {
+                    if(res.code>0){
+                        util.showSuccessToast('保存成功');
+                       setTimeout(function(){
+                            wx.navigateBack();
+                       },2000);
+                    }else{
+                        util.showErrorToast('保存失败，请联系客服');
+                    }
+                });
         });
     },
 })

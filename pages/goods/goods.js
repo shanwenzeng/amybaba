@@ -296,6 +296,7 @@ Page({
     onLoad: function(options) {
         this.findGoodsDetail(options.id);
         this.findProductCarousel(options.id);
+        this.addBrowserHistory(options.id)
         let id = 0;
         var scene = decodeURIComponent(options.scene);
         if (scene != 'undefined') {
@@ -307,6 +308,10 @@ Page({
             id: id, // 这个是商品id
             valueId: id,
         });
+    },
+    //添加我的足迹
+    addBrowserHistory(goodsId){
+        
     },
     //查询商品详情
     findGoodsDetail(productId){
@@ -405,11 +410,7 @@ Page({
         util.loginNow();
         var that = this;
         let userInfo = wx.getStorageSync('userInfo');
-        let productLength = this.data.productList.length;
-        if (userInfo == '') {
-            return false;
-        }
-        if (this.data.openAttr == false && productLength != 1) {
+        if (this.data.openAttr == false ) {
             //打开规格选择窗口
             this.setData({
                 openAttr: !that.data.openAttr
@@ -418,59 +419,29 @@ Page({
                 alone_text: '加入购物车'
             })
         } else {
-
-            //提示选择完整规格
-            if (!this.isCheckedAllSpec()) {
-                wx.showToast({
-                    image: '/images/icon/icon_error.png',
-                    title: '请选择规格',
-                });
-                return false;
-            }
-
-            //根据选中的规格，判断是否有对应的sku信息
-            let checkedProductArray = this.getCheckedProductItem(this.getCheckedSpecKey());
-            if (!checkedProductArray || checkedProductArray.length <= 0) {
-                //找不到对应的product信息，提示没有库存
-                wx.showToast({
-                    image: '/images/icon/icon_error.png',
-                    title: '库存不足',
-                });
-                return false;
-            }
-            let checkedProduct = checkedProductArray[0];
             //验证库存
-            if (checkedProduct.goods_number < this.data.number) {
-                //要买的数量比库存多
-                wx.showToast({
-                    image: '/images/icon/icon_error.png',
-                    title: '库存不足',
-                });
-                return false;
-            }
-            util.request(api.CartAdd, {
-                    addType: 0,
-                    goodsId: this.data.id,
-                    number: this.data.number,
-                    productId: checkedProduct.id
-                }, "POST")
+            // if (checkedProduct.goods_number < this.data.number) {
+            //     //要买的数量比库存多
+            //     wx.showToast({
+            //         image: '/images/icon/icon_error.png',
+            //         title: '库存不足',
+            //     });
+            //     return false;
+            // }
+            util.request(api.Addshoppingcart, {
+                    goods:{id: this.data.id},
+                    customer:{id:wx.getStorageSync('openId')},
+                    amount:this.data.number.toString()
+                })
                 .then(function(res) {
-                    let _res = res;
-                    if (_res.errno == 0) {
-                        wx.showToast({
-                            title: '添加成功',
-                        });
-                        if (productLength != 1 || that.data.openAttr == true) {
+                    if(res.code>0){
+                        util.showErrorToast('加入成功')
+                        if (that.data.openAttr == true) {
                             that.setData({
                                 openAttr: !that.data.openAttr,
-                                cartGoodsCount: _res.data.cartTotal.goodsCount
                             });
-                        } else {
-                            that.setData({
-                                cartGoodsCount: _res.data.cartTotal.goodsCount
-                            });
-                        }
-                    } else {
+                        } 
+                    }else{
                         wx.showToast({
                             image: '/images/icon/icon_error.png',
                             title: _res.errmsg,

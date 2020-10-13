@@ -7,6 +7,7 @@ Page({
     data: {
         orderList: [],
         allOrderList: [],
+        orderDetail:[],
         allPage: 1,
         allCount: 0,
         size: 8,
@@ -52,22 +53,40 @@ Page({
             }
         });
     },
+    //获取订单信息
     getOrderList() {
         let that = this;
-        util.request(api.OrderList, {
-            showType: that.data.showType,
-            size: that.data.size,
-            page: that.data.allPage,
-        }).then(function(res) {
-            if (res.errno === 0) {
-                let count = res.data.count;
+        let showType=wx.getStorageSync('showType');//获取缓存中的订单状态
+        let openId=wx.getStorageSync('openId');
+        var obj={};//传递给后台的参数
+        if(showType==undefined || showType==0){//全部不传递状态，全部查询出来
+            obj={customer:{id: openId }};
+        }else if(showType=="待付款"){//待付款
+            obj={customer:{id:openId },orderStatus:showType};
+        }else{//待发货或者待收货
+            obj={customer:{id:openId },shipStatus:showType};
+        }
+        util.request(api.OrderList,obj).then(function(res) {
+            if (res.length > 0) {
+                let count = res.length;
+                for(let i=0;i<res.length;i++){
+                    res[i].createTime=util.formatTime(new Date(res[i].createTime))//重新设置时间格式
+                    util.request(api.OrderDetail, {
+                        order:res[i].id
+                    }).then(function(res) {
+                        console.log(res)
+                        that.setData({
+                            orderDetail:that.data.orderDetail.concat(res.data)
+                        });
+                    });
+                }
                 that.setData({
                     allCount: count,
-                    allOrderList: that.data.allOrderList.concat(res.data.data),
-                    allPage: res.data.currentPage,
-                    orderList: that.data.allOrderList.concat(res.data.data)
+                    allOrderList: that.data.allOrderList.concat(res),
+                    // allPage: res.data.currentPage,
+                    orderList: that.data.allOrderList.concat(res)
                 });
-                let hasOrderData = that.data.allOrderList.concat(res.data.data);
+                let hasOrderData = that.data.allOrderList.concat(res);
                 if (count == 0) {
                     that.setData({
                         hasOrder: 1
@@ -75,6 +94,7 @@ Page({
                 }
             }
         });
+    
     },
     toIndexPage: function(e) {
         wx.switchTab({
@@ -86,19 +106,20 @@ Page({
         let showType = wx.getStorageSync('showType');
         let nowShowType = this.data.showType;
         let doRefresh = wx.getStorageSync('doRefresh');
-        if (nowShowType != showType || doRefresh == 1) {
-            this.setData({
-                showType: showType,
-                orderList: [],
-                allOrderList: [],
-                allPage: 1,
-                allCount: 0,
-                size: 8
-            });
-            this.getOrderList();
-            wx.removeStorageSync('doRefresh');
-        }
-        this.getOrderInfo();
+        // if (nowShowType != showType || doRefresh == 1) {
+        //     this.setData({
+        //         showType: showType,
+        //         orderList: [],
+        //         allOrderList: [],
+        //         allPage: 1,
+        //         allCount: 0,
+        //         size: 8
+        //     });
+        //     this.getOrderList();
+        //     wx.removeStorageSync('doRefresh');
+        // }
+        // this.getOrderInfo();
+        this.getOrderList()
     },
     switchTab: function(event) {
         let showType = event.currentTarget.dataset.index;
@@ -111,7 +132,7 @@ Page({
             allCount: 0,
             size: 8
         });
-        this.getOrderInfo();
+        // this.getOrderInfo();
         this.getOrderList();
     },
     // “取消订单”点击效果
