@@ -2,7 +2,7 @@
 	<view class="goodsList" wx:if="{{cartGoods.length > 0}}">
 		<view class="a-goods {{item.isTouchMove ? 'touch-move-active' : ''}}" wx:for="{{cartGoods}}" wx:key="id" bindtouchstart="touchstart" bindtouchmove="touchmove" data-index="{{index}}">
 			<view class='content'>
-				<view wx:if="{{item.number >0 && item.is_on_sale == 1}}" class="checkbox" bindtap="checkedItem" data-item-index="{{index}}">
+				<view wx:if="{{item.amount >0}}" class="checkbox" bindtap="checkedItem" data-item-index="{{index}}">
 					<image wx:if="{{item.checked == 1}}" class="checkbox-img" src="/images/icon/gou-red.png"></image>
 					<image wx:else class="checkbox-img" src="/images/icon/gou-gray.png"></image>
 				</view>
@@ -10,10 +10,10 @@
 				<view class="goods-info">
 					<navigator class="goods-url" hover-class="none" url="/pages/goods/goods?id={{item.goods.id}}">
 						<view class="img-box">
-							<image src="../../{{item.photo}}" class="img" />
+							<image src="/{{item.photo}}" class="img" />
 						</view>
 						<view class="text-box">
-							<view class="{{item.number >0 && item.is_on_sale == 1?'goods-title':'out-stock-title'}}">{{item.name}}</view>
+							<view class="{{item.number >0 && item.is_on_sale == 1?'goods-title':'out-stock-title'}}">{{item.standard}}</view>
 							<view class="goods-label">{{item.goods.name}}</view>
 							<view class="goods-price">
 								<view class='price-now'>￥{{item.price}}</view>
@@ -47,10 +47,10 @@
 			<view class="all-selected" bindtap="checkedAll">
 				<image class="checkbox" wx:if="{{checkedAllStatus}}" src="/images/icon/gou-red.png"></image>
 				<image class="checkbox" wx:else src="/images/icon/gou-gray.png"></image>
-				<view class="text">全选({{cartTotal.checkedGoodsCount}})
+				<view class="text">全选({{totalAmount}})
 				</view>
 			</view>
-			<view class="total" hidden="">合计：¥{{cartTotal.checkedGoodsAmount}}</view>
+			<view class="total" hidden="">合计：¥{{totalMoney}}</view>
 		</view>
 		<view class="to-pay-btn" hidden="" bindtap="checkoutOrder">去结算</view>
 		<!-- <view class="to-pay-btn" hidden="" bindtap="test">去结算</view>    -->

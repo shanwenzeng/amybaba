@@ -15,7 +15,7 @@
         <block wx:if="{{gallery.length > 0}}">
             <swiper bindchange="bindchange" class="banner banner-style1" indicator-dots="{{false}}" autoplay="{{false}}" current="{{current}}" circular="{{true}}" interval="3000" duration="1000" display-multiple-items="1">
                 <swiper-item class="item" wx:for="{{gallery}}" wx:key="id">
-                    <image bindtap="previewImage" data-src="../../upload/image/{{item.path}}" src="../../upload/image/{{item.path}}" class="slide-image" mode="aspectFill" />
+                    <image bindtap="previewImage" data-src="{{item.path}}" src="{{item.path}}" class="slide-image" mode="aspectFill" />
                 </swiper-item>
             </swiper>
         </block>
@@ -69,7 +69,7 @@
             </view>
             <view class="img-info">
                 <view class="img-wrap">
-                    <image class="img" src="../../{{goods[0].photo}}"></image>
+                    <image class="img" src="/{{goods[0].photo}}"></image>
                 </view>
                 <view class="info">
                     <view class='price-range' wx:if="{{priceChecked == false}}">

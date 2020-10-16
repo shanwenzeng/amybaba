@@ -1,6 +1,6 @@
 <view class="container">
     <view class='about-wrap'>
-        <view class='title'>艾米巴巴</view>
+        <view class='title'>艾米巴</view>
         <view class='content'>
             微信小程序商城
         </view>

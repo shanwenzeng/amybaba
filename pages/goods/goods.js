@@ -294,9 +294,9 @@ Page({
         });
     },
     onLoad: function(options) {
-        this.findGoodsDetail(options.id);
         this.findProductCarousel(options.id);
-        this.addBrowserHistory(options.id)
+        this.findGoodsDetail(options.id);
+        this.addBrowserHistory(options.id);
         let id = 0;
         var scene = decodeURIComponent(options.scene);
         if (scene != 'undefined') {
@@ -310,8 +310,23 @@ Page({
         });
     },
     //添加我的足迹
-    addBrowserHistory(goodsId){
-        
+    addBrowserHistory(productId){
+        let that=this;
+        let openId = wx.getStorageSync('openId');
+        if(openId==undefined || openId.length==0){//如果没有openId,不保存浏览足迹
+            return false;
+        }
+        let obj={customer:{id:openId},product:{id:productId}};
+         //判断是否存在
+         util.request(api.browserHistoryIsExist,obj).then(function(res){
+            if(res.code <=0){//不存在，保存浏览记录
+                util.request(api.addBrowserHistory,obj).then(function(res){
+                    if(res.code <=0){
+                        console.log("保存商品浏览记录失败")
+                    }
+                })
+            }
+        });
     },
     //查询商品详情
     findGoodsDetail(productId){
@@ -409,6 +424,7 @@ Page({
         // 判断是否登录，如果没有登录，则登录
         util.loginNow();
         var that = this;
+        let goods = this.data.goods;
         let userInfo = wx.getStorageSync('userInfo');
         if (this.data.openAttr == false ) {
             //打开规格选择窗口
@@ -420,22 +436,29 @@ Page({
             })
         } else {
             //验证库存
-            // if (checkedProduct.goods_number < this.data.number) {
-            //     //要买的数量比库存多
-            //     wx.showToast({
-            //         image: '/images/icon/icon_error.png',
-            //         title: '库存不足',
-            //     });
-            //     return false;
-            // }
+            if (goods[0].stock < this.data.number) {
+                //要买的数量比库存多
+                wx.showToast({
+                    image: '/images/icon/icon_error.png',
+                    title: '库存不足',
+                });
+                return false;
+            }
             util.request(api.Addshoppingcart, {
-                    goods:{id: this.data.id},
+                    addType: 0,
+                    goods:{id: goods[0].goods.id},
                     customer:{id:wx.getStorageSync('openId')},
-                    amount:this.data.number.toString()
+                    amount:this.data.number.toString(),
+                    photo:goods[0].photo,
+                    product:{id:goods[0].id},
+                    name:goods[0].goods.name,
+                    weight:goods[0].weight,
+                    price:goods[0].price,
+                    standard:goods[0].standard,
                 })
                 .then(function(res) {
                     if(res.code>0){
-                        util.showErrorToast('加入成功')
+                        util.showSuccessToast('加入成功')
                         if (that.data.openAttr == true) {
                             that.setData({
                                 openAttr: !that.data.openAttr,

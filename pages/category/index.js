@@ -67,9 +67,12 @@ Page({
     },
     getCurrentList: function(id) {
         let that = this;
-        util.request(api.GetProduct).then(function(res) {
+        util.request(api.GetProduct,{
+            rowsCount: that.data.size,//每次显示的数量
+            page: that.data.allPage,//页码
+        }).then(function(res) {
             if (res.data.length > 0) {
-                let count = res.data.length;
+                let count = res.total;//总记录数
                 that.setData({
                     allCount: count,
                     allPage: 1,
@@ -89,17 +92,22 @@ Page({
     //根据商家id和分类进行商品查询
     findProduct: function(shopId,categoryId) {
         let that = this;
-        let obj={id:shopId};
+        let obj={id:shopId, rowsCount: that.data.size,page: that.data.allPage};
         if(categoryId!=undefined && categoryId!=0){//categoryId不等于0，代表按分类进行查询
+            that.setData({list:[]});//清空原来的数据
             obj={id:shopId,categoryId:categoryId};
+            // obj={id:shopId,categoryId:categoryId,rowsCount: that.data.size,page: that.data.allPage};
+        }else if(categoryId==0){//点击全部
+            that.setData({list:[]});//清空原来的数据
+            obj={id:shopId, rowsCount: that.data.size,page: 1};
         }
         util.request(api.FindProduct,obj).then(function(res) {
             if (res.data.length > 0) {//查询到产品
-                let count = res.data.length;
+                let count = res.total;//总记录数
                 that.setData({
                     allCount: count,
-                    allPage: 1,
-                    list: res.data,
+                    allPage: that.data.allPage,
+                    list:that.data.list.concat(res.data),
                     showNoMore: 1,
                     loading: 0,
                 });
@@ -155,6 +163,7 @@ Page({
     switchCate: function(e) {
         let shopId = this.data.shopId;//商家id
         let categoryId = e.currentTarget.dataset.id;//分类id
+        wx.setStorageSync('categoryId', categoryId);//将分类id存储在缓存中
         let nowId = this.data.nowId;//当前选中的分类id
         if (categoryId == nowId) {//当前选中的分类id与你单击的分类id相同，则不再进行查询
             return false;
@@ -207,9 +216,9 @@ Page({
         });
         let nowId = that.data.nowId;
         if (nowId == 0 || nowId == undefined) {
-            that.getCurrentList(0);
+            that.findProduct(0);
         } else {
-            that.getCurrentList(nowId);
+            that.findProduct(nowId,wx.getStorageSync('categoryId'));
         }
     }
 })

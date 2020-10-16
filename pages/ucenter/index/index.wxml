@@ -104,7 +104,7 @@
     </view>
     <view class="company">
         <view class="c-wrap">
-            <view class="text">艾米巴巴</view>
+            <view class="text">艾米巴</view>
             <view class="line"></view>
         </view>
         <view class="tip">微信小程序商城</view>

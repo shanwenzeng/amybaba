@@ -70,16 +70,17 @@ Page({
         });
     },
     onLoad: function (options) {
-        // this.getFootprintList();
         this.getBrowserHistory();//页面加载时，查询浏览历史
     },
-    deletePrint: function (e) {
+    //删除浏览记录
+    deletetBrowserHistory: function (e) {
         let that = this;
         let id = e.currentTarget.dataset.val;
-        util.request(api.FootprintDelete, { footprintId: id }, 'POST').then(function (res) {
-            if (res.errno === 0) {
+        util.request(api.deletetBrowserHistory, { id: id }).then(function (res) {
+            console.log
+            if (res > 0) {
                 wx.showToast({
-                    title: '取消成功',
+                    title: '删除成功',
                     icon: 'success',
                     mask: true
                 });
@@ -110,6 +111,6 @@ Page({
         that.setData({
             allPage: that.data.allPage + 1
         });
-        that.getFootprintList();
+        //that.getFootprintList();
     }
 })

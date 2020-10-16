@@ -186,12 +186,14 @@ page {
 }
 
 .cancel-print {
-    position: absolute;
+    /* position: absolute;
     top: 20rpx;
-    right: 20rpx;
+    right: 20rpx; */
+    float: right;
     width: 46rpx;
     height: 46rpx;
     z-index: 999;
+    margin-right:10rpx ;
 }
 
 .hidden {
@@ -222,7 +224,10 @@ page {
 .goods-info {
     /* width: 220rpx; */
 }
-
+.nav-center{
+    width: 100%;
+    text-align: center;
+}
 .goods-info .goods-title {
     font-size: 28rpx;
     color: #222;
@@ -234,7 +239,7 @@ page {
     overflow: hidden;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
-    text-align: left;
+    text-align: center;
     /* text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden; */
@@ -251,13 +256,29 @@ page {
     overflow: hidden;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
-    text-align: left;
+    text-align: center;
 }
+.goods-price {
+    font-size: 24rpx;
+    color: #888;
+    margin-bottom: 6rpx;
+    /* height: 64rpx; */
+    display: -webkit-box;
+    word-break: break-all;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    text-align: center;
+    color:red;
+}
+
 
 .goods-info .price-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    text-align: center;
 }
 
 .goods-info .price-container .l {
@@ -279,7 +300,7 @@ page {
     font-size: 22rpx;
     height: 22rpx;
     color: #000;
-    text-align: left;
+    text-align: center;
 }
 
 .goods-info .price-container .l .b {

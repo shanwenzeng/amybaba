@@ -74,7 +74,6 @@ Page({
                     util.request(api.OrderDetail, {
                         order:res[i].id
                     }).then(function(res) {
-                        console.log(res)
                         that.setData({
                             orderDetail:that.data.orderDetail.concat(res.data)
                         });

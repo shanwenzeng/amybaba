@@ -1,3 +1,4 @@
+ <import src="../../../utils/model/model.wxml"/>
 <view class="container">
     <view class='edit-container'>
         <view class="a-item">
@@ -20,8 +21,9 @@
             <view class="icon">
                 <image class="img" src="/images/icon/position.png"></image>
             </view>
-            <view class="input-wrap" bindtap="chooseRegion">
-                <input cursor-spacing='100' class="a-input" value="{{address.province}}{{address.city}}{{address.district}}" disabled="true" placeholder="选择省份、城市、区县" />
+            <view class="input-wrap" bindtap="translate">
+                <input cursor-spacing='100' class="a-input" value="{{address.province}}-{{address.city}}-{{address.district}}" disabled="true" placeholder="选择省份、城市、区县" />
+                <template is="areaData" data="{{...item}}"/>
                 <view class="arrow"></view>
             </view>
         </view>

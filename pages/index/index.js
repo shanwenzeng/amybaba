@@ -24,6 +24,7 @@ Page({
         longitude:'',
         latitude:'',
         distance:'',
+        imageUrl:'http://localhost:8081/jxambb/',
     },
     onHide:function(){
         this.setData({
@@ -56,7 +57,7 @@ Page({
     onShareAppMessage: function () {
         let info = wx.getStorageSync('userInfo');
         return {
-            title: '艾米巴巴',
+            title: '艾米巴',
             desc: '',
             path: '/pages/index/index?id=' + info.id
         }
@@ -68,19 +69,8 @@ Page({
     },
     getIndexData: function () {
         let that = this;
-        util.request(api.IndexUrl).then(function (res) {
-            if (res.errno === 0) {
-                that.setData({
-                    // floorGoods: res.data.categoryList,
-                    // banner: res.data.banner,
-                    //channel: res.data.channel,
-                    // notice: res.data.notice,
-                    loading: 1,
-                });
-            }
-        });
         //商品轮播
-        util.request(api.GoodsCarouselUrl,{},'POST').then(function (res) {
+        util.request(api.GetProduct,{isCarousel:'是'}).then(function (res) {
             if (res.data.length> 0) {
                that.setData({
                    banner: res.data,
@@ -89,7 +79,7 @@ Page({
            }
        });
         //广告或通知
-        util.request(api.Advert,{},'POST').then(function (res) {
+        util.request(api.Advert).then(function (res) {
             if (res.data.length> 0) {
                 that.setData({
                     notice: res.data,
@@ -98,8 +88,8 @@ Page({
                 });
             }
         });
-       //推荐好物
-       util.request(api.recommendGoods,{},'POST').then(function (res) {
+       //产品分类
+       util.request(api.recommendGoods).then(function (res) {
             if (res.data.length> 0) {
                 that.setData({
                     channel: res.data,
@@ -126,13 +116,13 @@ Page({
                                     }
                                 }
                             }
-                            that.setData({recommendShops: res.data,loading:0});//所有的距离计算完毕后，进行赋值
+                            that.setData({recommendShops: res.data,loading:1});//所有的距离计算完毕后，进行赋值
                         }
                     });
                 }
             }
         });
-       
+
     },
     onLoad: function (options) {
         let systemInfo = wx.getStorageSync('systemInfo');

@@ -1,9 +1,14 @@
 var util = require('../../../utils/util.js');
 var api = require('../../../config/api.js');
+var model = require('../../../utils/model/model.js')
 var app = getApp();
+var show = false;
+var item = {};
 Page({
     data: {
-
+        item: {
+            show: show
+          },
         address: {
             id: 0,
             province_id: 0,
@@ -13,7 +18,13 @@ Page({
             full_region: '',
             name: '',
             phone: '',
-            isDefault: 0
+            isDefault: 0,
+            province:'',
+            city:'',
+            district:'',
+            // province:'请选择省份',
+            // city:'城市',
+            // district:'区县',
         },
         addressId: 0,
         openSelectRegion: false,
@@ -190,9 +201,31 @@ Page({
         }
         this.getRegionList(1);
     },
-    onReady: function() {
-
+    onReady: function(e) {
+        var that = this;
+        //请求数据
+        model.updateAreaData(that, 0, e);
     },
+      //点击选择城市按钮显示picker-view
+  translate: function (e) {
+    model.animationEvents(this, 0, true,400);  
+  },
+  //隐藏picker-view
+  hiddenFloatView: function (e) {
+    model.animationEvents(this, 200, false,400);
+  },
+  //滑动事件
+  bindChange: function (e) {
+    model.updateAreaData(this, 1, e);
+    item = this.data.item;
+    let address = this.data.address;
+    address.province = item.provinces[item.value[0]].name;
+    address.city= item.citys[item.value[1]].name;
+    address.district= item.countys[item.value[2]].name;
+    this.setData({
+        address:address
+    });
+  },
     selectRegionType(event) {
         let that = this;
         let regionTypeIndex = event.target.dataset.regionTypeIndex;
@@ -322,7 +355,6 @@ Page({
     //保存地址
     saveAddress() {
         let address = this.data.address;
-        console.log(address)
         if (address.name == '' || address.name == undefined) {
             util.showErrorToast('请输入姓名');
             return false;
@@ -343,10 +375,10 @@ Page({
         util.request(api.SaveAddress, {
             name: address.name,
             phone: address.phone,
-            province: address.province_name,
-            city: address.city_name,
-            district: address.district_name,
-            detailAddress: address. detailAddress,
+            province: address.province,
+            city: address.city,
+            district: address.district,
+            detailAddress: address.detailAddress,
             isDefault: address.isDefault==0?'否':'是',
             customer:{id:wx.getStorageSync('openId')}
         }).then(function(res) {

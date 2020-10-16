@@ -30,7 +30,7 @@
 						</view>
 					</view>
 					<view class='goods-sum'>
-						<view class="text">共{{gitem.amount}}件</view>
+						<view class="text">共{{item.amount}}件</view>
 						<view class="arrow"></view>
 					</view>
 				</view>
@@ -38,7 +38,7 @@
 			<view class='order-price-wrap'>
 				<view class='order-price'>
 					<view class='price-label'>总价：¥</view>
-					<view class='price-sum'>{{gitem.price}}</view>
+					<view class='price-sum'>{{item.totalPrice}}</view>
 				</view>
 			</view>
 			<!-- 待付款 -->

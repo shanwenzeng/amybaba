@@ -1,3 +1,5 @@
+/* 引入省市区选择器样式 */
+@import '../../../utils/model/model.wxss';
 page {
     min-height: 100%;
     background-color: #f8f8f8;

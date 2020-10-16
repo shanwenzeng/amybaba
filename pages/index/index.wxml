@@ -13,8 +13,8 @@
     <view class='banner-wrap'>
         <swiper class="banner" indicator-dots="true" autoplay="{{autoplay}}" interval="3000" duration="1000"   >
             <swiper-item wx:for="{{banner}}"  wx:key="id">
-                <navigator>
-                    <image src="../../{{item.image}}" background-size="cover"></image>
+                <navigator url="/pages/goods/goods?id={{item.id}}">
+                    <image src="/{{item.photo}}" background-size="cover"></image>
                 </navigator>
             </swiper-item>
         </swiper>
@@ -34,31 +34,34 @@
     <swiper class="catalog-wrap" indicator-dots="{{false}}" indicator-color="#dedede" indicator-active-color="#e00000" wx:if="{{show_channel}}">
         <swiper-item class="first">
             <!-- 分类 -->
-            <view wx:for="{{channel}}" wx:if="{{channel.length >0}}" wx:key="id" class='icon-navi' data-cateid="{{item.id}}" bindtap="goCategory">
-                <image class='icon-img' src="../../{{item.icon}}"></image>
+            <view wx:for="{{channel}}" wx:if="{{channel.length >0}}" wx:key="id" class='icon-navi' data-cateid="{{item.id}}" >
+              <navigator url="/pages/search/search?keyword={{item.name}}">
+                <image class='icon-img' src="/{{item.icon}}"></image>
                 <view class='icon-text'>{{item.name}}</view>
+                </navigator>
             </view>
         </swiper-item>
         <swiper-item class="first" wx:if="{{channel.length > 6}}">
             <navigator wx:for="{{channel}}" wx:key="id" hover-class="none" class='icon-navi' url="/pages/category/index?id={{item.id}}" wx:if="{{item.sort_order > 6 && item.sort_order < 12}}">
-                <image class='icon-img' src="../../{{item.icon}}"></image>
+                <image class='icon-img' src="/{{item.icon}}"></image>
                 <view class='icon-text'>{{item.name}}</view>
             </navigator>
         </swiper-item>
         <swiper-item class="first" wx:if="{{channel.length > 11}}">
             <navigator wx:for="{{channel}}" hover-class="none" class='icon-navi' url="/pages/category/index?id={{item.id}}" wx:if="{{item.sort_order > 10}}">
-                <image class='icon-img' src="../../{{item.icon}}"></image>
+                <image class='icon-img' src="/{{item.icon}}"></image>
                 <view class='icon-text'>{{item.name}}</view>
             </navigator>
         </swiper-item>
     </swiper>
     <!-- 推荐商家 -->
-    <view class="no-more-goods">---推荐商家---</view>
+
+    <view class="no-more-goods" wx:if="{{recommendShops.length>0}}">---推荐商家---</view>
     <view class='list-wrap clearfix'>
         <view class="goods-box {{(index+1)%2 == 0?'no-margin':''}}" wx:for="{{recommendShops}}" wx:for-index="index" wx:for-item="item" wx:key="id" >
             <navigator hover-class='none' class='navi-url' url="/pages/category/index?id={{item.id}}">
                 <view class="box">
-                    <image src="../../{{item.photo}}" class="image">
+                    <image src="/{{item.photo}}" class="image">
                         <view wx:if="{{item.is_new == 1}}" class='new-tag'>新品</view>
                     </image>
                     <block wx:if="{{item.goods_number <= 0}}">
@@ -71,8 +74,13 @@
                     <view class="goods-title">{{item.name}}</view>
                     <view class="goods-intro">{{item.address}}</view>
                     <view class="goods-intro">距离您：{{item.distance}}千米</view>
-                    <view class="goods-star">{{item.star}}星</view>
-
+                    <view class="goods-star" wx:if="{{item.star==5}}">★★★★★</view>
+                    <view class="goods-star" wx:if="{{item.star==4}}">★★★★</view>
+                    <view class="goods-star" wx:if="{{item.star==3}}">★★★</view>
+                    <view class="goods-star" wx:if="{{item.star==2}}">★★</view>
+                    <view class="goods-star" wx:if="{{item.star==1}}">★</view>
+                        
+                        
                 </view>
             </navigator>
         </view>
@@ -80,7 +88,7 @@
     <view class="goods-container">
         <view class='topic-container' wx:for="{{floorGoods}}" wx:key="id">
             <view class='banner-container' bindtap="goCategory" data-cateid="{{item.id}}" wx:if="{{index_banner_img == 1}}">
-                <image mode='aspectFill' style="width:100%;height:{{item.height}}rpx" src='../../{{item.photo}}'>
+                <image mode='aspectFill' style="width:100%;height:{{item.height}}rpx" src='../../{item.photo}}'>
                 </image>
                 <view class="bg" style="height:{{item.height}}rpx;line-height:{{item.height}}rpx;"></view>
                 <view class="text" style="height:{{item.height}}rpx;line-height:{{item.height}}rpx;">{{item.name}}</view>

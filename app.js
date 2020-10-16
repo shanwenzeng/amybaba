@@ -5,6 +5,7 @@ App({
         deviceInfo: {},
         longitude:'',
         latitude:'',
+        ApiRootUrl:'http://localhost:8081/jxambb/'
     },
     onLaunch: function() {
         this.data.deviceInfo = wx.getSystemInfoSync();
@@ -50,6 +51,7 @@ App({
             avatar: 'http://lucky-icon.meiweiyuxian.com/hio/default_avatar_big.png'
         },
         token: '',
+        ApiRootUrl: 'http://localhost:8081/jxambb/',
     }
 
 })
