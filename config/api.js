@@ -1,7 +1,7 @@
 // const ApiRootUrl = 'http://localhost:8360/api/';
 const ApiRootUrl = 'https://www.hiolabs.com/api/';
-const ApiRootUrlTwo = 'http://localhost:8081/jxambb/';
-// const ApiRootUrlTwo = 'https://yfk.qrzyyn.com/jxambb/';
+// const ApiRootUrlTwo = 'http://localhost:8081/jxambb/';
+const ApiRootUrlTwo = 'https://yfk.qrzyyn.com/jxambb/';
 
 module.exports = {
     // 登录
@@ -51,7 +51,8 @@ module.exports = {
     // DeleteAddress: ApiRootUrl + 'address/deleteAddress', //保存收货地址
     DeleteAddress: ApiRootUrlTwo + 'address/del', //保存收货地址
     // SaveAddress: ApiRootUrl + 'address/saveAddress', //保存收货地址
-    SaveAddress: ApiRootUrlTwo + 'address/add',
+    addAddress: ApiRootUrlTwo + 'address/add',//新增地址
+    editAddress: ApiRootUrlTwo + 'address/edit',//修改地址
     // GetAddresses: ApiRootUrl + 'address/getAddresses',
     GetAddresses: ApiRootUrlTwo + 'address/find',
     RegionList: ApiRootUrl + 'region/list', //获取区域列表
@@ -88,7 +89,8 @@ module.exports = {
     GetBase64: ApiRootUrl + 'qrcode/getBase64', //获取商品详情二维码
     //我的
     FindCustomer: ApiRootUrlTwo + 'consumer/getMe',//查找消费者
+    uploadImage: ApiRootUrlTwo + 'shop/upload',//上传图片
     //获取openId
-    GetOpenId: ApiRootUrlTwo + 'consumer/getOpenId',//获取用户的openId
+    GetOpenId: ApiRootUrlTwo + 'consumer/getOpenId',//获取用户的openId   
 
 };

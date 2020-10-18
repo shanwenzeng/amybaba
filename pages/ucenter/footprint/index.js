@@ -12,6 +12,7 @@ Page({
         size: 8,
         hasPrint: 1,
         showNoMore: 1,
+        ApiRootUrl:app.globalData.ApiRootUrl,//项目根目录
     },
     getFootprintList() {
         let that = this;
@@ -91,7 +92,7 @@ Page({
                     allCount: 0,
                     size: 8
                 });
-                that.getFootprintList();
+                that.getBrowserHistory();//重新加载我的足迹
             }
         });
     },
@@ -111,6 +112,6 @@ Page({
         that.setData({
             allPage: that.data.allPage + 1
         });
-        //that.getFootprintList();
+        //that.getBrowserHistory();
     }
 })

@@ -12,6 +12,7 @@ Page({
         hasUserInfo: false,
         canIUse: wx.canIUse('button.open-type.getUserInfo'),
         status: {},
+        money:'0',//;余额
     },
     goProfile: function (e) {
         let res = util.loginNow();
@@ -31,6 +32,28 @@ Page({
             });
         }
     },
+    //查找消费者余额
+    getMoney(){
+        let that = this;
+        util.request(api.FindCustomer,{id:wx.getStorageSync('openId')}).then(function(res) {
+            if (res!='') {
+                that.setData({
+                   money:res.money
+                });
+                wx.setStorageSync("money",res.money);//将我的余额存入缓存
+            }
+        });
+    },
+    //前往充值中心
+    toMoney: function(e) {
+        let res = util.loginNow();
+        if (res == true) {
+            wx.navigateTo({
+                url: '/pages/ucenter/money/money',
+            });
+        }
+    },
+    //前往地址管理
     toAddressList: function(e) {
         let res = util.loginNow();
         if (res == true) {
@@ -74,6 +97,7 @@ Page({
         this.setData({
             userInfo: userInfo,
         });
+        this.getMoney();//获取余额
         this.getOrderInfo();
         wx.removeStorageSync('categoryId');
     },

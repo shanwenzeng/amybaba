@@ -1,6 +1,7 @@
 var util = require('../../utils/util.js');
 var api = require('../../config/api.js');
-
+//获取应用实例
+const app = getApp()
 Page({
     data: {
         navList: [],
@@ -19,7 +20,8 @@ Page({
         showNoMore: 0,
         loading:0,
         index_banner_img:0,
-        shopId:0
+        shopId:0,
+        ApiRootUrl:app.globalData.ApiRootUrl,//项目根目录
     },
     onLoad: function(options) {
         this.data.shopId=options.id;//保存商家id

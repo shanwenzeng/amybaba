@@ -17,17 +17,17 @@
 		"checkInvalidKey": true,
 		"checkSiteMap": false,
 		"uploadWithSourceMap": true,
+		"compileHotReLoad": false,
 		"babelSetting": {
 			"ignore": [],
 			"disablePlugins": [],
 			"outputPath": ""
 		},
-		"useCompilerModule": false,
+		"useIsolateContext": true,
+		"useCompilerModule": true,
 		"userConfirmedUseCompilerModuleSwitch": false,
-		"compileHotReLoad": false,
 		"useMultiFrameRuntime": false,
 		"useApiHook": true,
-		"useIsolateContext": true,
 		"packNpmManually": false,
 		"packNpmRelationList": []
 	},

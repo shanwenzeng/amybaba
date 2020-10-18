@@ -18,7 +18,7 @@ Page({
             full_region: '',
             name: '',
             phone: '',
-            isDefault: 0,
+            isDefault: '否',
             province:'',
             city:'',
             district:'',
@@ -77,9 +77,9 @@ Page({
     },
     switchChange(e) {
         let status = e.detail.value;
-        let isDefault = 0;
+        let isDefault = '否';
         if (status == true) {
-            isDefault = 1;
+            isDefault = '是';
         }
         let address = 'address.isDefault';
         this.setData({
@@ -199,7 +199,7 @@ Page({
             });
             this.getAddressDetail();
         }
-        this.getRegionList(1);
+        // this.getRegionList(1);
     },
     onReady: function(e) {
         var that = this;
@@ -372,21 +372,26 @@ Page({
             return false;
         }
         let that = this;
-        util.request(api.SaveAddress, {
+        let url=api.addAddress;//新增地址
+        if(this.data.address.id!=0){
+            url=api.editAddress;//修改地址
+        }
+        util.request(url, {
+            id:address.id,
             name: address.name,
             phone: address.phone,
             province: address.province,
             city: address.city,
             district: address.district,
             detailAddress: address.detailAddress,
-            isDefault: address.isDefault==0?'否':'是',
+            isDefault: address.isDefault,
             customer:{id:wx.getStorageSync('openId')}
         }).then(function(res) {
             if (res.code > 0) {
                 util.showSuccessToast('保存成功');
                setTimeout(function(){
                     wx.navigateBack();
-               },2000);
+               },1000);
             }
         });
     },

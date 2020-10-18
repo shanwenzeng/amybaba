@@ -20,7 +20,8 @@ Page({
         startY: 0,
         hasCartGoods: 0,
         totalMoney:'',
-        totalAmount:''
+        totalAmount:'',
+        ApiRootUrl:app.globalData.ApiRootUrl,//项目根目录
     },
     onLoad: function() {
     },
@@ -64,11 +65,11 @@ Page({
                 let totalAmount=0;//购物车总数量
                 let totalMoney=0;//总金额
                 for(let i=0;i<res.data.length;i++){
-                    totalAmount=parseInt(totalAmount)+parseInt(res.data[i].amount);
                     if(res.data[i].checked=="1"){
+                        totalAmount=parseInt(totalAmount)+parseInt(res.data[i].amount);
                         totalMoney=totalMoney+parseFloat(res.data[i].amount)*parseFloat(res.data[i].price)
-                        }
-                     }
+                    }
+                }
                 that.setData({
                     cartGoods: res.data,
                     cartTotal: res.data.length,
@@ -77,10 +78,10 @@ Page({
                     totalMoney:totalMoney
                 });
                 //设置导航栏中购物车中的总数量
-                wx.setTabBarBadge({
-                    index: 2,//2代表第3个导航
-                    text: totalAmount.toString()//导航栏中的文本
-                })
+                // wx.setTabBarBadge({
+                //     index: 2,//2代表第3个导航
+                //     text: totalAmount.toString()//导航栏中的文本
+                // })
 
             }
             that.setData({
@@ -113,61 +114,26 @@ Page({
             'cartTotal.checkedGoodsAmount': checkedGoodsAmount,
         });
     },
+    //全选与反选
     checkedAll: function() {
-        let that = this;
-        if (!this.data.isEditCart) {
-            var productIds = this.data.cartGoods.map(function(v) {
-                return v.id;
-            });
-             util.request(api.batchEditshoppingcart,productIds).then(function(res) {
-                if (res > 0) {
-                    that.getCartList();//重新加载购物车
-                }
-                // that.setData({
-                //     checkedAllStatus: that.isCheckedAll()
-                // });
-            });
-            // let totalAmount=0;//购物车总数量
-            // let totalMoney=0;//总金额
-            // let goods=this.data.cartGoods;
-            // for(let i=0;i<goods.length;i++){
-            //     totalAmount=parseInt(totalAmount)+parseInt(goods[i].amount);
-            //     totalMoney=totalMoney+parseFloat(goods[i].amount)*parseFloat(goods[i].price)
-            // }
-            // that.setData({
-            //     totalAmount:totalAmount,
-            //     totalMoney:totalMoney
-            // });
-            // util.showErrorToast(this.data.cartTotal)
-            // util.request(api.CartChecked, {
-            //     productIds: productIds.join(','),
-            //     isChecked: that.isCheckedAll() ? 0 : 1
-            // }, 'POST').then(function(res) {
-            //     console.log(res)
-            //     if (res.errno === 0) {
-            //         that.setData({
-            //             cartGoods: res.data.cartList,
-            //             cartTotal: res.data.cartTotal
-            //         });
-            //     }
-            //     that.setData({
-            //         checkedAllStatus: that.isCheckedAll()
-            //     });
-            // });
-        } else {
-            //编辑状态
-            let checkedAllStatus = that.isCheckedAll();
-            let tmpCartData = this.data.cartGoods.map(function(v) {
-                v.checked = !checkedAllStatus;
-                return v;
-            });
-            getCheckedGoodsCount();
-            that.setData({
-                cartGoods: tmpCartData,
-                checkedAllStatus: that.isCheckedAll(),
-            });
+        let cartGoods=this.data.cartGoods;
+        let totalAmount=0;//购物车总数量
+        let totalMoney=0;//总金额
+        for (let i = 0; i < cartGoods.length; i++) {
+            if(this.data.checkedAllStatus==true){
+                cartGoods[i].checked=0;   
+            }else{
+                cartGoods[i].checked=1;   
+                totalAmount=parseInt(totalAmount)+parseInt(cartGoods[i].amount);
+                totalMoney=totalMoney+parseFloat(cartGoods[i].amount)*parseFloat(cartGoods[i].price)
+            }         
         }
-
+        this.setData({
+            cartGoods:cartGoods,
+            checkedAllStatus:!this.data.checkedAllStatus,
+            totalAmount:totalAmount,
+            totalMoney:totalMoney
+        });
     },
     //修改数量
     updateCart: function(itemIndex, amount,id) {
@@ -252,7 +218,6 @@ Page({
                 if (res.code > 0) {
                     that.getCartList();//选择商品后，重新加载数据
                 }
-
                 that.setData({
                     checkedAllStatus: that.isCheckedAll()
                 });

@@ -11,7 +11,7 @@
                     <view class="text">{{item.province}}{{item.city}}{{item.district}}</view>
                 </view>
                 <view class="name">
-                    <view class="text">{{item.customer.name}} {{item.phone}}</view>
+                    <view class="text">{{item.name}} {{item.phone}}</view>
                     <view class="default" wx:if="{{item.isDefault=='是'}}">默认</view>
                 </view>
             </view>

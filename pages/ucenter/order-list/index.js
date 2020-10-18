@@ -14,7 +14,8 @@ Page({
         showType: 9,
         hasOrder: 0,
         showTips: 0,
-        status: {}
+        status: {},
+        ApiRootUrl:app.globalData.ApiRootUrl,//项目根目录
     },
     toOrderDetails: function(e) {
         let orderId = e.currentTarget.dataset.id;

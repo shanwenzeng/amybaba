@@ -1,0 +1,65 @@
+<view class="container">
+    <view class="order-container">
+        <view class='header' data-index='0' bindtap='toOrderListTap'>
+            <view class='top-title'>
+                <view class='left-line'></view>
+                <view class='text'>我的余额</view>
+            </view>
+        </view>
+        <view class='btn-container'>
+            <view class='icon-wrap' style="text-align:center;margin:0 auto;">
+                <view class='order-icon-wrap'>
+                    <image class='order-icon' src='/images/icon/money.png'>
+                    </image>
+                </view>
+                 <view class="sym">{{money}}元</view>
+            </view>
+        </view>
+        <view class="line"></view>
+        <view class="content">请选择充值金额</view>
+        <view class="line"></view>
+        <view class='btn-container'>
+            <view class='icon-wrap' data-index='100' bindtap='chooseMoney'>
+                <view class='order-icon-wrap' wx:if="{{choose==100}}">
+                    <image class='order-icon' src='/images/icon/recharged.jpg'>
+                    </image>
+                </view>
+                <view class='order-icon-wrap' wx:else>
+                    <image class='order-icon' src='/images/icon/recharge.jpg'>
+                    </image>
+                </view>
+                <text class='order-txt'>100元</text>
+            </view>
+            <view class='icon-wrap' data-index='200' bindtap='chooseMoney'>
+                 <view class='order-icon-wrap' wx:if="{{choose==200}}">
+                    <image class='order-icon' src='/images/icon/recharged.jpg'>
+                    </image>
+                </view>
+                <view class='order-icon-wrap' wx:else>
+                    <image class='order-icon' src='/images/icon/recharge.jpg'>
+                    </image>
+                </view>
+                <text class='order-txt'>200元</text>
+            </view>
+            <view class='icon-wrap' data-index='500' bindtap='chooseMoney'>
+                 <view class='order-icon-wrap' wx:if="{{choose==500}}">
+                    <image class='order-icon' src='/images/icon/recharged.jpg'>
+                    </image>
+                </view>
+                <view class='order-icon-wrap' wx:else>
+                    <image class='order-icon' src='/images/icon/recharge.jpg'>
+                    </image>
+                </view>
+                <text class='order-txt'>500元</text>
+            </view>
+        </view>
+        <view class="line"></view>
+         <view class='btn-container'>
+        <input value="{{choose}}" min placeholder="请输入充值金额" type="number" cursor-spacing="100" bindblur="inputMoney" />
+         </view>
+        <view class="line"></view>
+         <view class='btn-container'>
+         <button style="width:80%;background-color:green;color:white;" bindtap="rechangeMoney" >立即充值</button>
+         </view>
+    </view>
+</view>

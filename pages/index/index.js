@@ -24,7 +24,7 @@ Page({
         longitude:'',
         latitude:'',
         distance:'',
-        imageUrl:'http://localhost:8081/jxambb/',
+        ApiRootUrl:app.globalData.ApiRootUrl,//项目根目录
     },
     onHide:function(){
         this.setData({

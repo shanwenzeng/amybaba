@@ -18,6 +18,7 @@ Page({
         salesSortOrder:'desc',
         categoryId: 0,
         historyId:[],
+        ApiRootUrl:app.globalData.ApiRootUrl,//项目根目录
     },
     //事件处理函数
     closeSearch: function () {

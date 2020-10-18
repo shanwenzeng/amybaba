@@ -28,7 +28,8 @@ Page({
         current: 0,
         showShareDialog:0,
         userInfo:{},
-        autoplay:true
+        autoplay:true,
+        ApiRootUrl:app.globalData.ApiRootUrl,//项目根目录
     },
     hideDialog: function (e) {
         let that = this;

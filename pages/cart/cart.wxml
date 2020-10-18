@@ -10,7 +10,7 @@
 				<view class="goods-info">
 					<navigator class="goods-url" hover-class="none" url="/pages/goods/goods?id={{item.goods.id}}">
 						<view class="img-box">
-							<image src="/{{item.photo}}" class="img" />
+							<image src="{{ApiRootUrl}}{{item.photo}}" class="img" />
 						</view>
 						<view class="text-box">
 							<view class="{{item.number >0 && item.is_on_sale == 1?'goods-title':'out-stock-title'}}">{{item.standard}}</view>

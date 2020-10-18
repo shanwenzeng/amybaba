@@ -24,6 +24,35 @@
             </view>
         </view>
     </view>
+    
+    <view class="order-container">
+        <view class='header' data-index='0' bindtap='toOrderListTap'>
+            <view class='top-title'>
+                <view class='left-line'></view>
+                <view class='text'>我的余额</view>
+            </view>
+            <view class='see-more'>
+                <view class="text">查看交易明细</view>
+                <view class="arrow"></view>
+            </view>
+        </view>
+        <view class='btn-container'>
+          <view class='icon-wrap' data-index='1'>
+                <view class='order-icon-wrap'>
+                    <image class='order-icon' src='/images/icon/money.png'>
+                    </image>
+                </view>
+                <text class='order-txt'>{{money}}元</text>
+            </view>
+          <view class='icon-wrap' data-index='2' bindtap='toMoney'>
+                <view class='order-icon-wrap'>
+                    <image class='order-icon' src='/images/icon/recharge.jpg'>
+                    </image>
+                </view>
+                <text class='order-txt'>充值中心</text>
+            </view>
+        </view>
+    </view>
     <view class="order-container">
         <view class='header' data-index='0' bindtap='toOrderListTap'>
             <view class='top-title'>
@@ -72,8 +101,6 @@
             </view>
             <view class="arrow"></view>
         </view>
-    </view>
-    <view class="li-wrap">
         <view class="list" bindtap="toFootprint">
             <view class="list-l">
                 <view class="icon">
@@ -101,12 +128,5 @@
             </view>
             <view class="arrow"></view>
         </view>
-    </view>
-    <view class="company">
-        <view class="c-wrap">
-            <view class="text">艾米巴</view>
-            <view class="line"></view>
-        </view>
-        <view class="tip">微信小程序商城</view>
     </view>
 </view>

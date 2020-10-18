@@ -1,15 +1,13 @@
 <view class="container">
     <view class='about-wrap'>
         <view class='title'>艾米巴</view>
-        <view class='content'>
-            微信小程序商城
-        </view>
         <view class="line"></view>
-        <view class="content">开发者：xxxx</view>
-        <view class="content">微信：xxxxxx</view>
+        <view class="content">公司网址：www.aimiba.com.cn</view>
         <view class="line"></view>
-        <view class='content'>
-            xxxxxxxxxx
-        </view>
+        <view class="content">客服电话：18079978087</view>
+        <view class="line"></view>
+        <view class="content">欢迎您的加盟</view>
+        <view class="line"></view>
+        <view class="content">公众号：艾米巴</view>
     </view>
 </view>
