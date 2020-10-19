@@ -1,7 +1,7 @@
 <!-- 当前位置 -->
 <view style="height:25px;line-height:25px;margin-left:10px;">
     <image class="icon" src="/images/icon/location.png"></image>
-    <text style="margin-left:8px;">{{currentLocation}}</text>
+    <text style="margin-left:8px;color: #999;">{{currentLocation}}</text>
 </view>
 <view class="container" wx:if="{{loading == 1}}">
 

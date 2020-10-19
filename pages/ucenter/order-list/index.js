@@ -72,17 +72,11 @@ Page({
                 let count = res.length;
                 for(let i=0;i<res.length;i++){
                     res[i].createTime=util.formatTime(new Date(res[i].createTime))//重新设置时间格式
-                    util.request(api.OrderDetail, {
-                        order:res[i].id
-                    }).then(function(res) {
-                        that.setData({
-                            orderDetail:that.data.orderDetail.concat(res.data)
-                        });
-                    });
+                    res[i].allImage=res[i].allImage.split(",");
                 }
                 that.setData({
                     allCount: count,
-                    allOrderList: that.data.allOrderList.concat(res),
+                    // allOrderList: that.data.allOrderList.concat(res),
                     // allPage: res.data.currentPage,
                     orderList: that.data.allOrderList.concat(res)
                 });

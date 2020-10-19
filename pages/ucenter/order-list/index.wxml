@@ -18,15 +18,15 @@
 			<view class='list-top-wrap'>
 				<view class='time'>{{item.createTime}}</view>
 				<view class='status'>
-					<view class="pay-status" wx:if="{{item.orderStatus}}">线下支付订单</view>
+					<!-- <view class="pay-status" wx:if="{{item.orderStatus}}">线下支付订单</view> -->
 					<view class="order-status">{{item.shipStatus}}</view>
 				</view>
 			</view>
 			<view class="goods-list">
 				<view class="a-goods">
 					<view class="img-box">
-						<view class='image-wrap' wx:for="{{orderDetail}}" wx:key="id" wx:for-item="gitem" wx:if="{{index<4}}">
-							<image src="{{gitem.image}}" class="goods-image" />
+						<view class='image-wrap' wx:for="{{item.allImage}}" wx:key="id" wx:for-item="gitem" wx:if="{{index<4}}">
+							<image src="{{ApiRootUrl}}{{gitem}}" class="goods-image" />
 						</view>
 					</view>
 					<view class='goods-sum'>
@@ -49,6 +49,6 @@
 				<view class="dele-btn">查看详情</view>
 			</view>
 		</view>
-		<view wx:if="{{showTips}}" class="no-more-goods">没有更多商品啦</view>
+		<view wx:if="{{showTips}}" class="no-more-goods">没有更多订单啦</view>
 	</view>
 </view>

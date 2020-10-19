@@ -394,14 +394,14 @@ function getLocation(callback){
             //     longitude: that.data.longitude
             // },
             success: function (res) {
-                console.log("获取地址成功：" + res.result.ad_info.city);
+                // console.log("获取地址成功：" + res.result.ad_info.city);
                 callback(res);//回调函数
             },
             fail: function (res) {
                 console.log("获取地址失败" + res);
             },
             complete: function (res) {
-                console.log(res);
+                // console.log(res);
             }
             });
         }

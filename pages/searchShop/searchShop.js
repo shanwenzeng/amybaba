@@ -120,9 +120,9 @@ Page({
             searchStatus: false
         });
     },
-    findShopByKeyword: function (keyword) {
+    findShopByKeyword: function (keyword,orderCondition,orderType) {
         let that = this;
-        util.request(api.findShopByKeyword,{condition:keyword}).then(function(res) {
+        util.request(api.findShopByKeyword,{condition:keyword,orderCondition:orderCondition,orderType:orderType}).then(function(res) {
             if (res.data.length > 0) {//查询到产品
                 that.setData({
                     searchStatus: true,
@@ -135,47 +135,46 @@ Page({
             that.findSearchHistory();
         });
     },
+    //点击搜索历史时执行
     onKeywordTap: function (event) {
         this.getSearchResult(event.target.dataset.keyword);
-        console.log(event.target.dataset.keyword)
     },
     getSearchResult(keyword) {
-        util.showErrorToast(keyword)
         this.setData({
             keyword: keyword,
             page: 1,
             categoryId: 0,
             shopList: []
         });
-
+        wx.setStorageSync('keyword', keyword);//保存查询关键字到缓存中，方便分类查询时使用
         this.findShopByKeyword(keyword);
     },
     openSortFilter: function (event) {
         let currentId = event.currentTarget.id;
         switch (currentId) {
-            case 'salesSort':
-                let _SortOrder = 'asc';
+            case 'highOpinionSort'://好评排序
+                let highOpinionOrder = 'asc';
                 if (this.data.salesSortOrder == 'asc') {
-                    _SortOrder = 'desc';
+                    highOpinionOrder = 'desc';
                 }
                 this.setData({
-                    'currentSortType': 'sales',
+                    'currentSortType': 'highOpinion',
                     'currentSortOrder': 'asc',
-                    'salesSortOrder': _SortOrder
+                    'salesSortOrder': highOpinionOrder
                 });
-                this.findShopByKeyword();
+                this.findShopByKeyword(wx.getStorageSync('keyword'),'highOpinionOrder',highOpinionOrder);
                 break;
-            case 'priceSort':
-                let tmpSortOrder = 'asc';
+            case 'distanceSort'://按距离排序
+                let distanceSortOrder = 'asc';
                 if (this.data.currentSortOrder == 'asc') {
-                    tmpSortOrder = 'desc';
+                    distanceSortOrder = 'desc';
                 }
                 this.setData({
-                    'currentSortType': 'price',
-                    'currentSortOrder': tmpSortOrder,
+                    'currentSortType': 'distance',
+                    'currentSortOrder': distanceSortOrder,
                     'salesSortOrder': 'asc'
                 });
-                this.findShopByKeyword();
+                this.findShopByKeyword(wx.getStorageSync('keyword'),'distanceSort',distanceSortOrder);
                 break;
             default:
                 //综合排序
@@ -184,7 +183,7 @@ Page({
                     'currentSortOrder': 'desc',
                     'salesSortOrder': 'desc'
                 });
-                this.findShopByKeyword();
+                this.findShopByKeyword(wx.getStorageSync('keyword'),compositeSort,'default');
         }
     },
     onKeywordConfirm(event) {

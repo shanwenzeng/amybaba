@@ -24,7 +24,7 @@ Page({
         longitude:'',
         latitude:'',
         distance:'',
-        currentLocation:'',//当前位置
+        currentLocation:'地址获取中......',//当前位置
         ApiRootUrl:app.globalData.ApiRootUrl,//项目根目录
     },
     onHide:function(){

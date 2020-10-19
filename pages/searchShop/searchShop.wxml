@@ -36,17 +36,17 @@
                 <view class="item {{currentSortType == 'default' ? 'active' : ''}}" bindtap="openSortFilter" id="defaultSort">
                     <view class="txt">综合</view>
                 </view>
-                <view class="item {{currentSortType == 'price' ? 'active' : ''}}" bindtap="openSortFilter" id="priceSort">
+                <view class="item {{currentSortType == 'price' ? 'active' : ''}}" bindtap="openSortFilter" id="distanceSort">
                     <view class="txt">距离</view>
-                    <image class="icon" src="/images/icon/order-by.png" wx:if="{{currentSortType == 'default' || currentSortType == 'sales'}}"></image>
+                    <image class="icon" src="/images/icon/order-by.png" wx:if="{{currentSortType == 'default' || currentSortType == 'highOpinion'}}"></image>
                     <block wx:else>
                         <image class="icon" wx:if="{{currentSortOrder == 'asc'}}" src='/images/icon/asc.png'></image>
                         <image class="icon" wx:elif="{{currentSortOrder == 'desc'}}" src='/images/icon/desc.png'></image>
                     </block>
                 </view>
-                <view class="item {{currentSortType == 'sales' ? 'active' : ''}}" bindtap="openSortFilter" id="salesSort">
+                <view class="item {{currentSortType == 'sales' ? 'active' : ''}}" bindtap="openSortFilter" id="highOpinionSort">
                     <view class="txt">好评</view>
-                    <image class="icon" src="/images/icon/order-by.png" wx:if="{{currentSortType == 'default' || currentSortType == 'price'}}"></image>
+                    <image class="icon" src="/images/icon/order-by.png" wx:if="{{currentSortType == 'default' || currentSortType == 'distance'}}"></image>
                     <block wx:else>
                         <image class="icon" wx:if="{{salesSortOrder == 'asc'}}" src='/images/icon/asc.png'></image>
                         <image class="icon" wx:elif="{{salesSortOrder == 'desc'}}" src='/images/icon/desc.png'></image>
@@ -76,6 +76,11 @@
                                 <view class='price-container'>
                                     <view class='l'>
                                         <view class='h'>{{iitem.name}}</view>
+                                        <view class="h" wx:if="{{iitem.star==5}}">★★★★★</view>
+                                        <view class="h" wx:if="{{iitem.star==4}}">★★★★</view>
+                                        <view class="h" wx:if="{{iitem.star==3}}">★★★</view>
+                                        <view class="h" wx:if="{{iitem.star==2}}">★★</view>
+                                        <view class="h" wx:if="{{iitem.star==1}}">★</view>
                                     </view>
                                 </view>
                             </view>
@@ -84,7 +89,7 @@
                 </view>
             </view>
         </view>
-        <view class='no-more'>没有更多商品了</view>
+        <view class='no-more'>没有更多商家了</view>
     </view>
 
     <view class="search-result-empty" wx:if="{{!shopList.length && searchStatus}}">
