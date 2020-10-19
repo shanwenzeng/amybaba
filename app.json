@@ -21,7 +21,9 @@
     "pages/payResult/payResult",
     "pages/payOffline/index",
     "pages/shop/shop",
-    "pages/ucenter/money/money"
+    "pages/ucenter/money/money",
+    "pages/ucenter/enter/enter",
+    "pages/searchShop/searchShop"
   ],
   "window": {
     "backgroundTextStyle": "light",

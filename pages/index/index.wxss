@@ -922,3 +922,7 @@ page {
     height: 140rpx;
     width: 140rpx;
 }
+.icon {
+    width: 30rpx;
+    height: 30rpx;
+}

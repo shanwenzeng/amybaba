@@ -380,30 +380,22 @@ function findDistance(lat,long,callback){
     });
 }
 // 获取位置,得用腾讯地图
-function getLocation(){
+function getLocation(callback){
     var that = this
     wx.getLocation({
         type: 'wgs84', // 默认为 wgs84 返回 gps 坐标，gcj02 返回可用于 wx.openLocation 的坐标
         success: function (res) {
-            console.log(res)
-            that.setData({
-            longitude: res.longitude,
-            latitude: res.latitude
-            })
-                app.globalData.longitude = res.longitude;
-                app.globalData.latitude = res.latitude;
-                console.log(app.globalData.longitude+":::::"+app.globalData.latitude )
             var qqmapsdk = new QQMapWX({
             key: 'AUFBZ-PBMW3-L343G-YPN7H-NXVK7-QKB6C' // 必填
             });
             qqmapsdk.reverseGeocoder({
-            location: {
-                latitude: that.data.latitude,
-                longitude: that.data.longitude
-            },
+            // location: {
+            //     latitude: that.data.latitude,
+            //     longitude: that.data.longitude
+            // },
             success: function (res) {
                 console.log("获取地址成功：" + res.result.ad_info.city);
-                // 
+                callback(res);//回调函数
             },
             fail: function (res) {
                 console.log("获取地址失败" + res);

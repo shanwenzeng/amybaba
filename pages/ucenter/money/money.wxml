@@ -55,7 +55,7 @@
         </view>
         <view class="line"></view>
          <view class='btn-container'>
-        <input value="{{choose}}" min placeholder="请输入充值金额" type="number" cursor-spacing="100" bindblur="inputMoney" />
+        <input value="{{choose}}" min placeholder="请输入充值金额" type="number" cursor-spacing="100" bindinput="inputMoney" />
          </view>
         <view class="line"></view>
          <view class='btn-container'>

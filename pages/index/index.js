@@ -24,6 +24,7 @@ Page({
         longitude:'',
         latitude:'',
         distance:'',
+        currentLocation:'',//当前位置
         ApiRootUrl:app.globalData.ApiRootUrl,//项目根目录
     },
     onHide:function(){
@@ -32,8 +33,9 @@ Page({
         })
     },
     goSearch: function () {
+        //搜索商家
         wx.navigateTo({
-            url: '/pages/search/search',
+            url: '/pages/searchShop/searchShop',
         })
     },
     goCategory: function (e) {
@@ -124,9 +126,20 @@ Page({
         });
 
     },
+    //获取消费者当前位置
+    getCurrentLocation:function(){
+        let that=this;
+        util.getLocation(function(res){
+            that.setData({
+                currentLocation:res.result.address
+            });
+        });
+        
+    },
     onLoad: function (options) {
         let systemInfo = wx.getStorageSync('systemInfo');
         var scene = decodeURIComponent(options.scene);
+        this.getCurrentLocation();//获取消费者当前位置
     },
     onShow: function () {        
         this.getIndexData();//获得首页数据

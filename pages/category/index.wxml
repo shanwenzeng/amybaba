@@ -2,7 +2,7 @@
     <view class="search">
         <navigator url="/pages/search/search" class="input">
             <image class="icon" src="/images/icon/search.png"></image>
-            <text class="txt">搜索</text>
+            <text class="txt">搜索商品</text>
         </navigator>
     </view>
     <view class="catalog">

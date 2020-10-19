@@ -19,6 +19,7 @@ module.exports = {
     GetProduct: ApiRootUrlTwo + 'product/find', //商家中的商品信息
     FindProduct: ApiRootUrlTwo + 'product/findProduct', //根据商家id和分类进行商品查询
     findProductByKeyword: ApiRootUrlTwo + 'product/find', //根据商家id和分类进行商品查询
+    findShopByKeyword: ApiRootUrlTwo + 'shop/find', //根据商家id和分类进行商品查询
     CatalogCurrent: ApiRootUrl + 'catalog/current', //分类目录当前分类数据接口
     GetCurrentList: ApiRootUrl + 'catalog/currentlist',
     // 购物车
@@ -89,6 +90,8 @@ module.exports = {
     GetBase64: ApiRootUrl + 'qrcode/getBase64', //获取商品详情二维码
     //我的
     FindCustomer: ApiRootUrlTwo + 'consumer/getMe',//查找消费者
+    addShop: ApiRootUrlTwo + 'shop/add',//新增商家（即商家入驻）
+    editShop: ApiRootUrlTwo + 'shop/edit',//修改商家信息
     uploadImage: ApiRootUrlTwo + 'shop/upload',//上传图片
     //获取openId
     GetOpenId: ApiRootUrlTwo + 'consumer/getOpenId',//获取用户的openId   

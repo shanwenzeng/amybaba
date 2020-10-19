@@ -1,0 +1,68 @@
+<import src="../../../utils/model/model.wxml"/>
+<view class="container">
+    <view class='edit-container'>
+        <view class="a-item">
+            <view class="icon">
+                <image class="img" src="/images/icon/receiver.png"></image>
+            </view>
+            <view class="input-wrap">
+                <input cursor-spacing='100' class='a-input' bindinput="bindinputName" placeholder='商家名称' value="{{shop.name}}"></input>
+            </view>
+        </view>
+        <view class="a-item">
+            <view class="icon">
+                <image class="img" src="/images/icon/receiver.png"></image>
+            </view>
+            <view class="input-wrap">
+                <input cursor-spacing='100' class='a-input' bindinput="bindinputBoss" placeholder='姓名' value="{{shop.boss}}"></input>
+            </view>
+        </view>
+        <view class="a-item">
+            <view class="icon">
+                <image class="img" src="/images/icon/mobile.png"></image>
+            </view>
+            <view class="input-wrap">
+                <input cursor-spacing='100' class='a-input' type='number' bindblur="phoneChange" value="{{shop.phone}}" placeholder='手机号码'></input>
+            </view>
+        </view>
+        <view class="a-item">
+            <view class="icon">
+                <image class="img" src="/images/icon/position.png"></image>
+            </view>
+            <view class="input-wrap" bindtap="translate">
+                <input cursor-spacing='100' class="a-input" value="{{shop.province}}{{shop.city}}{{shop.district}}" disabled="true" placeholder="选择省份、城市、区县" />
+                <template is="areaData" data="{{...item}}"/>
+                <view class="arrow"></view>
+            </view>
+        </view>
+        <view class="a-item">
+            <view class="icon">
+                <image class="img" src="/images/icon/address.png"></image>
+            </view>
+            <view class="input-wrap">
+                <input cursor-spacing='100' class="a-input" bindinput="bindinputAddress" value="{{shop.address}}" placeholder="详细地址, 如街道、小区或写字楼等" />
+            </view>
+        </view>
+    </view>
+
+    <view class='btn-wrap' bindtap="saveShop">
+        <view class="btn active">保存</view>
+    </view>
+    <view class='delete-wrap' wx:if="{{addressId > 0}}" bindtap='deleteAddress'>
+        <view class='btn'>删除</view>
+    </view>
+    <view class="region-select" wx:if="{{openSelectRegion}}">
+        <view class="hd">
+            <view class="region-selected">
+                <view class="item {{item.id == 0 ? 'disabled' : ''}} {{(regionType -1) === index ? 'selected' : ''}}" bindtap="selectRegionType" data-region-type-index="{{index}}" wx:for="{{selectRegionList}}" wx:key="id">{{item.name}}</view>
+            </view>
+            <view class="done {{selectRegionDone ? '' : 'disabled'}}" bindtap="doneSelectRegion">确定</view>
+        </view>
+        <view class="bd">
+            <scroll-view scroll-y class="region-list">
+                <view class="item {{item.selected ? 'selected' : ''}}" bindtap="selectRegion" data-region-index="{{index}}" wx:for="{{regionList}}" wx:key="id">{{item.name}}</view>
+            </scroll-view>
+        </view>
+    </view>
+</view>
+<view class="bg-mask" bindtap="cancelSelectRegion" wx:if="{{openSelectRegion}}"></view>

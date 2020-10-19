@@ -32,7 +32,7 @@
                 <view class='text'>我的余额</view>
             </view>
             <view class='see-more'>
-                <view class="text">查看交易明细</view>
+                <view class="text">查看充值明细</view>
                 <view class="arrow"></view>
             </view>
         </view>
@@ -107,6 +107,15 @@
                     <image class="img" src="/images/icon/icon-footprint-r.png"></image>
                 </view>
                 <view class="text">我的足迹</view>
+            </view>
+            <view class="arrow"></view>
+        </view>
+        <view class="list" bindtap="shopEnter">
+            <view class="list-l">
+                <view class="icon">
+                    <image class="img" src="/images/icon/icon-footprint-r.png"></image>
+                </view>
+                <view class="text">商家入驻</view>
             </view>
             <view class="arrow"></view>
         </view>

@@ -75,6 +75,15 @@ Page({
             });
         }
     },
+    //商家入驻
+    shopEnter: function(e) {
+        let res = util.loginNow();
+        if (res == true) {
+            wx.navigateTo({
+                url: '/pages/ucenter/enter/enter',
+            });
+        }
+    },
     goAuth: function(e) {
         wx.navigateTo({
             url: '/pages/app-auth/index',
