@@ -24,45 +24,6 @@ Page({
             name: name,
         });
     },
-    //选择图片
-    chooseImages:function(){
-        let that =this;
-        wx.chooseImage({
-            count: 1,
-            sizeType: ['original', 'compressed'],
-            sourceType: ['album', 'camera'],
-            success (res) {
-              // tempFilePath可以作为img标签的src属性显示图片
-              const tempFilePaths = res.tempFilePaths
-              that.setData({photo:tempFilePaths});
-            }
-          })
-    },
-     /**
-   * 上传照片
-   */
-  uploadImg: function() {
-    var that = this
-    wx.uploadFile({
-        url: api.uploadImage, //上传图片请求地址
-        filePath: that.data.photo[0],
-        name: 'file',
-        formData: {
-          'user': '黑柴哥'
-        },
-        success: function (res) {
-          var data = res.data
-          console.log(res)
-          if(res.data!="error"){
-              //成功，保存路径到数据库，res.data为返回的路径
-              util.showSuccessToast("图片上传成功！")
-          }else{
-              util.showErrorToast("图片上传失败！，请联系客服")
-          }
-        }
-      })
-},
-
     //查找消费者消息，赋值给文本框
     FindCustomer(){
         let that = this;

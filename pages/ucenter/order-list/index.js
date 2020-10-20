@@ -21,7 +21,7 @@ Page({
         let orderId = e.currentTarget.dataset.id;
         wx.setStorageSync('orderId', orderId)
         wx.navigateTo({
-            url: '/pages/ucenter/order-details/index',
+            url: '/pages/ucenter/order-details/index?id='+orderId,
         })
     },
     payOrder: function(e) {

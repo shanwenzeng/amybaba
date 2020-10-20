@@ -8,11 +8,6 @@
             <image class="icon" src="/images/icon/mobile.png"></image>
             <input class='a-input' bindblur="phoneChange" value="{{phone}}" placeholder='手机号码'></input>
         </view>
-        <view class="a-item">
-            <image class="icon" src="/images/icon/location.png" ></image>
-            <image style="width:60px;height:60px;" src="{{photo}}" bindtap="chooseImages"></image>
-            <button bindtap="uploadImg">上传</button>
-        </view>
     </view>
     <view class='wrap-btn'>
         <view wx:if="{{status == 0}}" class="btn-wrap disable}}">保存</view>

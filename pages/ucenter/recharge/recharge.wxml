@@ -1,0 +1,17 @@
+<view class="container">
+    <view wx:if="{{hasPrint == 1}}" class="print-recharge">
+        <view class="recharge-container" wx:for="{{rechargeList}}"  wx:for-item="item" wx:key="id" wx:for-index="index">
+            <view  class="header">
+                <image class="icon" src="/images/icon/recharged.jpg"></image>
+                <view>
+                    <view>余额充值</view>
+            <view>{{item.createTime}}</view>
+                </view>
+                <view class="see-more">
+                    <view class='text'>+{{item.money}}</view>
+                </view>
+            </view>
+            <view class="line"></view>
+        </view>
+    </view>
+</view>

@@ -26,13 +26,13 @@
     </view>
     
     <view class="order-container">
-        <view class='header' data-index='0' bindtap='toOrderListTap'>
+        <view class='header' data-index='0' bindtap='toRechargeListTap'>
             <view class='top-title'>
                 <view class='left-line'></view>
                 <view class='text'>我的余额</view>
             </view>
             <view class='see-more'>
-                <view class="text">查看充值明细</view>
+                <view class="text">查看交易明细</view>
                 <view class="arrow"></view>
             </view>
         </view>

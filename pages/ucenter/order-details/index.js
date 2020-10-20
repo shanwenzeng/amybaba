@@ -72,8 +72,8 @@ Page({
             url: '/pages/ucenter/address-select/index?id=' + orderId,
         });
     },
-    onLoad: function () {
-
+    onLoad: function (options) {
+        console.log(options.id)
     },
     onShow: function () {
         var orderId = wx.getStorageSync('orderId');

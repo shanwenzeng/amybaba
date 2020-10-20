@@ -45,7 +45,7 @@
 			<view class="order-edit" wx:if="{{item.handleOption.cancel && item.handleOption.pay}}">
 				<view catchtap='payOrder' class="edit-btn" data-orderid="{{item.id}}">继续支付</view>
 			</view>
-			<view wx:else class="order-edit">
+			<view wx:else class="order-edit" >
 				<view class="dele-btn">查看详情</view>
 			</view>
 		</view>

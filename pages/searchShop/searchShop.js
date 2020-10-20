@@ -183,7 +183,7 @@ Page({
                     'currentSortOrder': 'desc',
                     'salesSortOrder': 'desc'
                 });
-                this.findShopByKeyword(wx.getStorageSync('keyword'),compositeSort,'default');
+                this.findShopByKeyword(wx.getStorageSync('keyword'),'compositeSort','default');
         }
     },
     onKeywordConfirm(event) {

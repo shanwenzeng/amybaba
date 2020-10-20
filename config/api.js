@@ -1,7 +1,7 @@
 // const ApiRootUrl = 'http://localhost:8360/api/';
 const ApiRootUrl = 'https://www.hiolabs.com/api/';
-// const ApiRootUrlTwo = 'http://localhost:8081/jxambb/';
-const ApiRootUrlTwo = 'https://yfk.qrzyyn.com/jxambb/';
+const ApiRootUrlTwo = 'http://localhost:8081/jxambb/';
+// const ApiRootUrlTwo = 'https://yfk.qrzyyn.com/jxambb/';
 
 module.exports = {
     // 登录
@@ -93,6 +93,9 @@ module.exports = {
     addShop: ApiRootUrlTwo + 'shop/add',//新增商家（即商家入驻）
     editShop: ApiRootUrlTwo + 'shop/edit',//修改商家信息
     uploadImage: ApiRootUrlTwo + 'shop/upload',//上传图片
+    shopIsExist: ApiRootUrlTwo + 'shop/isExist',//判断商家是否存在
+    investMoney: ApiRootUrlTwo + 'recharge/add',//充值
+    findRecharge: ApiRootUrlTwo + 'recharge/find', //充值列表
     //获取openId
     GetOpenId: ApiRootUrlTwo + 'consumer/getOpenId',//获取用户的openId   
 

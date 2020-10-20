@@ -19,6 +19,7 @@ Page({
             city:'',
             district:'',
             address:'',
+            businessLicense:'/images/icon/add.png'//营业执照
         }
     },
     phoneChange(e) {
@@ -194,6 +195,7 @@ Page({
   },
     //保存商家（即商家入驻）
     saveShop() {
+        this.uploadImg();//保存到数据库前，先将图片上传到服务器
         let shop = this.data.shop;
         if (shop.name == '' || shop.name == undefined) {
             util.showErrorToast('请输入商家名称');
@@ -220,23 +222,36 @@ Page({
         if(this.data.shop.id!=0){
             url=api.editShop;//修改商家信息
         }
-        util.request(url, {
-            id:shop.id,
+        //检查该商家是否已入住
+        util.request(api.shopIsExist,{
             name: shop.name,
             boss: shop.boss,
-            phone: shop.phone,
-            province: shop.province,
-            city: shop.city,
-            district: shop.district,
-            address: shop.address,
-            status:'禁用'
-        }).then(function(res) {
-            if (res.code > 0) {
-                util.showSuccessToast('保存成功');
-               setTimeout(function(){
-                    wx.navigateBack();
-               },1000);
-            }
+            phone: shop.phone,}).then(function(res){
+            if(res.code <=0){
+                //保存商家
+                util.request(url, {
+                    id:shop.id,
+                    name: shop.name,
+                    boss: shop.boss,
+                    phone: shop.phone,
+                    province: shop.province,
+                    city: shop.city,
+                    district: shop.district,
+                    address: shop.address,
+                    status:'禁用',
+                    businessLicense:wx.getStorageSync('photo')
+                }).then(function(res) {
+                    if (res.code > 0) {
+                        util.showSuccessToast('保存成功');
+                    setTimeout(function(){
+                            wx.navigateBack();
+                    },1000);
+                    }
+                });
+            }else{
+                util.showErrorToast("商家已存在，不能重复入驻")
+            }               
+
         });
     },
     onShow: function() {
@@ -258,5 +273,46 @@ Page({
     onUnload: function() {
         // 页面关闭
 
+    },
+    //选择图片
+    chooseImages:function(){
+        let that =this;
+        let shop = this.data.shop;
+        wx.chooseImage({
+            count: 1,
+            sizeType: ['original', 'compressed'],
+            sourceType: ['album', 'camera'],
+            success (res) {
+                // tempFilePath可以作为img标签的src属性显示图片
+                // const tempFilePaths = res.tempFilePaths
+                shop.businessLicense = res.tempFilePaths;
+                that.setData({shop:shop});
+            }
+            })
+    },
+        /**
+     * 上传照片
+     */
+      uploadImg: function() {
+        var that = this
+        wx.uploadFile({
+            url: api.uploadImage, //上传图片请求地址
+            filePath: that.data.shop.businessLicense[0],
+            name: 'file',
+            formData: {
+              'user': '黑柴哥'
+            },
+            success: function (res) {
+              console.log(res)
+              if(res.data!="error"){
+                  //成功，保存路径到数据库，res.data为返回的路径
+                //   util.showSuccessToast("图片上传成功！")
+                  wx.setStorageSync('photo', res.data);//将图片路径，保存在缓存中
+
+              }else{
+                  util.showErrorToast("图片上传失败，请联系客服")
+              }
+            }
+          })
     }
 })

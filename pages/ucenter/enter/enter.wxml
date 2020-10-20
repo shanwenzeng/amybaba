@@ -43,6 +43,12 @@
                 <input cursor-spacing='100' class="a-input" bindinput="bindinputAddress" value="{{shop.address}}" placeholder="详细地址, 如街道、小区或写字楼等" />
             </view>
         </view>
+        <view class="a-item">
+            <text>请上传营业执照</text>
+            <view style="margin-left:10px;">
+                <image style="width:100px;height:100px;" src="{{shop.businessLicense}}" bindtap="chooseImages"></image>
+            </view>
+        </view>
     </view>
 
     <view class='btn-wrap' bindtap="saveShop">

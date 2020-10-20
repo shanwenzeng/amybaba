@@ -22,6 +22,18 @@ Page({
             });
         }
     },
+    //前往交易页面
+    toRechargeListTap: function(event) {
+        let res = util.loginNow();
+        if (res == true) {
+            let showType = event.currentTarget.dataset.index;
+            wx.setStorageSync('showType', showType);
+            wx.navigateTo({
+                url: '/pages/ucenter/recharge/recharge?showType=' + showType,
+            });
+        }
+    },
+    //前往订单页面
     toOrderListTap: function(event) {
         let res = util.loginNow();
         if (res == true) {
