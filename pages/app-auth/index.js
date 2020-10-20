@@ -28,7 +28,7 @@ Page({
             //授权成功，返回前一个页面
             wx.navigateBack();
         }).catch((err) => {});
-        wx.hideloading();//隐藏加载进度条
+        wx.hideLoading();//隐藏加载进度条
     },
     goBack:function(){
         wx.navigateBack();

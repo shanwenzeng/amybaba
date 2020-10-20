@@ -163,6 +163,33 @@ Page({
         });      
     },
     submitOrder: function (e) {
+        //添加订单（即向orderList表中添加数据）
+        util.request(api.generateOrder,{
+            id:'115',
+            number:'20201020145023566',
+            customer:{id:wx.getStorageSync('openId')},
+            orderStatus:'待付款',
+            shipStatus:'待发货',
+        }).then(function(res){
+            if(res.code>0){
+                let orderId=res.data;
+                pay.payOrder(parseInt(orderId)).then(res => {
+                    wx.redirectTo({
+                        url: '/pages/payResult/payResult?status=1&orderId=' + orderId
+                    });
+                }).catch(res => {
+                    wx.redirectTo({
+                        url: '/pages/payResult/payResult?status=0&orderId=' + orderId
+                    });
+                });
+                
+            }else{
+                util.showErrorToast("提交订单失败，请联系客服");
+            }
+        });
+        return false;
+
+
         // if (this.data.addressId <= 0) {
         //     util.showErrorToast('请选择收货地址');
         //     return false;

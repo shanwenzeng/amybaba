@@ -35,6 +35,8 @@ module.exports = {
     Addshoppingcart: ApiRootUrlTwo + 'shoppingcart/add', //将商品加入购物车
     Editshoppingcart: ApiRootUrlTwo + 'shoppingcart/edit', // 更新购物车的商品
     batchEditshoppingcart: ApiRootUrlTwo + 'shoppingcart/batchEdit', //批量修改购物车
+    //订单
+    generateOrder: ApiRootUrlTwo + 'orderList/generateOrder',//生成订单
     //商家
     RecommendShop: ApiRootUrlTwo + 'shop/findRecommendShop',
     findShopBySale: ApiRootUrlTwo + 'shop/findShopBySale',//按销量查询商家，由高到底排序
