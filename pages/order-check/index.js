@@ -211,10 +211,12 @@ Page({
                         url: '/pages/payResult/payResult?status=1&orderId=' + orderId
                     });
                 }).catch(res => {
+                    console.log(res);
                     wx.redirectTo({
                         url: '/pages/payResult/payResult?status=0 & orderId= '+ orderId
                     });
                 }).catch(res => {
+                    console.log(res);
                     wx.redirectTo({
                         url: '/pages/payResult/payResult?status=0&orderId=' + orderId
                     });
