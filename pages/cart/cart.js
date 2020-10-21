@@ -173,25 +173,32 @@ Page({
         let amount = Number(cartItem.amount) + 1;
         this.updateCart(itemIndex, amount, cartItem.id);
     },
-    checkoutOrder: function() {
-        //获取已选择的商品
-        util.loginNow();
-        let that = this;
-        var checkedGoods = this.data.cartGoods.filter(function(element, index, array) {
-            if (element.checked == true) {
-                return true;
-            } else {
-                return false;
-            }
-        });
-        if (checkedGoods.length <= 0) {
-            util.showErrorToast('你好像没选中商品');
-            return false;
-        }
-        wx.navigateTo({
-            url: '/pages/order-check/index?addtype=0'
-        })
-    },
+    checkoutOrder: function() {
+        //获取已选择的商品
+        util.loginNow();
+        let that = this;
+        var checkedGoods = this.data.cartGoods.filter(function(element, index, array) {
+            if (element.checked == true) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+        //获取选中的商品的id
+        var arr = [];
+        for(let i=0; i<checkedGoods.length;i++){
+            var checkedGoodsId = checkedGoods[i].id;
+            arr.push(checkedGoodsId);
+        }
+        wx.setStorageSync('checkedGoodsId', arr);
+        if (checkedGoods.length <= 0) {
+            util.showErrorToast('你好像没选中商品');
+            return false;
+        }
+        wx.navigateTo({
+            url: '/pages/order-check/index?addtype=0'
+        })
+    },
     selectTap: function(e) {
         const index = e.currentTarget.dataset.index;
         const list = this.data.goodsList.list;

@@ -6,7 +6,7 @@ const app = getApp()
 Page({
     data: {
         checkedGoodsList: [],
-        checkedAddress: {},
+        checkedAddress: {},//选择的地址
         totalMoney: 0.00, //商品总价
         freightPrice: 0.00, //快递费
         orderTotalPrice: 0.00, //订单总价
@@ -62,7 +62,7 @@ Page({
             postscript: postscript
         });
     },
-    onLoad: function (options) {
+    onLoad: function (options) {        
         let addType = options.addtype;
         let orderFrom = options.orderFrom;
         if (addType != undefined) {
@@ -81,12 +81,26 @@ Page({
     },
     onShow: function () {
         // 页面显示
+        // TODO结算时，显示默认地址，而不是从storage中获取的地址值
+        // try {
+        //     var addressId = wx.getStorageSync('addressId');
+        //     if (addressId == 0 || addressId == '') {
+        //         addressId = 0;
+        //     }
+        //     this.setData({
+        //         'addressId': addressId
+        //     });
+        // } catch (e) {}
+        
         this.getCheckoutInfo();
+        // wx.removeStorageSync('addressId');
+        // this.getAddressInfo();
     },
     onPullDownRefresh: function () {
         wx.showNavigationBarLoading()
         try {
             var addressId = wx.getStorageSync('addressId');
+            console.log(addressId)
             if (addressId == 0 || addressId == '') {
                 addressId = 0;
             }
@@ -104,33 +118,35 @@ Page({
     // TODO 有个bug，用户没选择地址，支付无法继续进行，在切换过token的情况下
     getCheckoutInfo: function () {
         let that = this;
-        let addressId = that.data.addressId;
+        // let addressId = that.data.addressId;
+        let addressId = wx.getStorageSync('addressId');
         let openId=wx.getStorageSync('openId');
         if(addressId === 0 || addressId == "" || addressId == null){
             util.request(api.GetAddresses,{customer:{id:openId}}, "POST"
         ).then(function (res) {
             for(let i=0;i < res.data.length;i++){
-                if(res.data[i].isDefault == '是'){//设置默认地址
+                if(res.data[i].isDefault == '是'){
                     that.setData({
-                        checkedAddress: res.data[i]
+                        checkedAddress: res.data[i],
+                        addressId: res.data[i].id
                     })
                 }
             }
-        });
-        }
-        //获取地址列表
-        util.request(api.GetAddresses,{customer:{id:openId}}, "POST"
+        })
+        } else{
+            util.request(api.GetAddresses,{customer:{id:openId}}, "POST"
         ).then(function (res) {
             for(let i=0;i < res.data.length;i++){
                 if(res.data[i].id===addressId){
                     let addressObject = res.data[i];
                     that.setData({
-                        checkedAddress: addressObject
+                        checkedAddress: addressObject,
+                        addressId: res.data[i].id
                     })
                 }
             }
         });
-        //获取购物车中的商品信息
+        }
         util.request(api.GetCartList,{
             customer:{id:openId},
             checked:'1'
@@ -154,6 +170,7 @@ Page({
                 orderTotalPrice: orderTotalPrice,
                 totalAmount:totalAmount,
             });
+
             let goods = res.data.checkedGoodsList;
             if (res.data.outStock == 1) {
                 util.showErrorToast('有部分商品缺货或已下架');
@@ -162,16 +179,32 @@ Page({
             }          
         });      
     },
-    submitOrder: function (e) {
+    submitOrder: function (e) {       
         //添加订单（即向orderList表中添加数据）
+        let checkedIds = wx.getStorageSync('checkedGoodsId'); //获取购物车勾选的id
+        console.log(checkedIds)
+        let customerId = wx.getStorageSync('openId');  //获取用户的id
+        let number = util.formatTimeNum(new Date(),'YMDhms');  //获取时间戳，为订单号
+        let name = this.data.checkedAddress.name; //收货人姓名
+        let phone = this.data.checkedAddress.phone; //收货人电话
+        let province = this.data.checkedAddress.province; //收货地址
+        let city = this.data.checkedAddress.city; //收货地城市
+        let district = this.data.checkedAddress.district  //收货地址县（区）
+        let detailAddress = this.data.checkedAddress.detailAddress; //详细地址
         util.request(api.generateOrder,{
-            id:'115',
-            number:'20201020145023566',
-            customer:{id:wx.getStorageSync('openId')},
+            id: checkedIds.toString(),
+            number: number,
+            customer:{id: customerId},
             orderStatus:'待付款',
             shipStatus:'待发货',
+            name: name,
+            phone: phone,
+            province: province,
+            city: city,
+            district: district,
+            detailAddress: detailAddress
         }).then(function(res){
-            if(res.code>0){
+            if(res.code > 0){
                 let orderId=res.data;
                 pay.payOrder(parseInt(orderId)).then(res => {
                     wx.redirectTo({
@@ -179,36 +212,53 @@ Page({
                     });
                 }).catch(res => {
                     wx.redirectTo({
+                        url: '/pages/payResult/payResult?status=0 & orderId= '+ orderId
+                    });
+                }).catch(res => {
+                    wx.redirectTo({
                         url: '/pages/payResult/payResult?status=0&orderId=' + orderId
                     });
                 });
-                
-            }else{
-                util.showErrorToast("提交订单失败，请联系客服");
+            } else {
+                util.showErrorToast(res.errmsg);
             }
+            wx.hideLoading()
+            // }else{
+            //     util.showErrorToast("提交订单失败，请联系客服");
+            // }
         });
         return false;
 
 
-        // if (this.data.addressId <= 0) {
-        //     util.showErrorToast('请选择收货地址');
-        //     return false;
-        // }
-        let addressId = this.data.addressId;
+
+
+
+        let addressId = parseInt(this.data.addressId);
+        console.log(addressId<0)
+        if (addressId <= 0) {
+            console.log(1231)
+            util.showErrorToast('请选择收货地址');
+            return false;
+        }
+        
+        // console.log(typeof(parseInt(this.data.addressId)));
         let postscript = this.data.postscript;
         let freightPrice = this.data.freightPrice;
         let actualPrice = this.data.actualPrice;
+        
         wx.showLoading({
             title: '',
             mask:true
         })
+        
         util.request(api.OrderSubmit, {
             addressId: addressId,
             postscript: postscript,
             freightPrice: freightPrice,
             actualPrice: actualPrice,
-            offlinePay: 0
+            offlinePay: 0,
         }, 'POST').then(res => {
+            console.log(res)
             if (res.errno === 0) {
                 wx.removeStorageSync('orderId');
                 wx.setStorageSync('addressId', 0);

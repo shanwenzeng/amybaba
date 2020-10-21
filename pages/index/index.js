@@ -139,9 +139,9 @@ Page({
     onLoad: function (options) {
         let systemInfo = wx.getStorageSync('systemInfo');
         var scene = decodeURIComponent(options.scene);
-    },
-    onShow: function () {        
         this.getIndexData();//获得首页数据
+    },
+    onShow: function () {    
         this.getCurrentLocation();//获取消费者当前位置
         var that = this;
         let userInfo = wx.getStorageSync('userInfo');
