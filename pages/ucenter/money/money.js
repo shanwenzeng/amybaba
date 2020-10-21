@@ -48,23 +48,27 @@ Page({
       util.showErrorToast("请选择或输入充值金额");
       return false;
     }
-    
     if(this.data.choose<=0){
       util.showErrorToast("请输入正确的充值金额");
       return false;
     }
     let that=this;
-      util.request(api.editSettings, {
+      util.request(api.investMoney, {
         id:wx.getStorageSync('openId'),
         money: that.data.choose,
+        customer:{id:wx.getStorageSync('openId')},
       }).then(function(res) {
         if(res.code>0){
-            util.showSuccessToast('充值成功');
+           util.showSuccessToast('充值成功');
             setTimeout(function(){
                   wx.navigateBack();
-            },1000);
+            },1500);
+            let money=wx.getStorageSync('money');
+            if(money==undefined || money==null || money.length==0){
+                money=0;
+            }
             that.setData({
-              money:parseFloat(wx.getStorageSync('money'))+parseFloat(that.data.choose)//页面显示时，设置余额
+              money:parseFloat(money)+parseFloat(that.data.choose)//页面显示时，设置余额
             });
         }else{
             util.showErrorToast('充值失败，请联系客服');

@@ -11,9 +11,7 @@ Page({
         allCount: 0,
         size: 8,
         hasPrint: 1,
-
         money:'0'
-        //ApiRootUrl:app.globalData.ApiRootUrl,//项目根目录
     },
     //
     getRecharge() {
@@ -27,11 +25,10 @@ Page({
                     rechargeList: res.data,
                     size:count
                 });
-                if (count == 0) {
-                    that.setData({
-
+            }else{
+                that.setData({ 
+                        hasPrint: 0
                     });
-                }
             }
         });
     },

@@ -66,4 +66,9 @@ page {
     width: 60rpx;
     height: 60rpx;
 }
-
+.text{
+    text-align: center;
+    font-size: 28rpx;
+    margin: 100rpx 0 100rpx 0;
+    color: #999;
+}

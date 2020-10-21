@@ -42,7 +42,8 @@
                     <image class='order-icon' src='/images/icon/money.png'>
                     </image>
                 </view>
-                <text class='order-txt'>{{money}}元</text>
+                <text class='order-txt' wx:if="{{money.length>0}}">{{money}}元</text>
+                <text class='order-txt' wx:else>0元</text>
             </view>
           <view class='icon-wrap' data-index='2' bindtap='toMoney'>
                 <view class='order-icon-wrap'>

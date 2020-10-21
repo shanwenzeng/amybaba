@@ -18,6 +18,7 @@
     "pages/ucenter/order-details/index",
     "pages/ucenter/express-info/index",
     "pages/ucenter/footprint/index",
+    "pages/ucenter/recharge/recharge",
     "pages/payResult/payResult",
     "pages/payOffline/index",
     "pages/shop/shop",

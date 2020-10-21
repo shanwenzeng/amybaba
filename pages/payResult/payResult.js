@@ -12,6 +12,7 @@ Page({
         imageUrl:''
     },
     onLoad: function(options) {
+        console.log("订单号："+options.orderId)
         // 页面初始化 options为页面跳转所带来的参数
         this.setData({
             orderId: options.orderId,
