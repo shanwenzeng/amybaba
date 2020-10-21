@@ -59,7 +59,8 @@ module.exports = {
     // GetAddresses: ApiRootUrl + 'address/getAddresses',
     GetAddresses: ApiRootUrlTwo + 'address/find',
     RegionList: ApiRootUrl + 'region/list', //获取区域列表
-    PayPrepayId: ApiRootUrl + 'pay/preWeixinPay', //获取微信统一下单prepay_id
+    // PayPrepayId: ApiRootUrl + 'pay/preWeixinPay', //获取微信统一下单prepay_id
+    PayPrepayId: ApiRootUrlTwo + 'wxpay/createTransactions', //获取微信统一下单prepay_id
     OrderSubmit: ApiRootUrl + 'order/submit', // 提交订单
     OrderList: ApiRootUrlTwo + 'orderList/fastFind', //订单列表
     OrderDetail: ApiRootUrlTwo + 'orderDetail/findById', //订单详情

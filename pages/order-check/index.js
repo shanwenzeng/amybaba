@@ -205,8 +205,8 @@ Page({
             detailAddress: detailAddress
         }).then(function(res){
             if(res.code > 0){
-                let orderId=res.data;
-                pay.payOrder(parseInt(orderId)).then(res => {
+                let orderId="wx_orderId_"+res.data;
+                pay.payOrder(orderId,customerId).then(res => {
                     wx.redirectTo({
                         url: '/pages/payResult/payResult?status=1&orderId=' + orderId
                     });

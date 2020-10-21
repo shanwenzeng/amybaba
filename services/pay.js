@@ -1,14 +1,15 @@
 /**
- * 支付相关服务
+ * 支付相关服务111
  */
 const util = require('../utils/util.js');
 const api = require('../config/api.js');
-function payOrder(orderId) {
+function payOrder(orderId,openid) {
     return new Promise(function(resolve, reject) {
         util.request(api.PayPrepayId, {
-            orderId: orderId
+            orderId: orderId,
+            openid:openid
         }).then((res) => {
-            if (res.errno === 0) {
+            if (res.code === 1) {
                 const payParam = res.data;
                 // 如果没有支付想直接支付成功，下面注释。
                 // -----------------------------------
