@@ -10,10 +10,10 @@
             <image class='icon' src='/images/icon/contact.png'></image>
             <view class='text'>客服</view>
         </button>
-    </view>
+    </view>est
     <view class="search" bindtap="goSearch">
         <image class="icon" src="/images/icon/search.png"></image>
-        <text class="txt">搜索商家</text>
+        <text class="txt">搜索商家Test</text>
     </view>
     <view class='banner-wrap'>
         <swiper class="banner" indicator-dots="true" autoplay="{{autoplay}}" interval="3000" duration="1000"   >
