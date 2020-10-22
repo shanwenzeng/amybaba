@@ -6,6 +6,7 @@ const app = getApp()
 
 Page({
     data: {
+        ApiRootUrl:app.globalData.ApiRootUrl,//项目根目录
         floorGoods: [],
         openAttr: false,
         showChannel: 0,
@@ -13,7 +14,7 @@ Page({
         showBannerImg: 0,
         goodsCount: 0,
         recommendShops:[],
-        banner: [],
+        banner: ['upload/image/certificate1.png','upload/image/certificate2.png'],
         channel: [],
         index_banner_img: 0,
         userInfo: {},
@@ -25,7 +26,6 @@ Page({
         latitude:'',
         distance:'',
         currentLocation:'地址获取中......',//当前位置
-        ApiRootUrl:app.globalData.ApiRootUrl,//项目根目录
     },
     onHide:function(){
         this.setData({
@@ -84,7 +84,7 @@ Page({
         util.request(api.Advert).then(function (res) {
             if (res.data.length> 0) {
                 that.setData({
-                    notice: res.data,
+                    notice:res.data,
                     show_notice:1,
                     loading: 1
                 });

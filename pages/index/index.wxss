@@ -926,3 +926,32 @@ page {
     width: 30rpx;
     height: 30rpx;
 }
+.certificate{
+    width: 146rpx;
+    height: 52rpx;
+}
+
+
+/* 水平显示 ,左辚显示地址，右边显示图片*/
+ 
+.flex-wrp-row {
+    height:25px;
+    line-height:25px;
+    display: flex;
+    flex-direction: row;
+  }
+   
+  .item {
+    padding: 0 20rpx;
+    position: relative;
+  }
+   
+  .item-left {
+     flex: 1; /* 重要 */
+     align-items:center;
+  }
+   
+  .item-right {
+    position: relative;
+    align-items:center;
+  }  
