@@ -72,7 +72,9 @@ Page({
                 let count = res.length;
                 for(let i=0;i<res.length;i++){
                     res[i].createTime=util.formatTime(new Date(res[i].createTime))//重新设置时间格式
-                    res[i].allImage=res[i].allImage.split(",");
+                    if(res[i].allImage!=undefined && res[i].allImage!=null && res[i].allImage.length>0){
+                        res[i].allImage=res[i].allImage.split(",");
+                    }
                 }
                 that.setData({
                     allCount: count,

@@ -8,12 +8,12 @@
 				</view>
 				<image src="/images/icon/gou-gray.png" wx:else class="checkbox"></image>
 				<view class="goods-info">
-					<navigator class="goods-url" hover-class="none" url="/pages/goods/goods?id={{item.goods.id}}">
+					<navigator class="goods-url" hover-class="none" url="/pages/goods/goods?id={{item.id}}">
 						<view class="img-box">
 							<image src="{{ApiRootUrl}}{{item.photo}}" class="img" />
 						</view>
 						<view class="text-box">
-							<view class="{{item.number >0 && item.is_on_sale == 1?'goods-title':'out-stock-title'}}">{{item.standard}}</view>
+							<view class="{{item.amount >0 }}">{{item.standard}}</view>
 							<view class="goods-label">{{item.goods.name}}</view>
 							<view class="goods-price">
 								<view class='price-now'>￥{{item.price}}</view>
@@ -42,7 +42,7 @@
 			去逛逛
 		</view>
 	</view>
-	<view class="settle-box" wx:if="{{cartGoods.length > 0}}">
+	<view class="settle-box {{cartTotal.length > 0}}">
 		<view class="left-price">
 			<view class="all-selected" bindtap="checkedAll">
 				<image class="checkbox" wx:if="{{checkedAllStatus}}" src="/images/icon/gou-red.png"></image>

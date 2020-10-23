@@ -1,7 +1,7 @@
 // const ApiRootUrl = 'http://localhost:8360/api/';
 const ApiRootUrl = 'https://www.hiolabs.com/api/';
-// const ApiRootUrlTwo = 'http://localhost:8081/jxambb/';
-const ApiRootUrlTwo = 'https://yfk.qrzyyn.com/jxambb/';
+const ApiRootUrlTwo = 'http://localhost:8081/jxambb/';
+// const ApiRootUrlTwo = 'https://yfk.qrzyyn.com/jxambb/';
 
 module.exports = {
     // 登录
@@ -37,6 +37,7 @@ module.exports = {
     batchEditshoppingcart: ApiRootUrlTwo + 'shoppingcart/batchEdit', //批量修改购物车
     //订单
     generateOrder: ApiRootUrlTwo + 'orderList/generateOrder',//生成订单
+    OrderDetail: ApiRootUrlTwo + 'orderDetail/findById', //订单详情
     //商家
     RecommendShop: ApiRootUrlTwo + 'shop/findRecommendShop',
     findShopBySale: ApiRootUrlTwo + 'shop/findShopBySale',//按销量查询商家，由高到底排序

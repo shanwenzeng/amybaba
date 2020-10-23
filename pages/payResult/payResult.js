@@ -30,7 +30,7 @@ Page({
         });
     },
     payOrder() {
-        pay.payOrder(parseInt(this.data.orderId)).then(res => {
+        pay.payOrder(parseInt(this.data.orderId),wx.getStorageSync('openId')).then(res => {
             this.setData({
                 status: true
             });

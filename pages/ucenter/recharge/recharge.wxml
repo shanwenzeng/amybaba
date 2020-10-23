@@ -5,10 +5,10 @@
                 <image class="icon" src="/images/icon/recharged.jpg"></image>
                 <view>
                     <view>余额充值</view>
-            <view>{{item.createTime}}</view>
+                    <view>{{item.createTime}}</view>
                 </view>
                 <view class="see-more">
-                    <view class='text'>+{{item.money}}</view>
+                    <view>+{{item.money}}</view>
                 </view>
             </view>
             <view class="line"></view>

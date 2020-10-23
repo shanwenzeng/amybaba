@@ -14,6 +14,8 @@ Page({
         handleOption: {},
         textCode: {},
         goodsCount: 0,
+        goods_price:0,
+        ship:0,
         addressId: 0,
         postscript: '',
         hasPay: 0,
@@ -73,7 +75,7 @@ Page({
         });
     },
     onLoad: function (options) {
-        console.log(options.id)
+        this.data.orderId=wx.getStorageSync('orderId');
     },
     onShow: function () {
         var orderId = wx.getStorageSync('orderId');
@@ -126,12 +128,12 @@ Page({
             onPosting: 0
         })
         let that = this;
-        util.request(api.OrderExpressInfo, {
+        util.request(api.OrderDetail, {
             orderId: that.data.orderId
         }).then(function (res) {
-            if (res.errno === 0) {
+            if (res.data.length > 0) {
                 let express = res.data;
-                express.traces = JSON.parse(res.data.traces);
+                // express.traces = JSON.parse(res.data.traces);
                 that.setData({
                     onPosting: 1,
                     express: express
@@ -141,28 +143,37 @@ Page({
     },
     getOrderDetail: function () {
         let that = this;
+        let amount=0;
+        let price=0;
+        let orderInfo={};
         util.request(api.OrderDetail, {
             orderId: that.data.orderId
         }).then(function (res) {
-            if (res.errno === 0) {
+            console.log(res)
+            if (res.code== 0) {
+                for(let i=0;i<res.data.length;i++){
+                    amount +=parseInt(res.data[i].amount);
+                    price +=parseInt(res.data[i].amount) *parseInt(res.data[i].price);
+                }
                 that.setData({
-                    orderInfo: res.data.orderInfo,
-                    orderGoods: res.data.orderGoods,
-                    handleOption: res.data.handleOption,
-                    textCode: res.data.textCode,
-                    goodsCount: res.data.goodsCount
+                    orderInfo: res.data,
+                    orderGoods: res.data.goods,
+                    //handleOption: res.data.handleOption,
+                    // textCode: res.data.textCode,
+                    goodsCount: amount,
+                    goods_price:price
                 });
-                let receive = res.data.textCode.receive;
-                if (receive == true) {
-                    let confirm_remainTime = res.data.orderInfo.confirm_remainTime;
-                    remaintimer.reTime(confirm_remainTime, 'c_remainTime', that);
-                }
-                let oCancel = res.data.handleOption.cancel;
-                let payTime = 0;
-                if (oCancel == true) {
-                    payTime = res.data.orderInfo.final_pay_time
-                    that.orderTimer(payTime);
-                }
+                // let receive = res.data.textCode.receive;
+                // if (receive == true) {
+                //     let confirm_remainTime = res.data.orderInfo.confirm_remainTime;
+                //     remaintimer.reTime(confirm_remainTime, 'c_remainTime', that);
+                // }
+                // let oCancel = res.data.handleOption.cancel;
+                // let payTime = 0;
+                // if (oCancel == true) {
+                //     payTime = res.data.orderInfo.final_pay_time
+                //     that.orderTimer(payTime);
+                // }
             }
         });
         wx.hideLoading();

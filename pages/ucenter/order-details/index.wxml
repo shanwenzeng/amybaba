@@ -7,7 +7,7 @@
 			<image wx:elif="{{textCode.delivery == true}}" class='icon to-delivery' src="/images/icon/to-delivery-w.png"></image>
 			<image wx:elif="{{textCode.receive == true}}" class='icon to-receive' src="/images/icon/to-receive-w.png"></image>
 			<image wx:elif="{{textCode.success == true}}" class='icon to-success' src="/images/icon/success-w.png"></image>
-			<view class='text'>{{orderInfo.order_status_text}}</view>
+			<view class='text' wx:for="{{orderInfo}}" wx:key="id" wx:for-item="item" >{{item.name}},</view>
 		</view>
 		<view wx:if="{{textCode.receive == true }}" class='count-wrap'>
 			<view class='time-text'></view>
@@ -86,11 +86,11 @@
 	<view class="price-check-wrap">
 		<view class="row-box">
 			<view class="row-label">商品总价</view>
-			<view class="right-text">¥{{orderInfo.goods_price}}</view>
+			<view class="right-text">¥{{goods_price}}</view>
 		</view>
 		<view class="row-box">
 			<view class="row-label">快递</view>
-			<view class="right-text">¥{{orderInfo.freight_price}}</view>
+			<view class="right-text">¥{{ship}}</view>
 		</view>
 		<view class="memo-box">
 			<view class="row-label memo-label">备注</view>
@@ -102,7 +102,7 @@
 		<view class="bottom-box">
 			<view class="row-label">合计：</view>
 			<view class="right-text price-to-pay">
-				¥{{orderInfo.actual_price}}
+				¥{{ship+goods_price}}
 			</view>
 			<view wx:if="{{orderInfo.change_price != orderInfo.actual_price }}" class='change-price'>(改价)</view>
 		</view>

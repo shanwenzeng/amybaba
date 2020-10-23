@@ -69,7 +69,7 @@
             </view>
             <view class="img-info">
                 <view class="img-wrap">
-                    <image class="img" src="/{{goods[0].photo}}"></image>
+                    <image class="img" src="{{ApiRootUrl}}{{goods[0].photo}}"></image>
                 </view>
                 <view class="info">
                     <view class='price-range' wx:if="{{priceChecked == false}}">
