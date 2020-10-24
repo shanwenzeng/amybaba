@@ -6,7 +6,7 @@ const app = getApp()
 
 Page({
     data: {
-        checkedGoodsList: [],
+        // checkedGoodsList: [],
         checkedAddress: {},
         totalMoney: 0.00, //商品总价
         freightPrice: 0.00, //快递费
@@ -106,9 +106,14 @@ Page({
     },
     //提交订单
     submitOrder: function (e) {
+        if (this.data.addressId <= 0) {
+            util.showErrorToast('请选择收货地址');
+            return false;
+        }
         //添加订单（即向orderList表中添加数据）
         let that = this;
         let id = [];            //定义购物车勾选的id
+        let productId = [];
         let goods = [];         //产品表id
         let goodsName = [];     //定义购物车勾选商品的名称
         let standard = [];      //定义购物车勾选商品的规格
@@ -116,7 +121,7 @@ Page({
         let price = [];         //定义加入购物车的价格
         let amount = [];        //定义购物车勾选商品的数量
         let image = [];         //定义购物车勾选商品的图片路径
-        let checkedGoodsList = wx.getStorageSync('checkedGoodsList'); //获取购物车勾选的对象
+        let checkedGoodsList = that.data.checkedGoodsList; //获取购物车勾选的对象
         let postscriptValue = that.data.postscript;      //获取备注
         if(postscriptValue == null || postscriptValue == ""){ //如果备注为空，默认输入“无备注”
             postscriptValue = "无";
@@ -125,7 +130,7 @@ Page({
         for(let i = 0; i < checkedGoodsList.length; i++){
             id.push(checkedGoodsList[i].id);                //获取购物车勾选的id
             goods.push(checkedGoodsList[i].goods.id);      // 产品表id
-            goodsName.push(checkedGoodsList[i].name);       //获取购物车勾选商品的规格
+            goodsName.push(checkedGoodsList[i].goods.name);       //获取购物车勾选商品的规格
             standard.push(checkedGoodsList[i].standard);    //获取购物车勾选商品的规格          
             simple.push(postscriptValue);              //获取备注                 
             price.push(checkedGoodsList[i].price);          //获取加入购物车的价格
@@ -193,62 +198,12 @@ Page({
             //     util.showErrorToast("提交订单失败，请联系客服");
             // }
         });
-        return false;
-
-
-
-
-
-        let addressId = parseInt(this.data.addressId);
-        console.log(addressId<0)
-        if (addressId <= 0) {
-            console.log(1231)
-            util.showErrorToast('请选择收货地址');
-            return false;
-        }
-        
-        // console.log(typeof(parseInt(this.data.addressId)));
-        let postscript = this.data.postscript;
-        let freightPrice = this.data.freightPrice;
-        let actualPrice = this.data.actualPrice;
-        
-        wx.showLoading({
-            title: '',
-            mask:true
-        })
-        
-        util.request(api.OrderSubmit, {
-            addressId: addressId,
-            postscript: postscript,
-            freightPrice: freightPrice,
-            actualPrice: actualPrice,
-            offlinePay: 0,
-        }, 'POST').then(res => {
-            console.log(res)
-            if (res.errno === 0) {
-                wx.removeStorageSync('orderId');
-                wx.setStorageSync('addressId', 0);
-                const orderId = res.data.orderInfo.id;
-                pay.payOrder(parseInt(orderId)).then(res => {
-                    wx.redirectTo({
-                        url: '/pages/payResult/payResult?status=1&orderId=' + orderId
-                    });
-                }).catch(res => {
-                    wx.redirectTo({
-                        url: '/pages/payResult/payResult?status=0&orderId=' + orderId
-                    });
-                });
-            } else {
-                util.showErrorToast(res.errmsg);
-            }
-            wx.hideLoading()
-        });
     },
     offlineOrder: function (e) {
-        if (this.data.addressId <= 0) {
-            util.showErrorToast('请选择收货地址');
-            return false;
-        }
+        // if (this.data.addressId <= 0) {
+        //     util.showErrorToast('请选择收货地址');
+        //     return false;
+        // }
         let addressId = this.data.addressId;
         let postscript = this.data.postscript;
         let freightPrice = this.data.freightPrice;
@@ -311,38 +266,65 @@ Page({
     getGodds:function(){
         let that = this;
          //获取选中的商品信息
-         let ids =wx.getStorageSync('checkedGoodsList');
+         let addType = that.data.addType;
+         let ids;
          let id="";
-         for (let i = 0; i < ids.length; i++) {
-              id += ids[i].id+",";            
-         }
-         id=id.substr(0,id.length-1);//选中商品的id
-         util.request(api.GetCartList,{id:id}).then(function (res) {
-             let totalAmount=0;//购物车总数量
-             let totalMoney=0;//总金额
-             for(let i=0;i<res.data.length;i++){
-                 if(res.data[i].checked=="1"){
-                     totalAmount=parseInt(totalAmount)+parseInt(res.data[i].amount);
-                     totalMoney=totalMoney+parseFloat(res.data[i].amount)*parseFloat(res.data[i].price)
+         if(addType == 0){
+            ids = wx.getStorageSync('checkedGoodsList');
+            for (let i = 0; i < ids.length; i++) {
+                id += ids[i].id+",";            
+            }
+            id=id.substr(0,id.length-1);//选中商品的id
+            util.request(api.GetCartList,
+                {
+                    id:id,
+                    addType: addType,
+                }
+                ).then(function (res) {
+                    console.log(res);
+                 let totalAmount=0;//购物车总数量
+                 let totalMoney=0;//总金额
+                 for(let i=0;i<res.data.length;i++){
+                     if(res.data[i].checked=="1"){
+                         totalAmount=parseInt(totalAmount)+parseInt(res.data[i].amount);
+                         totalMoney=totalMoney+parseFloat(res.data[i].amount)*parseFloat(res.data[i].price)
+                     }
                  }
-             }
-             let freightPrice = 0; //快递费
-             let orderTotalPrice = freightPrice + totalMoney; //实际需要支付的总价
-             let actualPrice = freightPrice + totalMoney; //订单总价
-             that.setData({
-                 actualPrice: actualPrice,
-                 freightPrice: freightPrice,
-                 totalMoney: totalMoney,
-                 orderTotalPrice: orderTotalPrice,
-                 totalAmount:totalAmount,
-                 checkedGoodsList:res.data,//设置选中的商品信息 
-             });
-             let goods = res.data.checkedGoodsList;
-             if (res.data.outStock == 1) {
-                 util.showErrorToast('有部分商品缺货或已下架');
-             } else if (res.data.numberChange == 1) {
-                 util.showErrorToast('部分商品库存有变动');
-             }       
-         }); 
+                 let freightPrice = 0; //快递费
+                 let orderTotalPrice = freightPrice + totalMoney; //实际需要支付的总价
+                 let actualPrice = freightPrice + totalMoney; //订单总价
+                 that.setData({
+                     actualPrice: actualPrice,
+                     freightPrice: freightPrice,
+                     totalMoney: totalMoney,
+                     orderTotalPrice: orderTotalPrice,
+                     totalAmount:totalAmount,
+                     checkedGoodsList:res.data,//设置选中的商品信息 
+                 });
+                 let goods = res.data.checkedGoodsList;
+                 if (res.data.outStock == 1) {
+                     util.showErrorToast('有部分商品缺货或已下架');
+                 } else if (res.data.numberChange == 1) {
+                     util.showErrorToast('部分商品库存有变动');
+                 }       
+             }); 
+        }
+        if(addType == 1){
+        ids = wx.getStorageSync('checkedGoodsList1');
+        let totalAmount = ids[0].amount;//总数量
+        let totalMoney = ids[0].totalMoney; //总金额
+        let freightPrice = 0; //快递费
+        let actualPrice = freightPrice + totalMoney; //订单总价
+        let orderTotalPrice = freightPrice + totalMoney; //实际需要支付的总价
+        that.setData({
+            totalAmount: totalAmount,
+            actualPrice: actualPrice,
+            freightPrice: freightPrice,
+            totalMoney: totalMoney,
+            orderTotalPrice: orderTotalPrice,
+            checkedGoodsList: ids
+        })
+        }
+        console.log(ids);
     }
 })

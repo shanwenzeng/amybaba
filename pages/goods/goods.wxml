@@ -101,6 +101,10 @@
                 </view>
                 <view class="number-item">
                     <view class="name">数量 ({{goods[0].goods.unit}})</view>
+                    <view style="float:right">
+                        <text>总价格：</text>
+                        <text style="color:red">{{totalMoney}}元</text>
+                    </view>
                     <view class="selnum">
                         <button class="cut" bindtap="cutNumber">-</button>
                         <input value="{{number}}" class="number" type="number" cursor-spacing="100" bindblur="inputNumber" />

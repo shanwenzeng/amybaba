@@ -6,6 +6,7 @@ var api = require('../../config/api.js');
 const user = require('../../services/user.js');
 Page({
     data: {
+        totalAmount:"",
         id: 0,
         goods: {},
         gallery: [],
@@ -73,6 +74,7 @@ Page({
         this.setData({
             number: number
         });
+        this.count();
     },
     goIndex: function() {
         wx.switchTab({
@@ -140,6 +142,7 @@ Page({
         let specNameId = event.currentTarget.dataset.nameId;
         let specValueId = event.currentTarget.dataset.valueId;
         let index = event.currentTarget.dataset.index;
+
         //判断是否可以点击
         let _specificationList = this.data.specificationList;
         if (_specificationList.specification_id == specNameId) {
@@ -189,6 +192,7 @@ Page({
     //判断规格是否选择完整
     isCheckedAllSpec: function() {
         return !this.getCheckedSpecValue().some(function(v) {
+            console.log(v);
             if (v.valueId == 0) {
                 return true;
             }
@@ -404,6 +408,7 @@ Page({
     },
     switchAttrPop: function() {
         if (this.data.openAttr == false) {
+            this.count();
             this.setData({
                 openAttr: !this.data.openAttr
             });
@@ -427,7 +432,11 @@ Page({
         var that = this;
         let goods = this.data.goods;
         let userInfo = wx.getStorageSync('userInfo');
+        if (userInfo == '') {
+            return false;
+        }
         if (this.data.openAttr == false ) {
+            that.count();
             //打开规格选择窗口
             this.setData({
                 openAttr: !that.data.openAttr
@@ -479,40 +488,54 @@ Page({
         // 判断是否登录，如果没有登录，则登录
         util.loginNow();
         let userInfo = wx.getStorageSync('userInfo');
+        let goods = this.data.goods;
         if (userInfo == '') {
             return false;
         }
         var that = this;
+        
         if (this.data.openAttr === false) {
+            that.count();
             //打开规格选择窗口
             this.setData({
                 openAttr: !this.data.openAttr
             });
             that.setData({
-                alone_text: '加入购物车'
+                alone_text: '立即购买'
             })
         } else {
-            //提示选择完整规格
-            if (!this.isCheckedAllSpec()) {
-                wx.showToast({
-                    image: '/images/icon/icon_error.png',
-                    title: '请选择规格',
-                });
-                return false;
-            }
-            //根据选中的规格，判断是否有对应的sku信息
-            let checkedProductArray = this.getCheckedProductItem(this.getCheckedSpecKey());
-            if (!checkedProductArray || checkedProductArray.length <= 0) {
-                //找不到对应的product信息，提示没有库存
-                wx.showToast({
-                    image: '/images/icon/icon_error.png',
-                    title: '库存不足',
-                });
-                return false;
-            }
-            let checkedProduct = checkedProductArray[0];
+        //     //提示选择完整规格
+        //     if (!this.isCheckedAllSpec()) {
+        //         wx.showToast({
+        //             image: '/images/icon/icon_error.png',
+        //             title: '请选择规格',
+        //         });
+        //         return false;
+        //     }
+        //     //根据选中的规格，判断是否有对应的sku信息
+        //     let checkedProductArray = this.getCheckedProductItem(this.getCheckedSpecKey());
+        //     if (!checkedProductArray || checkedProductArray.length <= 0) {
+        //         //找不到对应的product信息，提示没有库存
+        //         wx.showToast({
+        //             image: '/images/icon/icon_error.png',
+        //             title: '库存不足',
+        //         });
+        //         return false;
+        //     }
+        //     let checkedProduct = checkedProductArray[0];
+        //     //验证库存
+        //     if (checkedProduct.goods_number < this.data.number) {
+        //         //要买的数量比库存多
+        //         wx.showToast({
+        //             image: '/images/icon/icon_error.png',
+        //             title: '库存不足',
+        //         });
+        //         return false;
+        //     }
+
+
             //验证库存
-            if (checkedProduct.goods_number < this.data.number) {
+            if (goods[0].stock < this.data.number) {
                 //要买的数量比库存多
                 wx.showToast({
                     image: '/images/icon/icon_error.png',
@@ -520,17 +543,19 @@ Page({
                 });
                 return false;
             }
-            //添加到购物车
-            util.request(api.CartAdd, {
+            //立即购买
+            util.request(api.Addshoppingcart, {
                     addType: 1, // 0：正常加入购物车，1:立即购买，2:再来一单
                     goodsId: this.data.id,
                     number: this.data.number,
-                    productId: checkedProduct.id,
+                    productId: goods[0].id
                 }, "POST")
                 .then(function(res) {
                     let _res = res;
-                    if (_res.errno == 0) {
-                        let id = that.data.id;
+                    if (_res.code > 0) {
+                        goods[0]['totalMoney'] = that.data.totalMoney; //将总金额加入商品信息中
+                        goods[0]['amount'] = that.data.number;  //将总数量加入商品信息中
+                        wx.setStorageSync('checkedGoodsList1', goods);
                         wx.navigateTo({
                             url: '/pages/order-check/index?addtype=1'
                         });
@@ -547,6 +572,7 @@ Page({
         this.setData({
             number: (this.data.number - 1 > 1) ? this.data.number - 1 : 1
         });
+        this.count();
         this.setData({
             disabled: ''
         });
@@ -555,6 +581,7 @@ Page({
         this.setData({
             number: Number(this.data.number) + 1
         });
+        this.count();
         // let checkedProductArray = this.getCheckedProductItem(this.getCheckedSpecKey());
         // let checkedProduct = checkedProductArray;
         // var check_number = this.data.number + 1;
@@ -563,5 +590,13 @@ Page({
         //         disabled: true
         //     });
         // }
+    },
+    //计算当时的总金额
+    count: function(){
+        let goods = this.data.goods[0]; //获取商品的信息
+        let totalMoney = goods.price * this.data.number;  //计算总金额
+        this.setData({
+            totalMoney: totalMoney
+        }) 
     }
 })
