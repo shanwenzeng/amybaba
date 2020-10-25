@@ -176,18 +176,16 @@ Page({
             image: image
         }).then(function(res){
             if(res.code > 0){
-                let orderId=res.data;
-                pay.payOrder(parseInt(orderId)).then(res => {
+                // let orderId=res.data;
+                let orderId="wx_orderId_"+res.data;
+                console.log(orderId+".......")
+                pay.payOrder(orderId,customerId).then(res => {
                     wx.redirectTo({
                         url: '/pages/payResult/payResult?status=1&orderId=' + orderId
                     });
                 }).catch(res => {
                     wx.redirectTo({
-                        url: '/pages/payResult/payResult?status=0 & orderId= '+ orderId
-                    });
-                }).catch(res => {
-                    wx.redirectTo({
-                        url: '/pages/payResult/payResult?status=0&orderId=' + orderId
+                        url: '/pages/payResult/payResult?status=0&orderId= '+ orderId
                     });
                 });
             } else {

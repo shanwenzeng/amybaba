@@ -2,7 +2,7 @@
     <!-- 当前位置 -->
     <view class='item-left flex-wrp-row'>
       <image class="icon" src="/images/icon/location.png"  mode='aspectFit'></image>
-      <text style="margin-left:8px;color: #999;">{{currentLocation}}</text>
+      <text style="margin-left:8px;font-size:28rpx;color: #999;">{{currentLocation}}</text>
     </view>
     <view class='item-right flex-wrp-row'>
         <!-- 众信验证示范企业证书 -->

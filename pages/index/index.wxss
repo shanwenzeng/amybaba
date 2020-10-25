@@ -923,8 +923,8 @@ page {
     width: 140rpx;
 }
 .icon {
-    width: 30rpx;
-    height: 30rpx;
+    width: 35rpx;
+    height: 35rpx;
 }
 .certificate{
     width: 146rpx;
