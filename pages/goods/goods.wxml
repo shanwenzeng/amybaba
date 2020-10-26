@@ -129,7 +129,7 @@
                 <view class='icon-text'>客服</view>
             </button>
             <view class="left-icon" bindtap='openCartPage'>
-                <text class="cart-count">{{cartGoodsCount}}</text>
+                <text class="cart-count">{{shoppingCartAmount}}</text>
                 <image class='icon' src='/images/nav/icon-cart-b.png'></image>
                 <view class='icon-text'>购物车</view>
             </view>

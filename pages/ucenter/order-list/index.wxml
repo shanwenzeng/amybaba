@@ -10,6 +10,9 @@
 		<view class="tab {{ showType == '待收货' ? 'active' : ''}}" bindtap="switchTab" data-index='待收货'>
 			<view wx:if="{{status.toReceive > 0 }}" class='list-num'>{{status.toReceive}}</view>待收货
 		</view>
+		<view class="tab {{ showType == '已收货' ? 'active' : ''}}" bindtap="switchTab" data-index='已收货'>
+			<view wx:if="{{status.toReceive > 0 }}" class='list-num'>{{status.toReceive}}</view>已收货
+		</view>
 	</view>
 
 	<view class="wrap">

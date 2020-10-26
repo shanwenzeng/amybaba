@@ -8,6 +8,7 @@ const app = getApp()
 // TODO 拼团订单不能退款
 Page({
     data: {
+        ApiRootUrl:app.globalData.ApiRootUrl,//项目根目录
         orderId: 0,
         orderInfo: {},
         orderGoods: [],
@@ -24,7 +25,15 @@ Page({
         wxTimerList: {},
         express: {},
         onPosting: 0,
-        userInfo:{}
+        userInfo:{},
+        address:{
+            name:'',
+            phone:'',
+            province:'',
+            city:'',
+            district:'',
+            address:''
+        }
     },
     reOrderAgain: function () {
         let orderId = this.data.orderId
@@ -87,8 +96,8 @@ Page({
         wx.showLoading({
             title: '加载中...',
         })
-        this.getOrderDetail();
-        this.getExpressInfo();
+        this.getOrderDetail();//查询订单详情
+        // this.getExpressInfo();
     },
     onUnload: function () {
         let oCancel = this.data.handleOption.cancel;
@@ -146,34 +155,35 @@ Page({
         let amount=0;
         let price=0;
         let orderInfo={};
-        util.request(api.OrderDetail, {
-            orderId: that.data.orderId
+        util.request(api.OrderList, {
+            customer:{id:wx.getStorageSync('openId')},
+            id: that.data.orderId
         }).then(function (res) {
             console.log(res)
-            if (res.code== 0) {
-                for(let i=0;i<res.data.length;i++){
-                    amount +=parseInt(res.data[i].amount);
-                    price +=parseInt(res.data[i].amount) *parseInt(res.data[i].price);
+            if (res.length > 0) {
+                res[0].createTime=util.formatTime(new Date(res[0].createTime))//重新设置时间格式
+                //将图片拆分成数组
+                if(res[0].allImage!=undefined && res[0].allImage!=null && res[0].allImage.length>0){
+                    res[0].allImage=res[0].allImage.split(",");
                 }
                 that.setData({
-                    orderInfo: res.data,
-                    orderGoods: res.data.goods,
-                    //handleOption: res.data.handleOption,
-                    // textCode: res.data.textCode,
-                    goodsCount: amount,
-                    goods_price:price
+                    address:{
+                        name:res[0].name,
+                        phone:res[0].phone,
+                        province:res[0].province,
+                        city:res[0].city,
+                        district:res[0].district,
+                        address:res[0].address
+                    },
+                    orderInfo:{
+                        allImage:res[0].allImage,
+                        amount: res[0].amount,
+                        price:res[0].price,
+                        createTime:res[0].createTime,
+                        number:res[0].number,
+                        status:res[0].status
+                    }
                 });
-                // let receive = res.data.textCode.receive;
-                // if (receive == true) {
-                //     let confirm_remainTime = res.data.orderInfo.confirm_remainTime;
-                //     remaintimer.reTime(confirm_remainTime, 'c_remainTime', that);
-                // }
-                // let oCancel = res.data.handleOption.cancel;
-                // let payTime = 0;
-                // if (oCancel == true) {
-                //     payTime = res.data.orderInfo.final_pay_time
-                //     that.orderTimer(payTime);
-                // }
             }
         });
         wx.hideLoading();

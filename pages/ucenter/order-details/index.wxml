@@ -2,12 +2,7 @@
 	<!--   TODO 将状态码都去掉！  -->
 	<view class='status-wrap' bindtap='clearTimer'>
 		<view class='status-text'>
-			<image wx:if="{{textCode.pay == true}}" class='icon to-pay' src="/images/icon/to-pay-w.png"></image>
-			<image wx:elif="{{textCode.close == true}}" class='icon to-close' src="/images/icon/to-close-w.png"></image>
-			<image wx:elif="{{textCode.delivery == true}}" class='icon to-delivery' src="/images/icon/to-delivery-w.png"></image>
-			<image wx:elif="{{textCode.receive == true}}" class='icon to-receive' src="/images/icon/to-receive-w.png"></image>
-			<image wx:elif="{{textCode.success == true}}" class='icon to-success' src="/images/icon/success-w.png"></image>
-			<view class='text' wx:for="{{orderInfo}}" wx:key="id" wx:for-item="item" >{{item.name}},</view>
+			<view class='text'>订单状态：{{orderInfo.status}}</view>
 		</view>
 		<view wx:if="{{textCode.receive == true }}" class='count-wrap'>
 			<view class='time-text'></view>
@@ -32,8 +27,8 @@
 	<view class="address-box">
 		<image class="addr-icon" src="/images/icon/location.png"></image>
 		<view class="show-address">
-			<view class="name-tel">{{orderInfo.consignee}} {{orderInfo.mobile}}</view>
-			<view class="addr-text">{{orderInfo.full_region + orderInfo.address}}</view>
+			<view class="name-tel">{{address.name}} {{address.phone}}</view>
+			<view class="addr-text">{{address.province+address.city+address.district+address.address}}</view>
 		</view>
 	</view>
 	<view class="onPosting" wx:if="{{orderInfo.shipping_status && onPosting == 0}}">
@@ -72,12 +67,12 @@
 		</view>
 		<view class="a-goods">
 			<view class="img-box">
-				<view class='image-wrap' wx:for="{{orderGoods}}" wx:key="id" wx:if="{{index<4}}">
-					<image src="{{item.list_pic_url}}" class="goods-image" />
+				<view class='image-wrap' wx:for="{{orderInfo.allImage}}" wx:key="id" wx:if="{{index<4}}">
+					<image src="{{ApiRootUrl}}{{item}}" class="goods-image" />
 				</view>
 			</view>
 			<view class='goods-sum'>
-				<view class="text">共{{goodsCount}}件</view>
+				<view class="text">共{{orderInfo.amount}}件</view>
 				<view class="arrow"></view>
 			</view>
 		</view>
@@ -86,7 +81,7 @@
 	<view class="price-check-wrap">
 		<view class="row-box">
 			<view class="row-label">商品总价</view>
-			<view class="right-text">¥{{goods_price}}</view>
+			<view class="right-text">¥{{orderInfo.price}}</view>
 		</view>
 		<view class="row-box">
 			<view class="row-label">快递</view>
@@ -102,7 +97,7 @@
 		<view class="bottom-box">
 			<view class="row-label">合计：</view>
 			<view class="right-text price-to-pay">
-				¥{{ship+goods_price}}
+				¥{{ship+orderInfo.price}}
 			</view>
 			<view wx:if="{{orderInfo.change_price != orderInfo.actual_price }}" class='change-price'>(改价)</view>
 		</view>
@@ -111,11 +106,11 @@
 		<view class='row-box-wrap'>
 			<view class="row-box2">
 				<view class="row-label2">订单编号：</view>
-				<view class="right-text2">{{orderInfo.order_sn}}</view>
+				<view class="right-text2">{{orderInfo.number}}</view>
 			</view>
 			<view class="row-box2">
 				<view class="row-label2">创建时间：</view>
-				<view class="right-text2">{{orderInfo.add_time}}</view>
+				<view class="right-text2">{{orderInfo.createTime}}</view>
 			</view>
 			<view wx:if="{{orderInfo.pay_time}}" class="row-box2">
 				<view class="row-label2">支付交易号：</view>

@@ -23,11 +23,11 @@
 				</view>
 			</view>
 		</view>
-		<view class="goods-list" bindtap='toGoodsList'>
+		<view class="goods-list" bindtap='toGoodsList' data-id="{{}}">
 			<view class="list-title">商品信息</view>
 			<view class="a-goods">
 				<view class="img-box">
-					<view class='image-wrap' wx:for="{{checkedGoodsList}}" wx:if="{{item.checked == 1 || addType == 1}}" wx:key="id">
+					<view class='image-wrap' wx:for="{{checkedGoodsList}}"  wx:key="id">
 						<image wx:if="{{item.amount > 0 }}" src="{{ApiRootUrl}}{{item.photo}}" class="goods-image"></image>
 					</view>
 				</view>
