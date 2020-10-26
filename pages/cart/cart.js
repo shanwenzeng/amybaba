@@ -189,6 +189,7 @@ Page({
             util.showErrorToast('你好像没选中商品');
             return false;
         }
+
         wx.setStorageSync('checkedGoodsList', checkedGoods);//将选中的商品传到订单页面
         
         wx.navigateTo({
@@ -203,44 +204,69 @@ Page({
             this.setGoodsList(this.getSaveHide(), this.totalPrice(), this.allSelect(), this.noSelect(), list);
         }
     },
+
     //单个选中商品
     checkedItem: function(e) {
         let itemIndex = e.currentTarget.dataset.itemIndex;
-        let that = this;
-        let checked;
-        if(that.data.cartGoods[itemIndex].checked == 0){
-            checked = 1; 
+        let cartGoods = this.data.cartGoods;
+        let totalAmount=0;//购物车总数量
+        let totalMoney=0;//总金额
+        //修改点击的这个商品的checked为1
+        if(cartGoods[itemIndex].checked == 0){
+            cartGoods[itemIndex].checked = 1; 
         }else{
-            checked = 0;
+            cartGoods[itemIndex].checked = 0;
         }
-        if (!this.data.isEditCart) {
-            util.request(api.Editshoppingcart, {
-                id: that.data.cartGoods[itemIndex].id,
-                checked: checked
-            }).then(function(res) {
-                if (res.code > 0) {
-                    that.getCartList();//选择商品后，重新加载数据
-                }
-                that.setData({
-                    checkedAllStatus: that.isCheckedAll()
-                });
-            });
-        } else {
-            //编辑状态
-            let tmpCartData = this.data.cartGoods.map(function(element, index, array) {
-                if (index == itemIndex) {
-                    element.checked = !element.checked;
-                }
+        //获取checked为1的商品，计算总数量和总价格
+        for(let i = 0; i < cartGoods.length; i++){
+            if(cartGoods[i].checked == 1){
+                totalAmount=parseInt(totalAmount)+parseInt(cartGoods[i].amount);
+                totalMoney=totalMoney+parseFloat(cartGoods[i].amount)*parseFloat(cartGoods[i].price)
+            }
+        }
+        this.setData({
+            cartGoods: cartGoods,
+            totalAmount: totalAmount,
+            totalMoney: totalMoney
+        })
+        
+        
+        // console.log(cartGoods)
+        // let that = this;
+        // let checked;
+        // if(that.data.cartGoods[itemIndex].checked == 0){
+        //     checked = 1; 
+        // }else{
+        //     checked = 0;
+        // }
+        // if (!this.data.isEditCart) {
+        //     util.request(api.Editshoppingcart, {
+        //         id: that.data.cartGoods[itemIndex].id,
+        //         checked: checked
+        //     }).then(function(res) {
+        //         if (res.code > 0) {
+        //             that.getCartList();//选择商品后，重新加载数据
+        //         }
+        //         that.setData({
+        //             checkedAllStatus: that.isCheckedAll()
+        //         });
+        //     });
+        // } else {
+        //     //编辑状态
+        //     let tmpCartData = this.data.cartGoods.map(function(element, index, array) {
+        //         if (index == itemIndex) {
+        //             element.checked = !element.checked;
+        //         }
 
-                return element;
-            });
-            this.getCheckedGoodsCount();
-            that.setData({
-                cartGoods: tmpCartData,
-                checkedAllStatus: that.isCheckedAll(),
-                // 'cartTotal.checkedGoodsCount': that.getCheckedGoodsCount()
-            });
-        }
+        //         return element;
+        //     });
+        //     this.getCheckedGoodsCount();
+        //     that.setData({
+        //         cartGoods: tmpCartData,
+        //         checkedAllStatus: that.isCheckedAll(),
+        //         // 'cartTotal.checkedGoodsCount': that.getCheckedGoodsCount()
+        //     });
+        // }
     },
     handleTap: function(event) { //阻止冒泡 
 

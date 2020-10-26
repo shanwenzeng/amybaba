@@ -125,7 +125,8 @@ Page({
             util.showErrorToast('请选择收货地址');
             return false;
         }
-        //添加订单（即向orderList表中添加数据）
+
+        //添加订单（即向orderList表中添加数据） 
         let that = this;
         let checkedGoodsList = that.data.checkedGoodsList; //获取购物车勾选的商品的集合
         let checkedGoodsList1 = that.data.checkedGoodsList1;//将获取到的集合分割存入checkedGoodsList1中
