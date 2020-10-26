@@ -42,6 +42,7 @@ module.exports = {
     RecommendShop: ApiRootUrlTwo + 'shop/findRecommendShop',
     findShopBySale: ApiRootUrlTwo + 'shop/findShopBySale',//按销量查询商家，由高到底排序
     // 商品
+    findGoods: ApiRootUrlTwo + 'goods/find', //查询商品
     GoodsCount: ApiRootUrl + 'goods/count', //统计商品总数
     GoodsDetail: ApiRootUrl + 'goods/detail', //获得商品的详情
     GoodsList: ApiRootUrl + 'goods/list', //获得商品列表

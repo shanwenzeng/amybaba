@@ -6,7 +6,7 @@ function formatTime(date) {
     var month = date.getMonth() + 1
     var day = date.getDate()
 
-    var hour = date.getHours()
+    var hour = date.getHours()-8
     var minute = date.getMinutes()
     var second = date.getSeconds()
 

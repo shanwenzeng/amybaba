@@ -8,14 +8,15 @@ Page({
         goodsList: [],
     },
     onLoad: function(options) {
+        console.log(options.id)
         this.getGoodsList(options.id);
     },
     getGoodsList: function(id) {
         let that = this;
-        util.request(api.OrderGoods, {
-            orderId: id
+        util.request(api.findGoods, {
+            id: id
         }).then(function(res) {
-            if (res.errno === 0) {
+            if (res.code > 0) {
                 that.setData({
                     goodsList: res.data
                 });

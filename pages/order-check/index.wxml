@@ -23,7 +23,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="goods-list" bindtap='toGoodsList'>
+		<view class="goods-list" bindtap='toGoodsList' data-id="{{}}">
 			<view class="list-title">商品信息</view>
 			<view class="a-goods">
 				<view class="img-box">

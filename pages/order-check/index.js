@@ -43,8 +43,14 @@ Page({
         }
     },
     toGoodsList: function (e) {
+        let ids = wx.getStorageSync('checkedGoodsList');
+        let id="";
+        for (let i = 0; i < ids.length; i++) {
+            id += ids[i].id+",";            
+        }
+        id=id.substr(0,id.length-1);//选中商品的id
         wx.navigateTo({
-            url: '/pages/ucenter/goods-list/index',
+            url: '/pages/ucenter/goods-list/index?id='+id,
         });
     },
     toSelectAddress: function () {
@@ -83,7 +89,7 @@ Page({
     },
     onShow: function () {
         this.getAddress();//获取地址信息
-        this.getGodds();//获取商品信息
+        this.getGoods();//获取商品信息
     },
     onPullDownRefresh: function () {
         wx.showNavigationBarLoading()
@@ -154,7 +160,7 @@ Page({
         let province = this.data.checkedAddress.province; //收货地址
         let city = this.data.checkedAddress.city; //收货地城市
         let district = this.data.checkedAddress.district  //收货地址县（区）
-        let detailAddress = this.data.checkedAddress.detailAddress; //详细地址
+        let address = this.data.checkedAddress.address; //详细地址
         util.request(api.generateOrder,{
             id: id.toString(),
             number: number,
@@ -165,7 +171,7 @@ Page({
             province: province,
             city: city,
             district: district,
-            detailAddress: detailAddress,
+            address: address,
             goods: goods,
             goodsName: goodsName,
             standard: standard,
@@ -260,7 +266,7 @@ Page({
         }
     },
     //获取商品信息
-    getGodds:function(){
+    getGoods:function(){
         let that = this;
          //获取选中的商品信息
         let addType = that.data.addType;
@@ -278,14 +284,13 @@ Page({
                     addType: addType,
                 }
                 ).then(function (res) {
-                    console.log(res);
                  let totalAmount=0;//购物车总数量
                  let totalMoney=0;//总金额
                  for(let i=0;i<res.data.length;i++){
-                     if(res.data[i].checked=="1"){
+                    //  if(res.data[i].checked=="1"){
                          totalAmount=parseInt(totalAmount)+parseInt(res.data[i].amount);
                          totalMoney=totalMoney+parseFloat(res.data[i].amount)*parseFloat(res.data[i].price)
-                     }
+                    //  }
                  }
                  let freightPrice = 0; //快递费
                  let orderTotalPrice = freightPrice + totalMoney; //实际需要支付的总价

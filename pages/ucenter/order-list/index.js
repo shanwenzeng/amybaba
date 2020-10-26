@@ -62,10 +62,8 @@ Page({
         var obj={};//传递给后台的参数
         if(showType==undefined || showType==0){//全部不传递状态，全部查询出来
             obj={customer:{id: openId }};
-        }else if(showType=="待付款"){//待付款
-            obj={customer:{id:openId },orderStatus:showType};
         }else{//待发货或者待收货
-            obj={customer:{id:openId },shipStatus:showType};
+            obj={customer:{id:openId },status:showType};
         }
         util.request(api.OrderList,obj).then(function(res) {
             if (res.length > 0) {
@@ -115,7 +113,7 @@ Page({
         //     wx.removeStorageSync('doRefresh');
         // }
         // this.getOrderInfo();
-        this.getOrderList()
+        this.getOrderList();//查询订单
     },
     switchTab: function(event) {
         let showType = event.currentTarget.dataset.index;
