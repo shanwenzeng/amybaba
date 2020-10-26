@@ -16,7 +16,7 @@
             </view>
         </view>
         <view class="line"></view>
-        <view class="content">请选择充值金额</view>
+        <view class="content" style="margin-left:25rpx;">请选择充值金额</view>
         <view class="line"></view>
         <view class='btn-container'>
             <view class='icon-wrap' data-index='100' bindtap='chooseMoney'>
@@ -59,7 +59,7 @@
          </view>
         <view class="line"></view>
          <view class='btn-container'>
-         <button style="width:80%;background-color:green;color:white;" bindtap="rechangeMoney" >立即充值</button>
+         <button style="width:80%;background: linear-gradient(to right, #ff3456, #ff347d);color:white;" bindtap="rechangeMoney" >立即充值</button>
          </view>
     </view>
 </view>

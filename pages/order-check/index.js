@@ -14,7 +14,8 @@ Page({
             simple: [],
             price: [],
             amount: [],
-            image: []
+            image: [],
+            productIds:[]
         },
         checkedAddress: {},
         totalMoney: 0.00, //商品总价
@@ -59,7 +60,7 @@ Page({
         }
         id=id.substr(0,id.length-1);//选中商品的id
         wx.navigateTo({
-            url: '/pages/ucenter/goods-list/index?id='+id,
+            url: '/pages/ucenter/goods-list/index?status=0&id='+id,
         });
     },
     toSelectAddress: function () {
@@ -125,12 +126,10 @@ Page({
             util.showErrorToast('请选择收货地址');
             return false;
         }
-
         //添加订单（即向orderList表中添加数据） 
         let that = this;
         let checkedGoodsList = that.data.checkedGoodsList; //获取购物车勾选的商品的集合
         let checkedGoodsList1 = that.data.checkedGoodsList1;//将获取到的集合分割存入checkedGoodsList1中
-
         let postscriptValue = that.data.postscript;      //获取备注
         if(postscriptValue == null || postscriptValue == ""){ //如果备注为空，默认输入“无备注”
             postscriptValue = "无";
@@ -145,10 +144,9 @@ Page({
             checkedGoodsList1.price.push(checkedGoodsList[i].price);          //获取加入购物车的价格
             checkedGoodsList1.amount.push(checkedGoodsList[i].amount);        //获取购物车勾选商品的数量
             checkedGoodsList1.image.push(checkedGoodsList[i].photo);          //获取购物车勾选商品的图片路径
+            checkedGoodsList1.productIds.push(checkedGoodsList[i].product.id);          //获取购物车勾选商品的id
         }
-
         let customerId = wx.getStorageSync('openId');  //获取用户的id
-
         util.request(api.generateOrder,{
             id: checkedGoodsList1.id.toString(),//获取购物车勾选的id
             number: util.formatTimeNum(new Date(),'YMDhms'),//获取时间戳，为订单号
@@ -166,12 +164,11 @@ Page({
             simple: checkedGoodsList1.simple.toString(),        //订单的备注
             price: checkedGoodsList1.price.toString(),          //加入购物车的价格
             amount: checkedGoodsList1.amount.toString(),        //购物车勾选商品的数量
-            image: checkedGoodsList1.image.toString()           //购物车勾选商品的图片路径
+            image: checkedGoodsList1.image.toString(),           //购物车勾选商品的图片路径
+            productIds:checkedGoodsList1.productIds.toString()
         }).then(function(res){
             if(res.code > 0){
-                // let orderId=res.data;
                 let orderId="wx_orderId_"+res.data;
-                console.log(orderId+".......")
                 pay.payOrder(orderId,customerId).then(res => {
                     wx.redirectTo({
                         url: '/pages/payResult/payResult?status=1&orderId=' + orderId

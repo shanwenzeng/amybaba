@@ -11,7 +11,7 @@ Page({
         allPage: 1,
         allCount: 0,
         size: 8,
-        showType: 9,
+        showType: '全部',
         hasOrder: 0,
         showTips: 0,
         status: {},
@@ -21,7 +21,7 @@ Page({
         let orderId = e.currentTarget.dataset.id;
         wx.setStorageSync('orderId', orderId)
         wx.navigateTo({
-            url: '/pages/ucenter/order-details/index?id='+orderId,
+            url: '/pages/ucenter/order-details/index?status=1&id='+orderId,
         })
     },
     payOrder: function(e) {
@@ -60,7 +60,7 @@ Page({
         let showType=wx.getStorageSync('showType');//获取缓存中的订单状态
         let openId=wx.getStorageSync('openId');
         var obj={};//传递给后台的参数
-        if(showType==undefined || showType==0){//全部不传递状态，全部查询出来
+        if(showType==undefined || showType=='全部'){//全部不传递状态，全部查询出来
             obj={customer:{id: openId }};
         }else{//待发货或者待收货
             obj={customer:{id:openId },status:showType};
@@ -95,9 +95,12 @@ Page({
             url: '/pages/index/index'
         });
     },
-    onLoad: function() {},
+    onLoad: function() {
+        this.setData({
+            showType: wx.getStorageSync('showType')
+        });
+    },
     onShow: function() {
-        let showType = wx.getStorageSync('showType');
         let nowShowType = this.data.showType;
         let doRefresh = wx.getStorageSync('doRefresh');
         // if (nowShowType != showType || doRefresh == 1) {

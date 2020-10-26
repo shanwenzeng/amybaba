@@ -9,6 +9,7 @@ const app = getApp()
 Page({
     data: {
         ApiRootUrl:app.globalData.ApiRootUrl,//项目根目录
+        discount:'0',//优惠
         orderId: 0,
         orderInfo: {},
         orderGoods: [],
@@ -53,9 +54,9 @@ Page({
         })
     },
     toGoodsList: function (e) {
-        let orderId = this.data.orderId;
+        let productIds = this.data.orderInfo.productIds;
         wx.navigateTo({
-            url: '/pages/ucenter/goods-list/index?id=' + orderId,
+            url: '/pages/ucenter/goods-list/index?status=1&id=' + productIds,
         });
     },
     toExpressInfo: function (e) {
@@ -181,7 +182,8 @@ Page({
                         price:res[0].price,
                         createTime:res[0].createTime,
                         number:res[0].number,
-                        status:res[0].status
+                        status:res[0].status,
+                        productIds:res[0].productIds.split(",")
                     }
                 });
             }

@@ -1,6 +1,6 @@
 <view class="container">
 	<view class="tab-nav">
-		<view class="tab {{ showType == 0 ? 'active' : ''}}" bindtap="switchTab" data-index='0'>全部</view>
+		<view class="tab {{ showType == '全部' ? 'active' : ''}}" bindtap="switchTab" data-index='全部'>全部</view>
 		<view class="tab {{ showType == '待付款' ? 'active' : ''}}" bindtap="switchTab" data-index='待付款'>
 			<view wx:if="{{status.toPay > 0 }}" class='list-num'>{{status.toPay}}</view>待付款
 		</view>
@@ -14,15 +14,20 @@
 			<view wx:if="{{status.toReceive > 0 }}" class='list-num'>{{status.toReceive}}</view>已收货
 		</view>
 	</view>
-
-	<view class="wrap">
+<view class="no-order" wx:if="{{orderList.length <= 0}}">
+		<image src="/images/icon/no-order.png" class="no-order-img"></image>
+		<view class="text">您目前没有相关订单</view>
+		<view class="to-index-btn" bindtap="toIndexPage">
+			马上去逛逛
+		</view>
+	</view>
+	<view wx:else class="wrap">
 		<!--  待付款  -->
 		<view bindtap='toOrderDetails' class='order-list-wrap' data-id="{{item.id}}" wx:for="{{orderList}}" wx:key="id">
 			<view class='list-top-wrap'>
 				<view class='time'>{{item.createTime}}</view>
 				<view class='status'>
-					<!-- <view class="pay-status" wx:if="{{item.orderStatus}}">线下支付订单</view> -->
-					<view class="order-status">{{item.shipStatus}}</view>
+					<view class="order-status">{{item.status}}</view>
 				</view>
 			</view>
 			<view class="goods-list">

@@ -1,5 +1,6 @@
 var util = require('../../../utils/util.js');
 var api = require('../../../config/api.js');
+const pay = require('../../../services/pay.js');
 Page({
 
   /**
@@ -59,17 +60,23 @@ Page({
         customer:{id:wx.getStorageSync('openId')},
       }).then(function(res) {
         if(res.code>0){
-           util.showSuccessToast('充值成功');
-            setTimeout(function(){
-                  wx.navigateBack();
-            },1500);
+          let orderId="wx_orderId_"+util.formatTimeNum(new Date(),'YMDhms');
+          let customerId = wx.getStorageSync('openId');  //获取用户的id
+          pay.payOrder(orderId,customerId).then(res => {
+              util.showSuccessToast('充值成功');
+              that.setData({
+                money:parseFloat(money)+parseFloat(that.data.choose)//页面显示时，设置余额
+              });
+              setTimeout(function(){
+                    wx.navigateBack();
+              },3000);
+          }).catch(res => {
+              util.showErrorToast('充值失败，请联系客服');
+          });
             let money=wx.getStorageSync('money');
             if(money==undefined || money==null || money.length==0){
                 money=0;
             }
-            that.setData({
-              money:parseFloat(money)+parseFloat(that.data.choose)//页面显示时，设置余额
-            });
         }else{
             util.showErrorToast('充值失败，请联系客服');
         }
