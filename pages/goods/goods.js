@@ -6,6 +6,7 @@ var api = require('../../config/api.js');
 const user = require('../../services/user.js');
 Page({
     data: {
+        shoppingCartAmount: 0,
         totalAmount:"",
         id: 0,
         goods: {},
@@ -130,6 +131,7 @@ Page({
                 });
                 WxParse.wxParse('goodsDetail', 'html', res.data.info.goods_desc, that);
                 wx.setStorageSync('goodsImage', res.data.info.https_pic_url);
+                
             }
             else{
                 util.showErrorToast(res.errmsg)
@@ -343,6 +345,7 @@ Page({
                      loading:1
                 });
                 WxParse.wxParse('goodsDetail', 'html', res.data[0].goods.detail, that);
+                that.getShoppingCartInfo();//获取商品详情后判断购物车有无此商品
             }
         });
     },
@@ -370,7 +373,7 @@ Page({
         }
         this.setData({
             priceChecked: false,
-            sysHeight: sysHeight
+            sysHeight: sysHeight,
         })
         // this.getGoodsInfo();
         // this.getCartCount();
@@ -426,17 +429,82 @@ Page({
             showDialog: !this.data.showDialog
         });
     },
+    //查询用户的购物车里有没有当前商品，如果有则返回购物车id和购物车里该商品的数量
+    getShoppingCartInfo:function(){
+        let that = this;
+        let goods = that.data.goods;    //获取改商品的信息
+        //查询改顾客购物车中的所有商品
+        util.request(api.GetCartList,{  
+            customer:{id:wx.getStorageSync('openId')}
+        }).then(function(res){
+            let shoppingCartListInfo = res.data;
+            //判断该用户购物车有无商品
+            if(shoppingCartListInfo.length > 0){
+                let standard = goods[0].standard;  //获取该页面商品的规格
+                for(let i = 0; i < shoppingCartListInfo.length; i++){
+                    //比对用户购物车里有没有和该页面相同的商品
+                    if(standard == shoppingCartListInfo[i].standard){
+                        let shoppingCartAmount = parseInt(shoppingCartListInfo[i].amount); //获取购物车中该商品的数量
+                        that.setData({
+                            shoppingCartId: shoppingCartListInfo[i].id, //购物车的主键id
+                            shoppingCartAmount: shoppingCartAmount,  //购物车中该商品的数量
+                            shoppingCartMessage: 1  //提示信息，如果为1则购物车中有改商品，为0则无
+                        })
+                        return false;
+                    }else{
+                        that.setData({
+                            shoppingCartMessage: 0
+                        })
+                    }
+                }
+            }else{
+                that.setData({
+                    shoppingCartMessage: 0
+                })
+            }
+        })
+    },
+    //修改购物车里商品的数量
+    updateShoppingAmount: function(){
+        let that = this;
+        let shoppingCartId = this.data.shoppingCartId; //获取拥有改商品的购物车主键id
+        let shoppingCartAmount = this.data.shoppingCartAmount;  //获取拥有改商品的购物车的数量
+        let goodsAmount = this.data.number;     //获取用户想购买该商品的数量（加减按钮中间input框的值）
+        let amountCounts = shoppingCartAmount + goodsAmount;    //需要更改的数量
+        util.request(api.Editshoppingcart,{
+            id: shoppingCartId,
+            amount: amountCounts
+        }).then(function(res){
+            if(res.code>=0){
+                util.showSuccessToast('加入成功')
+                that.setData({
+                    shoppingCartAmount: amountCounts    //更改后购物车中改商品的数量
+                })
+                if (that.data.openAttr == true) {
+                    that.setData({
+                        openAttr: !that.data.openAttr,  
+                    });
+                }
+            }else{
+                wx.showToast({
+                    image: '/images/icon/icon_error.png',
+                    title: _res.errmsg,
+                });
+            }
+        })
+    },
     addToCart: function() {
         // 判断是否登录，如果没有登录，则登录
         util.loginNow();
         var that = this;
-        let goods = this.data.goods;
+        let goods = that.data.goods;
         let userInfo = wx.getStorageSync('userInfo');
         if (userInfo == '') {
             return false;
         }
+        that.getShoppingCartInfo();
         if (this.data.openAttr == false ) {
-            that.count();
+            that.count();//计算当前总价格
             //打开规格选择窗口
             this.setData({
                 openAttr: !that.data.openAttr
@@ -454,11 +522,19 @@ Page({
                 });
                 return false;
             }
-            util.request(api.Addshoppingcart, {
+            console.log(that.data.shoppingCartMessage)
+            //如果购物车中存在此商品，则直接修改数量（amount）
+            if(that.data.shoppingCartMessage == 1){
+                //修改购物车中此商品的数量（amount）
+                that.updateShoppingAmount();
+            }
+            //如果购物车中不存在此商品，把此商品的信息存入购物车中
+            if(that.data.shoppingCartMessage == 0){
+                util.request(api.Addshoppingcart, {
                     addType: 0,
                     goods:{id: goods[0].goods.id},
                     customer:{id:wx.getStorageSync('openId')},
-                    amount:this.data.number.toString(),
+                    amount:that.data.number.toString(),
                     photo:goods[0].photo,
                     product:{id:goods[0].id},
                     name:goods[0].goods.name,
@@ -472,6 +548,7 @@ Page({
                         if (that.data.openAttr == true) {
                             that.setData({
                                 openAttr: !that.data.openAttr,
+                                shoppingCartAmount: that.data.number
                             });
                         } 
                     }else{
@@ -480,8 +557,10 @@ Page({
                             title: _res.errmsg,
                         });
                     }
-
+        
                 });
+            }
+            
         }
     },
     fastToCart: function() {
@@ -552,7 +631,7 @@ Page({
                 }, "POST")
                 .then(function(res) {
                     let _res = res;
-                    if (_res.code > 0) {
+                    if (_res.code >= 0) {
                         goods[0]['totalMoney'] = that.data.totalMoney; //将总金额加入商品信息中
                         goods[0]['amount'] = that.data.number;  //将总数量加入商品信息中
                         wx.setStorageSync('checkedGoodsList1', goods);

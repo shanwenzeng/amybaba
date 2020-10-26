@@ -159,8 +159,7 @@ Page({
             id: id.toString(),
             number: number,
             customer:{id: customerId},
-            orderStatus:'待付款',
-            shipStatus:'待发货',
+            status:'待付款',
             name: name,
             phone: phone,
             province: province,
@@ -264,10 +263,10 @@ Page({
     getGodds:function(){
         let that = this;
          //获取选中的商品信息
-         let addType = that.data.addType;
-         let ids;
-         let id="";
-         if(addType == 0){
+        let addType = that.data.addType;
+        let ids;
+        let id="";
+        if(addType == 0){
             ids = wx.getStorageSync('checkedGoodsList');
             for (let i = 0; i < ids.length; i++) {
                 id += ids[i].id+",";            
@@ -299,12 +298,13 @@ Page({
                      totalAmount:totalAmount,
                      checkedGoodsList:res.data,//设置选中的商品信息 
                  });
-                 let goods = res.data.checkedGoodsList;
-                 if (res.data.outStock == 1) {
-                     util.showErrorToast('有部分商品缺货或已下架');
-                 } else if (res.data.numberChange == 1) {
-                     util.showErrorToast('部分商品库存有变动');
-                 }       
+
+                //  let goods = res.data.checkedGoodsList;
+                //  if (res.data.outStock == 1) {
+                //      util.showErrorToast('有部分商品缺货或已下架');
+                //  } else if (res.data.numberChange == 1) {
+                //      util.showErrorToast('部分商品库存有变动');
+                //  }       
              }); 
         }
         if(addType == 1){
@@ -320,7 +320,7 @@ Page({
             freightPrice: freightPrice,
             totalMoney: totalMoney,
             orderTotalPrice: orderTotalPrice,
-            checkedGoodsList: ids
+            checkedGoodsList: ids,
         })
         }
         console.log(ids);
