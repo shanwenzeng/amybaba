@@ -6,7 +6,16 @@ const app = getApp()
 
 Page({
     data: {
-        // checkedGoodsList: [],
+        checkedGoodsList1: {
+            id: [],
+            goods: [],
+            goodsName: [],
+            standard: [],
+            simple: [],
+            price: [],
+            amount: [],
+            image: []
+        },
         checkedAddress: {},
         totalMoney: 0.00, //商品总价
         freightPrice: 0.00, //快递费
@@ -118,67 +127,45 @@ Page({
         }
         //添加订单（即向orderList表中添加数据）
         let that = this;
-        let id = [];            //定义购物车勾选的id
-        let productId = [];
-        let goods = [];         //产品表id
-        let goodsName = [];     //定义购物车勾选商品的名称
-        let standard = [];      //定义购物车勾选商品的规格
-        let simple = [];        //订单的备注
-        let price = [];         //定义加入购物车的价格
-        let amount = [];        //定义购物车勾选商品的数量
-        let image = [];         //定义购物车勾选商品的图片路径
-        let checkedGoodsList = that.data.checkedGoodsList; //获取购物车勾选的对象
+        let checkedGoodsList = that.data.checkedGoodsList; //获取购物车勾选的商品的集合
+        let checkedGoodsList1 = that.data.checkedGoodsList1;//将获取到的集合分割存入checkedGoodsList1中
+
         let postscriptValue = that.data.postscript;      //获取备注
         if(postscriptValue == null || postscriptValue == ""){ //如果备注为空，默认输入“无备注”
             postscriptValue = "无";
         }
-
+        //将获取到的集合分割存入checkedGoodsList1中
         for(let i = 0; i < checkedGoodsList.length; i++){
-            id.push(checkedGoodsList[i].id);                //获取购物车勾选的id
-            goods.push(checkedGoodsList[i].goods.id);      // 产品表id
-            goodsName.push(checkedGoodsList[i].goods.name);       //获取购物车勾选商品的规格
-            standard.push(checkedGoodsList[i].standard);    //获取购物车勾选商品的规格          
-            simple.push(postscriptValue);              //获取备注                 
-            price.push(checkedGoodsList[i].price);          //获取加入购物车的价格
-            amount.push(checkedGoodsList[i].amount);        //获取购物车勾选商品的数量
-            image.push(checkedGoodsList[i].photo);          //获取购物车勾选商品的图片路径
+            checkedGoodsList1.id.push(checkedGoodsList[i].id);                //获取购物车勾选的id
+            checkedGoodsList1.goods.push(checkedGoodsList[i].goods.id);      // 产品表id
+            checkedGoodsList1.goodsName.push(checkedGoodsList[i].goods.name);       //获取购物车勾选商品的规格
+            checkedGoodsList1.standard.push(checkedGoodsList[i].standard);    //获取购物车勾选商品的规格          
+            checkedGoodsList1.simple.push(postscriptValue);              //获取备注                 
+            checkedGoodsList1.price.push(checkedGoodsList[i].price);          //获取加入购物车的价格
+            checkedGoodsList1.amount.push(checkedGoodsList[i].amount);        //获取购物车勾选商品的数量
+            checkedGoodsList1.image.push(checkedGoodsList[i].photo);          //获取购物车勾选商品的图片路径
         }
-        
-        //将集合转化为字符串
-        goods=goods.join(",");
-        goodsName=goodsName.join(",");
-        standard=standard.join(",");
-        simple = simple.join(",");
-        price=price.join(",");
-        amount=amount.join(",");
-        image=image.join(",");
 
         let customerId = wx.getStorageSync('openId');  //获取用户的id
-        let number = util.formatTimeNum(new Date(),'YMDhms');  //获取时间戳，为订单号
-        let name = this.data.checkedAddress.name; //收货人姓名
-        let phone = this.data.checkedAddress.phone; //收货人电话号码
-        let province = this.data.checkedAddress.province; //收货地址
-        let city = this.data.checkedAddress.city; //收货地城市
-        let district = this.data.checkedAddress.district  //收货地址县（区）
-        let address = this.data.checkedAddress.address; //详细地址
+
         util.request(api.generateOrder,{
-            id: id.toString(),
-            number: number,
+            id: checkedGoodsList1.id.toString(),//获取购物车勾选的id
+            number: util.formatTimeNum(new Date(),'YMDhms'),//获取时间戳，为订单号
             customer:{id: customerId},
             status:'待付款',
-            name: name,
-            phone: phone,
-            province: province,
-            city: city,
-            district: district,
-            address: address,
-            goods: goods,
-            goodsName: goodsName,
-            standard: standard,
-            simple: simple,
-            price: price,
-            amount: amount,
-            image: image
+            name: this.data.checkedAddress.name,                //收货人姓名
+            phone: this.data.checkedAddress.phone,              //收货人电话号码
+            province: this.data.checkedAddress.province,        //收货地址
+            city: this.data.checkedAddress.city,                //收货地城市
+            district: this.data.checkedAddress.district,        //收货地址县（区）
+            address: this.data.checkedAddress.detailAddress,    //详细地址
+            goods: checkedGoodsList1.goods.toString(),          //产品表id
+            goodsName: checkedGoodsList1.goodsName.toString(),  //购物车勾选商品的名称
+            standard: checkedGoodsList1.standard.toString(),    //购物车勾选商品的规格
+            simple: checkedGoodsList1.simple.toString(),        //订单的备注
+            price: checkedGoodsList1.price.toString(),          //加入购物车的价格
+            amount: checkedGoodsList1.amount.toString(),        //购物车勾选商品的数量
+            image: checkedGoodsList1.image.toString()           //购物车勾选商品的图片路径
         }).then(function(res){
             if(res.code > 0){
                 // let orderId=res.data;
@@ -328,6 +315,6 @@ Page({
             checkedGoodsList: ids,
         })
         }
-        console.log(ids);
+        // console.log(ids);
     }
 })

@@ -170,7 +170,7 @@ Page({
     addNumber: function(event) {
         let itemIndex = event.target.dataset.itemIndex;
         let cartItem = this.data.cartGoods[itemIndex];
-        console.log(cartItem)
+        // console.log(cartItem)
         let amount = Number(cartItem.amount) + 1;
         this.updateCart(itemIndex, amount, cartItem.id);
     },
@@ -189,7 +189,7 @@ Page({
             util.showErrorToast('你好像没选中商品');
             return false;
         }
-        wx.setStorageSync('checkedGoodsList', checkedGoods);
+        wx.setStorageSync('checkedGoodsList', checkedGoods);//将选中的商品传到订单页面
         
         wx.navigateTo({
             url: '/pages/order-check/index?addtype=0'
