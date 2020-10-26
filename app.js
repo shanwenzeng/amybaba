@@ -50,8 +50,8 @@ App({
             avatar: 'http://lucky-icon.meiweiyuxian.com/hio/default_avatar_big.png'
         },
         token: '',
-        ApiRootUrl: 'http://localhost:8081/jxambb/',//全局路径，用于获取项目根目录
-        // ApiRootUrl: 'https://yfk.qrzyyn.com/jxambb/',//全局路径，用于获取项目根目录
+        // ApiRootUrl: 'http://localhost:8081/jxambb/',//全局路径，用于获取项目根目录
+        ApiRootUrl: 'https://yfk.qrzyyn.com/jxambb/',//全局路径，用于获取项目根目录
     }
 
 })

@@ -43,8 +43,12 @@
 				<view class="right-text">￥{{totalMoney}}</view>
 			</view>
 			<view class="row-box">
-				<view class="row-label">快递</view>
+				<view class="row-label">配送费</view>
 				<view class="right-text">¥{{freightPrice}}</view>
+			</view>
+			<view class="row-box">
+				<view class="row-label">优惠</view>
+				<view class="right-text">¥{{discount}}</view>
 			</view>
 			<view class="memo-box">
 				<view class="row-label">备注：</view>
@@ -55,7 +59,7 @@
 			<view class="bottom-box">
 				<view class="row-label">合计：</view>
 				<view class="right-text price-to-pay">
-					¥{{orderTotalPrice}}
+					¥{{orderTotalPrice+freightPrice-discount}}
 				</view>
 			</view>
 		</view>

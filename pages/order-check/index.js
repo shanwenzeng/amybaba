@@ -6,6 +6,7 @@ const app = getApp()
 
 Page({
     data: {
+        discount:0,//优惠
         checkedGoodsList1: {
             id: [],
             goods: [],
