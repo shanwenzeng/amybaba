@@ -14,6 +14,7 @@ Page({
             standard: [],
             simple: [],
             price: [],
+            productIds: [],
             amount: [],
             image: [],
             productIds:[]
@@ -143,14 +144,15 @@ Page({
             checkedGoodsList1.standard.push(checkedGoodsList[i].standard);    //获取购物车勾选商品的规格          
             checkedGoodsList1.simple.push(postscriptValue);              //获取备注                 
             checkedGoodsList1.price.push(checkedGoodsList[i].price);          //获取加入购物车的价格
+            checkedGoodsList1.productIds.push(checkedGoodsList[i].productIds);
             checkedGoodsList1.amount.push(checkedGoodsList[i].amount);        //获取购物车勾选商品的数量
             checkedGoodsList1.image.push(checkedGoodsList[i].photo);          //获取购物车勾选商品的图片路径
-            checkedGoodsList1.productIds.push(checkedGoodsList[i].product.id);          //获取购物车勾选商品的id
+            checkedGoodsList1.productIds.push(checkedGoodsList[i].productIds);          //获取购物车勾选商品的id
         }
         let customerId = wx.getStorageSync('openId');  //获取用户的id
         util.request(api.generateOrder,{
-            id: checkedGoodsList1.id.toString(),//获取购物车勾选的id
-            number: util.formatTimeNum(new Date(),'YMDhms'),//获取时间戳，为订单号
+            id: checkedGoodsList1.id.toString(),                //获取购物车勾选的id
+            number: util.formatTimeNum(new Date(),'YMDhms'),    //获取时间戳，为订单号
             customer:{id: customerId},
             status:'待付款',
             name: this.data.checkedAddress.name,                //收货人姓名
@@ -164,9 +166,9 @@ Page({
             standard: checkedGoodsList1.standard.toString(),    //购物车勾选商品的规格
             simple: checkedGoodsList1.simple.toString(),        //订单的备注
             price: checkedGoodsList1.price.toString(),          //加入购物车的价格
+            productIds: checkedGoodsList1.productIds.toString(),//购物车勾选商品的产品id
             amount: checkedGoodsList1.amount.toString(),        //购物车勾选商品的数量
             image: checkedGoodsList1.image.toString(),           //购物车勾选商品的图片路径
-            productIds:checkedGoodsList1.productIds.toString()
         }).then(function(res){
             if(res.code > 0){
                 let orderId="wx_orderId_"+res.data;
@@ -258,6 +260,7 @@ Page({
         let addType = that.data.addType;
         let ids;
         let id="";
+        //购物车购买
         if(addType == 0){
             ids = wx.getStorageSync('checkedGoodsList');
             for (let i = 0; i < ids.length; i++) {
@@ -274,8 +277,9 @@ Page({
                  let totalMoney=0;//总金额
                  for(let i=0;i<res.data.length;i++){
                     //  if(res.data[i].checked=="1"){
-                         totalAmount=parseInt(totalAmount)+parseInt(res.data[i].amount);
-                         totalMoney=totalMoney+parseFloat(res.data[i].amount)*parseFloat(res.data[i].price)
+                    res.data[i]['productIds'] = res.data[i].product.id;
+                    totalAmount=parseInt(totalAmount)+parseInt(res.data[i].amount);
+                    totalMoney=totalMoney+parseFloat(res.data[i].amount)*parseFloat(res.data[i].price)
                     //  }
                  }
                  let freightPrice = 0; //快递费
@@ -298,6 +302,7 @@ Page({
                 //  }       
              }); 
         }
+        //立即购买
         if(addType == 1){
         ids = wx.getStorageSync('checkedGoodsList1');
         let totalAmount = ids[0].amount;//总数量
@@ -314,6 +319,5 @@ Page({
             checkedGoodsList: ids,
         })
         }
-        // console.log(ids);
     }
 })

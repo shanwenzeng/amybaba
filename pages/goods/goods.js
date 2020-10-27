@@ -522,7 +522,6 @@ Page({
                 });
                 return false;
             }
-            console.log(that.data.shoppingCartMessage)
             //如果购物车中存在此商品，则直接修改数量（amount）
             if(that.data.shoppingCartMessage == 1){
                 //修改购物车中此商品的数量（amount）
@@ -532,15 +531,16 @@ Page({
             if(that.data.shoppingCartMessage == 0){
                 util.request(api.Addshoppingcart, {
                     addType: 0,
-                    goods:{id: goods[0].goods.id},
-                    customer:{id:wx.getStorageSync('openId')},
-                    amount:that.data.number.toString(),
-                    photo:goods[0].photo,
-                    product:{id:goods[0].id},
-                    name:goods[0].goods.name,
-                    weight:goods[0].weight,
-                    price:goods[0].price,
-                    standard:goods[0].standard,
+                    goods:{id: goods[0].goods.id},              //商品的id
+                    customer:{id:wx.getStorageSync('openId')},  //顾客id
+                    amount:that.data.number.toString(),         //商品的数量
+                    photo:goods[0].photo,                       //图片路径
+                    product:{id:goods[0].id},                   //产品表id
+                    name:goods[0].goods.name,                   //商品名称
+                    weight:goods[0].weight,                     //商品的重量
+                    price:goods[0].price,                       //商品的价格
+                    standard:goods[0].standard,                 //商品的规格
+                    status: "0"                                 //状态码
                 })
                 .then(function(res) {
                     if(res.code>0){
@@ -625,15 +625,23 @@ Page({
             //立即购买
             util.request(api.Addshoppingcart, {
                     addType: 1, // 0：正常加入购物车，1:立即购买，2:再来一单
-                    goodsId: this.data.id,
-                    number: this.data.number,
-                    productId: goods[0].id
+                    goods:{id: goods[0].goods.id},              //商品的id
+                    customer:{id:wx.getStorageSync('openId')},  //顾客id
+                    amount:that.data.number.toString(),         //商品的数量
+                    photo:goods[0].photo,                       //图片路径
+                    product:{id:goods[0].id},                   //产品表id
+                    name:goods[0].goods.name,                   //商品名称
+                    weight:goods[0].weight,                     //商品的重量
+                    price:goods[0].price,                       //商品的价格
+                    standard:goods[0].standard,                 //商品的规格
+                    status: "1"
                 }, "POST")
                 .then(function(res) {
                     let _res = res;
                     if (_res.code >= 0) {
                         goods[0]['totalMoney'] = that.data.totalMoney; //将总金额加入商品信息中
                         goods[0]['amount'] = that.data.number;  //将总数量加入商品信息中
+                        goods[0]['productIds'] = that.data.id; //将产品id修改为productIds
                         wx.setStorageSync('checkedGoodsList1', goods);
                         wx.navigateTo({
                             url: '/pages/order-check/index?addtype=1'
