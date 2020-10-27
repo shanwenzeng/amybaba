@@ -3,11 +3,12 @@
  */
 const util = require('../utils/util.js');
 const api = require('../config/api.js');
-function payOrder(orderId,openid) {
+function payOrder(orderId,openid,money) {
     return new Promise(function(resolve, reject) {
         util.request(api.PayPrepayId, {
             orderId: orderId,
-            openid:openid
+            openid:openid,
+            money:money
         }).then((res) => {
             if (res.code === 1) {
                 const payParam = res.data;

@@ -57,8 +57,8 @@ Page({
     let that=this;
     let orderId="wx_orderId_"+util.formatTimeNum(new Date(),'YMDhms');
     let openId = wx.getStorageSync('openId');  //获取用户的id
-    //调用支付功能，需要传递两个参数，分别为：订单id，用户openId
-    pay.payOrder(orderId,openId).then(res => {
+    //调用支付功能，需要传递三个参数，分别为：订单id，用户openId，充值金额
+    pay.payOrder(orderId,openId,this.data.choose).then(res => {
       //调用后台充值功能，向recharge表中添加数据,同时修改customer表中的money字段
       util.request(api.investMoney, {
         id:openId,
@@ -74,8 +74,6 @@ Page({
           if(money==undefined || money==null || money.length==0){
             money=0;
           }   
-        }else{
-          util.showErrorToast('充值失败，请联系客服');
         }
       });   
     //设置3秒后返回上一页

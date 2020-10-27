@@ -152,7 +152,7 @@ Page({
         let customerId = wx.getStorageSync('openId');  //获取用户的id
         util.request(api.generateOrder,{
             id: checkedGoodsList1.id.toString(),                //获取购物车勾选的id
-            number: util.formatTimeNum(new Date(),'YMDhms'),    //获取时间戳，为订单号
+            number: util.getDateString(),    //获取日期字符串，为订单号
             customer:{id: customerId},
             status:'待付款',
             name: this.data.checkedAddress.name,                //收货人姓名
@@ -171,8 +171,8 @@ Page({
             image: checkedGoodsList1.image.toString(),           //购物车勾选商品的图片路径
         }).then(function(res){
             if(res.code > 0){
-                let orderId="wx_orderId_"+res.data;
-                pay.payOrder(orderId,customerId).then(res => {
+                let orderId="wx_orderId_"+res.data.toString();
+                pay.payOrder(orderId,customerId,that.data.totalMoney.toString()).then(res => {
                     wx.redirectTo({
                         url: '/pages/payResult/payResult?status=1&orderId=' + orderId
                     });
@@ -293,7 +293,6 @@ Page({
                      totalAmount:totalAmount,
                      checkedGoodsList:res.data,//设置选中的商品信息 
                  });
-
                 //  let goods = res.data.checkedGoodsList;
                 //  if (res.data.outStock == 1) {
                 //      util.showErrorToast('有部分商品缺货或已下架');

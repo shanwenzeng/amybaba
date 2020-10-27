@@ -37,7 +37,12 @@ function formatTimeNum(number, format) {
     }
     return format;
 }
-
+//获得日期字符串
+function getDateString()  {   
+    let d = new Date();
+    let dateString = d.getFullYear() + "" +(d.getMonth()+1) + "" + d.getDate() + "" + d.getHours() + "" + d.getMinutes() + "" + d.getSeconds()+""+d.getMilliseconds()+""+ Math.floor(Math.random()*10000);
+    return dateString;   
+}
 function testPhone(num) {
     var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1})|(16[0-9]{1})|(19[0-9]{1}))+\d{8})$/;
     if (num==undefined || num.length == 0) {
@@ -463,5 +468,6 @@ module.exports = {
     findDistance,
     getLocation,
     findXy,
-    getDistance
+    getDistance,
+    getDateString
 }
