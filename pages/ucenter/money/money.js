@@ -53,34 +53,38 @@ Page({
       util.showErrorToast("请输入正确的充值金额");
       return false;
     }
+    //调用微信充值功能
     let that=this;
+    let orderId="wx_orderId_"+util.formatTimeNum(new Date(),'YMDhms');
+    let openId = wx.getStorageSync('openId');  //获取用户的id
+    //调用支付功能，需要传递两个参数，分别为：订单id，用户openId
+    pay.payOrder(orderId,openId).then(res => {
+      //调用后台充值功能，向recharge表中添加数据,同时修改customer表中的money字段
       util.request(api.investMoney, {
-        id:wx.getStorageSync('openId'),
+        id:openId,
         money: that.data.choose,
-        customer:{id:wx.getStorageSync('openId')},
+        customer:{id:openId},
       }).then(function(res) {
         if(res.code>0){
-          let orderId="wx_orderId_"+util.formatTimeNum(new Date(),'YMDhms');
-          let customerId = wx.getStorageSync('openId');  //获取用户的id
-          pay.payOrder(orderId,customerId).then(res => {
-              util.showSuccessToast('充值成功');
-              that.setData({
-                money:parseFloat(money)+parseFloat(that.data.choose)//页面显示时，设置余额
-              });
-              setTimeout(function(){
-                    wx.navigateBack();
-              },3000);
-          }).catch(res => {
-              util.showErrorToast('充值失败，请联系客服');
+          util.showSuccessToast('充值成功');
+          that.setData({
+            money:parseFloat(money)+parseFloat(that.data.choose)//页面显示时，设置余额
           });
-            let money=wx.getStorageSync('money');
-            if(money==undefined || money==null || money.length==0){
-                money=0;
-            }
+          let money=wx.getStorageSync('money');
+          if(money==undefined || money==null || money.length==0){
+            money=0;
+          }   
         }else{
-            util.showErrorToast('充值失败，请联系客服');
+          util.showErrorToast('充值失败，请联系客服');
         }
-    });
+      });   
+    //设置3秒后返回上一页
+      setTimeout(function(){
+            wx.navigateBack();
+      },3000);
+    }).catch(res => {
+        util.showErrorToast('充值失败，请联系客服');
+    }); 
   },
   /**
    * 生命周期函数--监听页面隐藏

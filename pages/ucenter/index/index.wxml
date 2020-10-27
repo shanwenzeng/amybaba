@@ -70,7 +70,7 @@
                 <view class='order-icon-wrap'>
                     <image class='order-icon' src='/images/icon/icon-pay-r.png'>
                     </image>
-                    <view wx:if="{{status.toPay > 0 }}" class='red-point'>{{status.toPay}}</view>
+                    <view wx:if="{{status.waitPay > 0 }}" class='red-point'>{{status.waitPay}}</view>
                 </view>
                 <text class='order-txt'>待付款</text>
             </view>
@@ -78,7 +78,7 @@
                 <view class='order-icon-wrap'>
                     <image class='order-icon' src='/images/icon/icon-delivery-r.png'>
                     </image>
-                    <view wx:if="{{status.toDelivery > 0 }}" class='red-point'>{{status.toDelivery}}</view>
+                    <view wx:if="{{status.waitSend > 0 }}" class='red-point'>{{status.waitSend}}</view>
                 </view>
                 <text class='order-txt'>待发货</text>
             </view>
@@ -86,7 +86,7 @@
                 <view class='order-icon-wrap'>
                     <image class='order-icon' src='/images/icon/icon-onroad-r.png'>
                     </image>
-                    <view wx:if="{{status.toReceive > 0 }}" class='red-point'>{{status.toReceive}}</view>
+                    <view wx:if="{{status.waitReceive > 0 }}" class='red-point'>{{status.waitReceive}}</view>
                 </view>
                 <text class='order-txt'>待收货</text>
             </view>
