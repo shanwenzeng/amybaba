@@ -45,7 +45,7 @@ Page({
     //获取商家
     getShop:function(condition){
         let that=this;
-        let obj={};//传递给后台的参数
+        let obj={rowsCount: that.data.size, page: that.data.allPage};//传递给后台的参数
         let url=api.RecommendShops;//请求地址
         if(condition=="距离"){
             util.request(api.RecommendShops,obj).then(function (res) {
@@ -75,7 +75,7 @@ Page({
             if(condition=="销量"){
                 url=api.findShopBySale;
             }else if(condition=="好评"){
-                obj={star:'5'};
+                obj={rowsCount: that.data.size, page: that.data.allPage,star:'5'};
             }
             util.request(url,obj).then(function (res) {
                 if (res.data.length> 0) {
@@ -97,16 +97,16 @@ Page({
     getCurrentList: function(id) {
         let that = this;
         util.request(api.GetCurrentList, {
-            size: that.data.size,
-            page: that.data.allPage,
+            rowsCount: that.data.size, //一页的数量
+            page: that.data.allPage,    //当前页码
             id: id
         }, 'POST').then(function(res) {
-            if (res.errno === 0) {
-                let count = res.data.count;
+            if (res.code >= 0) {
+                let count = res.total;//总数
                 that.setData({
                     allCount: count,
-                    allPage: res.data.currentPage,
-                    // list: that.data.list.concat(res.data.data),
+                    // allPage: that.data.allPage, 
+                    shops: that.data.shops.concat(res.data),
                     showNoMore: 1,
                     loading: 0,
                 });
@@ -154,9 +154,8 @@ Page({
             })
             wx.setStorageSync('categoryId', nowId)
         }
-        
         this.getCatalog();//获取分类（全部、好评、距离、销量等）
-        this.getShop();//获取商家
+        // this.getShop();//获取商家
     },
     switchCate: function(e) {
       let id = e.currentTarget.dataset.id;
