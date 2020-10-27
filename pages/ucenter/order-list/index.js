@@ -117,6 +117,7 @@ Page({
         // }
         // this.getOrderInfo();
         this.getOrderList();//查询订单
+        this.findOrderByStatus();//根据订单状态统计订单各种状态数量
     },
     switchTab: function(event) {
         let showType = event.currentTarget.dataset.index;
@@ -176,5 +177,28 @@ Page({
             'allPage': that.data.allPage + 1
         });
         that.getOrderList();
+    },
+    //根据订单状态统计订单各种状态数量
+    findOrderByStatus:function(){
+        let that = this;
+        util.request(api.findOrderByStatus,{customer:{id:wx.getStorageSync('openId')}}).then(function(res) {
+            if (res.code > 0) {
+                let status={},all=0;
+                for(let i=0;i<res.data.length;i++){
+                    if(res.data[i].status=="待付款"){
+                        status.waitPay=res.data[i].count;
+                    }else if(res.data[i].status=="待发货"){
+                        status.waitSend=res.data[i].count;
+                    }else if(res.data[i].status=="待收货"){
+                        status.waitReceive=res.data[i].count;
+                    }else if(res.data[i].status=="已收货"){
+                        status.Received=res.data[i].count;
+                    }
+                    all+=res.data[i].count;//统计总数量
+                }
+                status.all=all;//全部订单数据
+                that.setData({status:status});
+            }
+        });
     }
 })

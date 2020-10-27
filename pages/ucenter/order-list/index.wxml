@@ -1,17 +1,19 @@
 <view class="container">
 	<view class="tab-nav">
-		<view class="tab {{ showType == '全部' ? 'active' : ''}}" bindtap="switchTab" data-index='全部'>全部</view>
+		<view class="tab {{ showType == '全部' ? 'active' : ''}}" bindtap="switchTab" data-index='全部'>
+			<view wx:if="{{status.all > 0 }}" class='list-num'>{{status.all}}</view>全部
+		</view>
 		<view class="tab {{ showType == '待付款' ? 'active' : ''}}" bindtap="switchTab" data-index='待付款'>
-			<view wx:if="{{status.toPay > 0 }}" class='list-num'>{{status.toPay}}</view>待付款
+			<view wx:if="{{status.waitPay > 0 }}" class='list-num'>{{status.waitPay}}</view>待付款
 		</view>
 		<view class="tab {{ showType == '待发货' ? 'active' : ''}}" bindtap="switchTab" data-index='待发货'>
-			<view wx:if="{{status.toDelivery > 0 }}" class='list-num'>{{status.toDelivery}}</view>待发货
+			<view wx:if="{{status.waitSend > 0 }}" class='list-num'>{{status.waitSend}}</view>待发货
 		</view>
 		<view class="tab {{ showType == '待收货' ? 'active' : ''}}" bindtap="switchTab" data-index='待收货'>
-			<view wx:if="{{status.toReceive > 0 }}" class='list-num'>{{status.toReceive}}</view>待收货
+			<view wx:if="{{status.waitReceive > 0 }}" class='list-num'>{{status.waitReceive}}</view>待收货
 		</view>
 		<view class="tab {{ showType == '已收货' ? 'active' : ''}}" bindtap="switchTab" data-index='已收货'>
-			<view wx:if="{{status.toReceive > 0 }}" class='list-num'>{{status.toReceive}}</view>已收货
+			<view wx:if="{{status.Received > 0 }}" class='list-num'>{{status.Received}}</view>已收货
 		</view>
 	</view>
 <view class="no-order" wx:if="{{orderList.length <= 0}}">

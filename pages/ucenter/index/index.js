@@ -11,7 +11,7 @@ Page({
         userInfo: {},
         hasUserInfo: false,
         canIUse: wx.canIUse('button.open-type.getUserInfo'),
-        status: {},
+        status: {},//订单状态
         money:'0',//;余额
     },
     goProfile: function (e) {
@@ -119,8 +119,8 @@ Page({
             userInfo: userInfo,
         });
         this.getMoney();//获取余额
-        this.getOrderInfo();
-        wx.removeStorageSync('categoryId');
+        this.findOrderByStatus();//根据订单状态统计订单各种状态数量
+        // wx.removeStorageSync('categoryId');
     },
 
     onPullDownRefresh: function() {
@@ -129,15 +129,23 @@ Page({
         wx.hideNavigationBarLoading() //完成停止加载
         wx.stopPullDownRefresh() //停止下拉刷新
     },
-    getOrderInfo: function(e) {
+    //根据订单状态统计订单各种状态数量
+    findOrderByStatus:function(){
         let that = this;
-        util.request(api.OrderCountInfo).then(function(res) {
-            if (res.errno === 0) {
-                let status = res.data;
-                that.setData({
-                    status: status
-                });
+        util.request(api.findOrderByStatus,{customer:{id:wx.getStorageSync('openId')}}).then(function(res) {
+            if (res.code > 0) {
+                let status={};
+                for(let i=0;i<res.data.length;i++){
+                    if(res.data[i].status=="待付款"){
+                        status.waitPay=res.data[i].count;
+                    }else if(res.data[i].status=="待发货"){
+                        status.waitSend=res.data[i].count;
+                    }else if(res.data[i].status=="待收货"){
+                        status.waitReceive=res.data[i].count;
+                    }
+                }
+                that.setData({status:status});
             }
         });
-    },
+    }
 })
