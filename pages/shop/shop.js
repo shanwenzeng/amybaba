@@ -45,7 +45,7 @@ Page({
     //获取商家
     getShop:function(condition){
         let that=this;
-        let obj={rowsCount: that.data.size, page: that.data.allPage};//传递给后台的参数
+        let obj={};//传递给后台的参数
         let url=api.RecommendShops;//请求地址
         if(condition=="距离"){
             util.request(api.RecommendShops,obj).then(function (res) {
@@ -75,7 +75,7 @@ Page({
             if(condition=="销量"){
                 url=api.findShopBySale;
             }else if(condition=="好评"){
-                obj={rowsCount: that.data.size, page: that.data.allPage,star:'5'};
+                obj={star:'5'};
             }
             util.request(url,obj).then(function (res) {
                 if (res.data.length> 0) {
@@ -94,6 +94,7 @@ Page({
             });
         });
     },
+    //商家的分页
     getCurrentList: function(id) {
         let that = this;
         util.request(api.GetCurrentList, {
