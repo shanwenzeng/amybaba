@@ -134,7 +134,7 @@ Page({
                 size: 8,
                 loading: 1
             })
-            this.getCurrentList(0);
+          //  this.getCurrentList(0);
             this.setData({
                 nowId: 0,
                 currentCategory: {}
@@ -156,7 +156,7 @@ Page({
             wx.setStorageSync('categoryId', nowId)
         }
         this.getCatalog();//获取分类（全部、好评、距离、销量等）
-        // this.getShop();//获取商家
+        this.getShop();//获取商家
     },
     switchCate: function(e) {
       let id = e.currentTarget.dataset.id;
