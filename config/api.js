@@ -38,6 +38,7 @@ module.exports = {
     batchEditshoppingcart: ApiRootUrlTwo + 'shoppingcart/batchEdit', //批量修改购物车
     //订单
     generateOrder: ApiRootUrlTwo + 'orderList/generateOrder',//生成订单
+    editOrderList: ApiRootUrlTwo + 'orderList/edit',//生成订单
     OrderDetail: ApiRootUrlTwo + 'orderDetail/findById', //订单详情
     findOrderDetail: ApiRootUrlTwo + 'orderDetail/find', //订单详情
     findMoney: ApiRootUrlTwo + 'consumer/findMoney', //查询余额

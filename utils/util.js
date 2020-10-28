@@ -12,7 +12,19 @@ function formatTime(date) {
 
     return [year, month, day].map(formatNumber).join('-') + ' ' + [hour, minute, second].map(formatNumber).join(':')
 }
-
+/*************************************************
+ * 将数值型的日期转换成长日期格式，
+ * 例如：1495977369000；YYYY-MM-DD  hh:mm:ss,并解决时间相差8小时的问题
+ * 返回：字符串值
+ *************************************************/
+Date.prototype.getLongDate=function(value){
+    if(value!=undefined) {
+        var d=new Date(value);
+        return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getUTCDate()+" "+(d.getUTCHours())+":"+d.getUTCMinutes()+":"+d.getUTCSeconds();
+    }else{
+        return "";
+    }
+};
 const formatNumber = n => {
     n = n.toString()
     return n[1] ? n : '0' + n

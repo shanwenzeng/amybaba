@@ -71,7 +71,71 @@ Page({
         });
     },
     payOrder: function (e) {
+        console.log(this+"....")
         let that = this;
+        let orderId="wx_orderId_"+this.data.orderId;
+        let order=this.data.orderId;//保存到消费记录表(recharge)中的order
+        //检测是否有余额，如果有余额，则优先使用余额支付，否则调用微信支付
+        util.request(api.findMoney,{
+            id:wx.getStorageSync('openId')
+        }).then(function(res){
+            if(res.code>0 && res.data>=that.data.orderInfo.price){    
+                wx.showModal({
+                    title: "您余额为："+res.data+"元",
+                    content: "您确定支付吗？",
+                    success: function (res) {
+                        if (res.confirm) {                                    
+                            util.request(api.investMoney,{
+                                id:wx.getStorageSync('openId'),
+                                customer:{id:wx.getStorageSync('openId')},
+                                money:that.data.orderInfo.price,
+                                order:order,
+                                type:"商品消费"
+                            }).then(function(res){
+                                if(res.code>0){
+                                    //付款成功后，修改订态状态为待发货
+                                    util.request(api.editOrderList,{
+                                        id:order,
+                                        status:'待发货'
+                                    }).then(function(res){
+                                        if(res.code>0){
+                                            wx.redirectTo({
+                                                url: '/pages/payResult/payResult?status=1&orderId=' + orderId
+                                            });
+                                        }
+                                    })
+                                }else{
+                                    wx.redirectTo({
+                                        url: '/pages/payResult/payResult?status=0&orderId= '+ orderId
+                                    });
+                                }
+                            });
+                        }
+                    }
+                });
+            }else{
+                //调用微信支付
+                pay.payOrder(orderId,wx.getStorageSync('openId'),that.data.orderInfo.price.toString()).then(res => {
+                    //付款成功后，修改订态状态为待发货
+                    util.request(api.editOrderList,{
+                        id:order,
+                        status:'待发货'
+                    }).then(function(res){
+                        if(res.code>0){
+                            wx.redirectTo({
+                                url: '/pages/payResult/payResult?status=1&orderId=' + orderId
+                            });
+                        }
+                    })
+                }).catch(res => {
+                    wx.redirectTo({
+                        url: '/pages/payResult/payResult?status=0&orderId= '+ orderId
+                    });
+                });
+            }
+        });
+
+
         pay.payOrder(parseInt(that.data.orderId)).then(res => {
             that.getOrderDetail();
         }).catch(res => {
@@ -153,7 +217,6 @@ Page({
             id: that.data.orderId
         }).then(function (res) {
             if (res.length > 0) {
-                res[0].createTime=util.formatTime(new Date(res[0].createTime))//重新设置时间格式
                 //将图片拆分成数组
                 if(res[0].allImage!=undefined && res[0].allImage!=null && res[0].allImage.length>0){
                     res[0].allImage=res[0].allImage.split(",");
@@ -172,7 +235,7 @@ Page({
                         allImage:res[0].allImage,
                         amount: res[0].amount,
                         price:res[0].price,
-                        createTime:res[0].createTime,
+                        createTime:Date.prototype.getLongDate(res[0].createTime) ,//重新设置时间格式
                         number:res[0].number,
                         status:res[0].status,
                         productIds:res[0].productIds.split(",")

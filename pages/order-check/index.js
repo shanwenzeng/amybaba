@@ -191,9 +191,17 @@ Page({
                                         type:"商品消费"
                                     }).then(function(res){
                                         if(res.code>0){
-                                            wx.redirectTo({
-                                                url: '/pages/payResult/payResult?status=1&orderId=' + orderId
-                                            });
+                                            //付款成功后，修改订态状态为待发货
+                                            util.request(api.editOrderList,{
+                                                id:order,
+                                                status:'待发货'
+                                            }).then(function(res){
+                                                if(res.code>0){
+                                                    wx.redirectTo({
+                                                        url: '/pages/payResult/payResult?status=1&orderId=' + orderId
+                                                    });
+                                                }
+                                            })
                                         }else{
                                             wx.redirectTo({
                                                 url: '/pages/payResult/payResult?status=0&orderId= '+ orderId
@@ -206,9 +214,17 @@ Page({
                     }else{
                         //调用微信支付
                         pay.payOrder(orderId,customerId,that.data.totalMoney.toString()).then(res => {
-                            wx.redirectTo({
-                                url: '/pages/payResult/payResult?status=1&orderId=' + orderId
-                            });
+                            //付款成功后，修改订态状态为待发货
+                            util.request(api.editOrderList,{
+                                id:order,
+                                status:'待发货'
+                            }).then(function(res){
+                                if(res.code>0){
+                                    wx.redirectTo({
+                                        url: '/pages/payResult/payResult?status=1&orderId=' + orderId
+                                    });
+                                }
+                            })
                         }).catch(res => {
                             wx.redirectTo({
                                 url: '/pages/payResult/payResult?status=0&orderId= '+ orderId
