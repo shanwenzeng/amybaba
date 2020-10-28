@@ -16,7 +16,7 @@ Page({
             price: [],
             productIds: [],
             amount: [],
-            image: [],
+            photo: [],
             productIds:[]
         },
         checkedAddress: {},
@@ -136,6 +136,7 @@ Page({
         if(postscriptValue == null || postscriptValue == ""){ //如果备注为空，默认输入“无备注”
             postscriptValue = "无";
         }
+        console.log(checkedGoodsList);
         //将获取到的集合分割存入checkedGoodsList1中
         for(let i = 0; i < checkedGoodsList.length; i++){
             checkedGoodsList1.id.push(checkedGoodsList[i].id);                //获取购物车勾选的id
@@ -144,9 +145,8 @@ Page({
             checkedGoodsList1.standard.push(checkedGoodsList[i].standard);    //获取购物车勾选商品的规格          
             checkedGoodsList1.simple.push(postscriptValue);              //获取备注                 
             checkedGoodsList1.price.push(checkedGoodsList[i].price);          //获取加入购物车的价格
-            checkedGoodsList1.productIds.push(checkedGoodsList[i].productIds);
             checkedGoodsList1.amount.push(checkedGoodsList[i].amount);        //获取购物车勾选商品的数量
-            checkedGoodsList1.image.push(checkedGoodsList[i].photo);          //获取购物车勾选商品的图片路径
+            checkedGoodsList1.photo.push(checkedGoodsList[i].photo);          //获取购物车勾选商品的图片路径
             checkedGoodsList1.productIds.push(checkedGoodsList[i].productIds);          //获取购物车勾选商品的id
         }
         let customerId = wx.getStorageSync('openId');  //获取用户的id
@@ -168,20 +168,20 @@ Page({
             price: checkedGoodsList1.price.toString(),          //加入购物车的价格
             productIds: checkedGoodsList1.productIds.toString(),//购物车勾选商品的产品id
             amount: checkedGoodsList1.amount.toString(),        //购物车勾选商品的数量
-            image: checkedGoodsList1.image.toString(),           //购物车勾选商品的图片路径
+            photo: checkedGoodsList1.photo.toString(),           //购物车勾选商品的图片路径
         }).then(function(res){
             if(res.code > 0){
                 let orderId="wx_orderId_"+res.data.toString();
                 //检测是否有余额，如果有余额，则优先使用余额支付，否则调用微信支付
-                wx.showModal({
-                    title: '',
-                    content: '您确定支付吗？',
-                    success: function (res) {
-                        if (res.confirm) {
-                            util.request(api.findMoney,{
-                                id:wx.getStorageSync('openId')
-                            }).then(function(res){
-                                if(res.code>0 && res.data>=that.data.totalMoney){
+                util.request(api.findMoney,{
+                    id:wx.getStorageSync('openId')
+                }).then(function(res){
+                    if(res.code>0 && res.data>=that.data.totalMoney){                        
+                        wx.showModal({
+                            title: "您余额为："+res.data+"元",
+                            content: "您确定支付吗？",
+                            success: function (res) {
+                                if (res.confirm) {                                    
                                     util.request(api.investMoney,{
                                         id:wx.getStorageSync('openId'),
                                         customer:{id:wx.getStorageSync('openId')},
@@ -199,20 +199,20 @@ Page({
                                             });
                                         }
                                     });
-                                }else{
-                                    //调用微信支付
-                                    pay.payOrder(orderId,customerId,that.data.totalMoney.toString()).then(res => {
-                                        wx.redirectTo({
-                                            url: '/pages/payResult/payResult?status=1&orderId=' + orderId
-                                        });
-                                    }).catch(res => {
-                                        wx.redirectTo({
-                                            url: '/pages/payResult/payResult?status=0&orderId= '+ orderId
-                                        });
-                                    });
                                 }
+                            }
+                        });
+                    }else{
+                        //调用微信支付
+                        pay.payOrder(orderId,customerId,that.data.totalMoney.toString()).then(res => {
+                            wx.redirectTo({
+                                url: '/pages/payResult/payResult?status=1&orderId=' + orderId
                             });
-                        }
+                        }).catch(res => {
+                            wx.redirectTo({
+                                url: '/pages/payResult/payResult?status=0&orderId= '+ orderId
+                            });
+                        });
                     }
                 });
             } else {

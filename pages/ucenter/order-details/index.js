@@ -54,9 +54,9 @@ Page({
         })
     },
     toGoodsList: function (e) {
-        let productIds = this.data.orderInfo.productIds;
+        let order = this.data.orderInfo.id;
         wx.navigateTo({
-            url: '/pages/ucenter/goods-list/index?status=1&id=' + productIds,
+            url: '/pages/ucenter/goods-list/index?order=' + order,
         });
     },
     toExpressInfo: function (e) {
@@ -105,10 +105,6 @@ Page({
     },
     onHide: function () {
         let oCancel = this.data.handleOption.cancel;
-        if (oCancel == true) {
-            let orderTimerID = this.data.wxTimerList.orderTimer.wxIntId;
-            clearInterval(orderTimerID);
-        }
     },
     orderTimer: function (endTime) {
         let that = this;
@@ -172,6 +168,7 @@ Page({
                         address:res[0].address
                     },
                     orderInfo:{
+                        id:res[0].id,
                         allImage:res[0].allImage,
                         amount: res[0].amount,
                         price:res[0].price,

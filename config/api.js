@@ -1,7 +1,7 @@
 // const ApiRootUrl = 'http://localhost:8360/api/';
 const ApiRootUrl = 'https://www.hiolabs.com/api/';
-// const ApiRootUrlTwo = 'http://localhost:8081/jxambb/';
-const ApiRootUrlTwo = 'https://yfk.qrzyyn.com/jxambb/';
+const ApiRootUrlTwo = 'http://localhost:8081/jxambb/';
+// const ApiRootUrlTwo = 'https://yfk.qrzyyn.com/jxambb/';
 
 module.exports = {
     // 登录
@@ -39,6 +39,7 @@ module.exports = {
     //订单
     generateOrder: ApiRootUrlTwo + 'orderList/generateOrder',//生成订单
     OrderDetail: ApiRootUrlTwo + 'orderDetail/findById', //订单详情
+    findOrderDetail: ApiRootUrlTwo + 'orderDetail/find', //订单详情
     findMoney: ApiRootUrlTwo + 'consumer/findMoney', //查询余额
     delOrderList: ApiRootUrlTwo + 'orderList/del', //删除订单，在orderlist表中添加了触发器，删除订单时，会自动删除orderdetail中数据
     
