@@ -2,19 +2,29 @@
     <view wx:if="{{hasPrint == 1}}" class="print-recharge">
         <view class="recharge-container" wx:for="{{rechargeList}}"  wx:for-item="item" wx:key="id" wx:for-index="index">
             <view  class="header">
-                <image class="icon" src="/images/icon/recharged.jpg"></image>
-                <view>
-                    <view>余额充值</view>
-                    <view>{{item.createTime}}</view>
+                <view class="logo">
+                    <view  wx:if="{{item.type =='余额充值'}}">
+                       <image class="icon" src="/images/icon/money.png"></image>  
+                    </view>
+                    <view wx:else>
+                        <image class="icon" src="/images/icon/pay.png"></image>
+                    </view>
                 </view>
-                <view class="see-more">
-                    <view>+{{item.money}}</view>
+                <view class="text">
+                    <view class="row1">
+                        <view class="text-top">
+                            <view class="title">{{item.type}}</view> 
+                            <view class="money">
+                                <view class="r" wx:if="{{item.type =='余额充值'}}">+{{item.money}}</view>
+                                <view wx:else>-{{item.money}}</view>
+                            </view>
+                        </view>
+                        <view class="time">{{item.createTime}}</view>
+                    </view>     
                 </view>
             </view>
             <view class="line"></view>
         </view>
-        <view class="show-more" wx:if="{{showNoMore == 1}}">加载更多</view>
-        <view class="no-more" wx:else>没有更多了...</view>
     </view>
     <view wx:else class="text">您没有交易记录！</view>
 </view>

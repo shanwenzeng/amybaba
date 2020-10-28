@@ -12,8 +12,6 @@ Page({
         categoryFilter: false,
         currentSortType: 'default',
         filterCategory: [],
-        defaultKeyword: {},
-        hotKeyword: [],
         currentSortOrder: 'desc',
         salesSortOrder:'desc',
         categoryId: 0,
@@ -37,42 +35,42 @@ Page({
             this.findShopByKeyword(options.keyword);
         }
     },
-    //保存搜索记录
-    addSearchHistory:function(key){
-        if(key==undefined || key.length==0)return false;
-        let that = this;
-        util.request(api.addSearchHistory,{
-            customer:{id:wx.getStorageSync('openId')},
-            keyword:key
-        }).then(function (res) {
-            if(res.code<=0){
-                console.log("保存搜索记录失败")
-            }
-        });
-    },
+      //保存搜索记录
+  addSearchHistory:function(key){
+    if(key==undefined || key.length==0)return false;
+    let openId = wx.getStorageSync('openId');
+    if(openId==undefined || openId.length==0){//如果没有openId,不保存浏览足迹
+        return false;
+    }
+    let obj={customer:{id:openId}, keyword: key,type:"1"};
+      //判断是否存在
+      util.request(api.searchHistoryIsExist,obj).then(function(res){
+        if(res.code <=0){//不存在，保存浏览记录
+            util.request(api.addSearchHistory,obj).then(function(res){
+                if(res.code <=0){
+                    console.log("保存搜索记录失败")
+                }
+            })
+        }
+        else{
+            return false;
+        }
+    });
+},
+
     //查询搜索历史记录
     findSearchHistory() {
         let that = this;
-        util.request(api.findSearchHistory).then(function (res) {
+        util.request(api.findSearchHistory,{customer:{id:wx.getStorageSync('openId')},type:"1"}).then(function (res) {
             if (res.data.length> 0) {
                 let history=new Array();//历史记录
                 let historyId=new Array();//历史记录的Id
-                let hot=new Array();//热门记录
-                let def=new Array();//默认记录
                 for (let index = 0; index < res.data.length; index++) {
-                   if(res.data[index].type=="热门搜索"){
-                       hot.push(res.data[index].keyword)
-                   }else if(res.data[index].type=="默认搜索"){
-                    def.push(res.data[index].keyword)
-                    }else{
-                        history.push(res.data[index].keyword)
-                        historyId.push(res.data[index].id)//保存历史记录id,用于执行删除
-                    }
+                    history.push(res.data[index].keyword)
+                    historyId.push(res.data[index].id)//保存历史记录id,用于执行删除
                  }
                 that.setData({
                     historyKeyword:history,
-                    defaultKeyword: def,
-                    hotKeyword: hot,
                     historyId:historyId
                 });
             }

@@ -6,11 +6,7 @@
                 <image src="/images/icon/trash-9.png" data-val="{{item.id}}" class='cancel-print'  catchtap='deletetBrowserHistory'></image>
             <navigator class="nav-center" hover-class='none' url="/pages/goods/goods?id={{item.product.id}}">
                 <view class="box">
-                    <image class="img" src="{{ApiRootUrl}}{{item.product.photo}}" background-size="cover">
-                        <!-- <block>
-                            <image src="/images/icon/trash-9.png" class='cancel-print' catchtap='deletePrint'></image>
-                        </block> -->
-                        
+                    <image class="img"  src="{{ApiRootUrl}}{{item.product.photo}}" background-size="cover">
                     </image>
                 </view>
                 <view class="goods-info {{item.product.stock == 0?'fast-out-status':''}}">

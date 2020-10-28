@@ -23,14 +23,7 @@ Page({
         ApiRootUrl:app.globalData.ApiRootUrl,//项目根目录
     },
     onLoad: function () {
-        this.setData({
-            shops: [],
-            page: 1,
-            total: 0,
-            size: 8,
-            loading: 1
-        })
-        this.shopPage();
+        this.findShop();//查找商家，并进行分页
     },
     onPullDownRefresh: function() {
         wx.showNavigationBarLoading()
@@ -99,8 +92,8 @@ Page({
             });
         });
     },
-    //商家的分页
-    shopPage: function() {
+    //查找商家，并进行分页
+    findShop: function() {
         let that = this;
         util.request(api.shopPage, {
             rowsCount: that.data.size, //每页的数量
@@ -201,13 +194,6 @@ Page({
         this.setData({
             page: that.data.page + 1
         });
-        this.shopPage();
-
-        // let nowId = that.data.nowId;
-        // if (nowId == 0 || nowId == undefined) {
-        //     that.shopPage();
-        // } else {
-        //     that.shopPage(nowId);
-        // }
+        this.findShop();//查找商家，并进行分页
     }
 })

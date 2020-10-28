@@ -39,6 +39,8 @@ module.exports = {
     //订单
     generateOrder: ApiRootUrlTwo + 'orderList/generateOrder',//生成订单
     OrderDetail: ApiRootUrlTwo + 'orderDetail/findById', //订单详情
+    findMoney: ApiRootUrlTwo + 'consumer/findMoney', //查询余额
+    changeMoney: ApiRootUrlTwo + 'consumer/changeMoney', //更改余额
     //商家
     RecommendShop: ApiRootUrlTwo + 'shop/findRecommendShop',
     findShopBySale: ApiRootUrlTwo + 'shop/findShopBySale',//按销量查询商家，由高到底排序
@@ -72,7 +74,6 @@ module.exports = {
     OrderCancel: ApiRootUrl + 'order/cancel', //取消订单
     OrderConfirm: ApiRootUrl + 'order/confirm', //物流详情
     OrderCount: ApiRootUrl + 'order/count', // 获取订单数
-    OrderCountInfo: ApiRootUrl + 'order/orderCount', // 我的页面获取订单数状态
     OrderExpressInfo: ApiRootUrl + 'order/express', //物流信息
     OrderGoods: ApiRootUrl + 'order/orderGoods', // 获取checkout页面的商品列表
     // 足迹
@@ -95,6 +96,7 @@ module.exports = {
     isExist: ApiRootUrlTwo + 'consumer/isExist',
     SettingsDetail: ApiRootUrl + 'settings/userDetail',
     GetBase64: ApiRootUrl + 'qrcode/getBase64', //获取商品详情二维码
+    searchHistoryIsExist: ApiRootUrlTwo + 'searchhistory/isExist',//判断查询历史是否存在
     //我的
     FindCustomer: ApiRootUrlTwo + 'consumer/getMe',//查找消费者
     addShop: ApiRootUrlTwo + 'shop/add',//新增商家（即商家入驻）
@@ -103,6 +105,8 @@ module.exports = {
     shopIsExist: ApiRootUrlTwo + 'shop/isExist',//判断商家是否存在
     investMoney: ApiRootUrlTwo + 'recharge/add',//充值
     findRecharge: ApiRootUrlTwo + 'recharge/find', //充值列表
+    findOrderByStatus: ApiRootUrlTwo + 'orderList/findOrderByStatus', //根据订单状态统计订单各种状态数量
+    
     //获取openId
     GetOpenId: ApiRootUrlTwo + 'consumer/getOpenId',//获取用户的openId   
 

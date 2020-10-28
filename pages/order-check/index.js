@@ -172,14 +172,48 @@ Page({
         }).then(function(res){
             if(res.code > 0){
                 let orderId="wx_orderId_"+res.data.toString();
-                pay.payOrder(orderId,customerId,that.data.totalMoney.toString()).then(res => {
-                    wx.redirectTo({
-                        url: '/pages/payResult/payResult?status=1&orderId=' + orderId
-                    });
-                }).catch(res => {
-                    wx.redirectTo({
-                        url: '/pages/payResult/payResult?status=0&orderId= '+ orderId
-                    });
+                //检测是否有余额，如果有余额，则优先使用余额支付，否则调用微信支付
+                wx.showModal({
+                    title: '',
+                    content: '您确定支付吗？',
+                    success: function (res) {
+                        if (res.confirm) {
+                            util.request(api.findMoney,{
+                                id:wx.getStorageSync('openId')
+                            }).then(function(res){
+                                if(res.code>0 && res.data>=that.data.totalMoney){
+                                    util.request(api.investMoney,{
+                                        id:wx.getStorageSync('openId'),
+                                        customer:{id:wx.getStorageSync('openId')},
+                                        money:that.data.totalMoney,
+                                        order:res.data.toString(),
+                                        type:"商品消费"
+                                    }).then(function(res){
+                                        if(res.code>0){
+                                            wx.redirectTo({
+                                                url: '/pages/payResult/payResult?status=1&orderId=' + orderId
+                                            });
+                                        }else{
+                                            wx.redirectTo({
+                                                url: '/pages/payResult/payResult?status=0&orderId= '+ orderId
+                                            });
+                                        }
+                                    });
+                                }else{
+                                    //调用微信支付
+                                    pay.payOrder(orderId,customerId,that.data.totalMoney.toString()).then(res => {
+                                        wx.redirectTo({
+                                            url: '/pages/payResult/payResult?status=1&orderId=' + orderId
+                                        });
+                                    }).catch(res => {
+                                        wx.redirectTo({
+                                            url: '/pages/payResult/payResult?status=0&orderId= '+ orderId
+                                        });
+                                    });
+                                }
+                            });
+                        }
+                    }
                 });
             } else {
                 util.showErrorToast(res.errmsg);

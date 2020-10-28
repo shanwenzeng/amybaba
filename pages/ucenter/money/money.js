@@ -64,6 +64,7 @@ Page({
         id:openId,
         money: that.data.choose,
         customer:{id:openId},
+        type:"余额充值"
       }).then(function(res) {
         if(res.code>0){
           util.showSuccessToast('充值成功');
