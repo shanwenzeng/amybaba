@@ -22,15 +22,20 @@ Page({
         totalMoney:'',
         totalAmount:'',
         ApiRootUrl:app.globalData.ApiRootUrl,//项目根目录
+        page: 1,    //当前页
+        size: 8,   //每页显示的条数
+        total: 0,   //数据库里总共的记录
+        showNoMore: 0,//提示下一页有没有信息，0为无，1为有
     },
     onLoad: function() {
+        // 页面显示
+        this.getCartList();
     },
     onReady: function() {
         // 页面渲染完成
     },
     onShow: function() {
-        // 页面显示
-        this.getCartList();
+
         wx.removeStorageSync('categoryId');
     },
     onPullDownRefresh: function() {
@@ -54,7 +59,11 @@ Page({
     getCartList: function() {
         let that = this;
         let openId=wx.getStorageSync('openId');
-        util.request(api.GetCartList,{customer:{id:openId}}).then(function(res) {
+        util.request(api.GetCartList,{
+            customer:{id:openId},
+            page:that.data.page, //当前页面
+            rowsCount:that.data.size,   //每页显示的条数
+        }).then(function(res) {
             if (res.data.length > 0) {
                 let hasCartGoods = res.data.length;
                 if (hasCartGoods.length != 0) {
@@ -71,22 +80,17 @@ Page({
                     }
                 }
                 that.setData({
-                    cartGoods: res.data,
                     cartTotal: res.data.length,
                     hasCartGoods: hasCartGoods,
                     totalAmount:totalAmount,
-                    totalMoney:totalMoney
+                    totalMoney:totalMoney,
+                    cartGoods: that.data.cartGoods.concat(res.data),//查询出来的数据
+                    total:res.total,//总记录数
+                    showNoMore: 1,  //1为下一页还有数据了
                 });
-
-                //设置导航栏中购物车中的总数量
-                // wx.setTabBarBadge({
-                //     index: 2,//2代表第3个导航
-                //     text: totalAmount.toString()//导航栏中的文本
-                // })
-
             }
             that.setData({
-                checkedAllStatus: that.isCheckedAll()
+                checkedAllStatus: that.isCheckedAll(),
             });
         });
     },
@@ -303,5 +307,20 @@ Page({
             });
         });
 
+    },
+
+    //触底后执行
+    onReachBottom: function () {
+        let that = this;
+        if (that.data.total / that.data.size < that.data.page) {
+            that.setData({
+                showNoMore: 0 //0为下一页没有数据了
+            });
+            return false;
+        }
+        that.setData({
+            page: that.data.page + 1  //当前页面的页码加1
+        });
+        this.getCartList();//查询充值记录
     }
 })

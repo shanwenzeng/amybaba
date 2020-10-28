@@ -32,6 +32,8 @@
 				删除
 			</view>
 		</view>
+		<view class="show-more" wx:if="{{showNoMore == 1}}">加载更多</view>
+    <view class="no-more" wx:else>没有更多了...</view>
 	</view>
 	<view class="cart-empty-container {{hasCartGoods == 0?'show':''}}">
 		<view class='cart-empty-view'>

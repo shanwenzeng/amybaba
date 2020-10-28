@@ -1,7 +1,7 @@
 // const ApiRootUrl = 'http://localhost:8360/api/';
 const ApiRootUrl = 'https://www.hiolabs.com/api/';
-// const ApiRootUrlTwo = 'http://localhost:8081/jxambb/';
-const ApiRootUrlTwo = 'https://yfk.qrzyyn.com/jxambb/';
+const ApiRootUrlTwo = 'http://localhost:8081/jxambb/';
+// const ApiRootUrlTwo = 'https://yfk.qrzyyn.com/jxambb/';
 
 module.exports = {
     // 登录
@@ -22,6 +22,7 @@ module.exports = {
     findShopByKeyword: ApiRootUrlTwo + 'shop/find', //根据商家id和分类进行商品查询
     CatalogCurrent: ApiRootUrl + 'catalog/current', //分类目录当前分类数据接口
     GetCurrentList: ApiRootUrl + 'catalog/currentlist',
+
     // 购物车
     CartAdd: ApiRootUrl + 'cart/add', // 添加商品到购物车
     CartList: ApiRootUrl + 'cart/index', //获取购物车的数据
@@ -41,6 +42,7 @@ module.exports = {
     //商家
     RecommendShop: ApiRootUrlTwo + 'shop/findRecommendShop',
     findShopBySale: ApiRootUrlTwo + 'shop/findShopBySale',//按销量查询商家，由高到底排序
+    shopPage: ApiRootUrlTwo + 'shop/find', //商家分页
     // 商品
     findGoods: ApiRootUrlTwo + 'goods/find', //查询商品
     GoodsCount: ApiRootUrl + 'goods/count', //统计商品总数

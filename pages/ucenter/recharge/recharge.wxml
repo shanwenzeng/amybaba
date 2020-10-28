@@ -13,6 +13,8 @@
             </view>
             <view class="line"></view>
         </view>
+        <view class="show-more" wx:if="{{showNoMore == 1}}">加载更多</view>
+        <view class="no-more" wx:else>没有更多了...</view>
     </view>
     <view wx:else class="text">您没有交易记录！</view>
 </view>

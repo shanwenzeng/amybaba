@@ -72,3 +72,22 @@ page {
     margin: 100rpx 0 100rpx 0;
     color: #999;
 }
+
+/* 分页中的（加载更多）的样式 */
+.print-recharge .show-more {
+    height: 100rpx;
+    line-height: 100rpx;
+    padding-bottom: 100rpx;
+    text-align: center;
+    font-size: 26rpx;
+    color: #52a9e2;
+}
+/* 分页中的（没有更多了...）的样式 */
+.print-recharge .no-more {
+    height: 100rpx;
+    line-height: 100rpx;
+    padding-bottom: 100rpx;
+    text-align: center;
+    font-size: 26rpx;
+    color: #666;
+}

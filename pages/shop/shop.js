@@ -10,23 +10,28 @@ Page({
         goodsCount: 0,
         nowIndex: 0,
         nowId: 0,
-        list: [],
-        shops:[],
-        good: [],
-        allPage: 1,
-        allCount: 0,
-        size: 8,
+        // list: [],
+        shops:[], //商家
+        good: [], 
+        page: 1, //分页的当前页码，默认为1
+        total: 0,//数据库中的总商家数
+        size: 8, //每页显示的商家数
         hasInfo: 0,
-        showNoMore: 0,
-        loading:0,
+        showNoMore: 0, //状态，0为下一页没有记录，1为下一页还有记录
+        loading:0, //0为
         index_banner_img:0,
         ApiRootUrl:app.globalData.ApiRootUrl,//项目根目录
     },
     onLoad: function () {
+        this.setData({
+            shops: [],
+            page: 1,
+            total: 0,
+            size: 8,
+            loading: 1
+        })
+        this.shopPage();
     },
-    // onLoad: function(options) {
-        
-    // },
     onPullDownRefresh: function() {
         wx.showNavigationBarLoading()
         this.getCatalog();
@@ -45,7 +50,7 @@ Page({
     //获取商家
     getShop:function(condition){
         let that=this;
-        let obj={};//传递给后台的参数
+        let obj={rowsCount: that.data.size,page: that.data.page};//传递给后台的参数
         let url=api.RecommendShops;//请求地址
         if(condition=="距离"){
             util.request(api.RecommendShops,obj).then(function (res) {
@@ -95,23 +100,21 @@ Page({
         });
     },
     //商家的分页
-    getCurrentList: function(id) {
+    shopPage: function() {
         let that = this;
-        util.request(api.GetCurrentList, {
-            rowsCount: that.data.size, //一页的数量
-            page: that.data.allPage,    //当前页码
-            id: id
+        util.request(api.shopPage, {
+            rowsCount: that.data.size, //每页的数量
+            page: that.data.page,    //当前页码
+            // id: id
         }, 'POST').then(function(res) {
             if (res.code >= 0) {
-                let count = res.total;//总数
                 that.setData({
-                    allCount: count,
-                    // allPage: that.data.allPage, 
+                    total: res.total,//总数
                     shops: that.data.shops.concat(res.data),
-                    showNoMore: 1,
+                    showNoMore: 1, //1为下一页还有记录
                     loading: 0,
                 });
-                if (count == 0) {
+                if (res.total == 0) {
                     that.setData({
                         hasInfo: 0,
                         showNoMore: 0
@@ -120,44 +123,47 @@ Page({
             }
         });
     },
-    onShow: function() {
-        let id = this.data.nowId;
-        let nowId = wx.getStorageSync('categoryId');
-        if(id == 0 && nowId === 0){
-            return false
-        }
-        else if (nowId == 0 && nowId === '') {
-            this.setData({
-                list: [],
-                allPage: 1,
-                allCount: 0,
-                size: 8,
-                loading: 1
-            })
-          //  this.getCurrentList(0);
-            this.setData({
-                nowId: 0,
-                currentCategory: {}
-            })
-            wx.setStorageSync('categoryId', 0)
-        } else if(id != nowId) {
-            this.setData({
-                list: [],
-                allPage: 1,
-                allCount: 0,
-                size: 8,
-                loading: 1
-            })
-            this.getCurrentList(nowId);
-            this.getCurrentCategory(nowId);
-            this.setData({
-                nowId: nowId
-            })
-            wx.setStorageSync('categoryId', nowId)
-        }
+    onShow: function(){
         this.getCatalog();//获取分类（全部、好评、距离、销量等）
-        this.getShop();//获取商家
     },
+    // onShow: function() {
+        // let id = this.data.nowId;
+        // let nowId = wx.getStorageSync('categoryId');
+        // if(id == 0 && nowId === 0){
+        //     return false
+        // }
+        // else if (nowId == 0 && nowId === '') {
+        //     this.setData({
+        //         shops: [],
+        //         page: 1,
+        //         total: 0,
+        //         size: 8,
+        //         loading: 1
+        //     })
+        //     this.shopPage(0);
+        //     this.setData({
+        //         nowId: 0,
+        //         currentCategory: {}
+        //     })
+        //     wx.setStorageSync('categoryId', 0)
+        // } else if(id != nowId) {
+        //     this.setData({
+        //         shops: [],
+        //         page: 1,
+        //         total: 0,
+        //         size: 8,
+        //         loading: 1
+        //     })
+        //     this.shopPage(nowId);
+        //     this.getCurrentCategory(nowId);
+        //     this.setData({
+        //         nowId: nowId
+        //     })
+        //     wx.setStorageSync('categoryId', nowId)
+        // }
+        // this.getCatalog();//获取分类（全部、好评、距离、销量等）
+        // // this.getShop();//获取商家
+    // },
     switchCate: function(e) {
       let id = e.currentTarget.dataset.id;
       let value = e.currentTarget.dataset.value;
@@ -166,14 +172,14 @@ Page({
             return false;
         } else {
             this.setData({
-                list: [],
-                allPage: 1,
-                allCount: 0,
+                shops: [],
+                page: 1,
+                total: 0,
                 size: 8,
                 loading: 1
             })
             if (id == 0) {
-              this.getShop();//根据类型查询商家
+              this.shopPage(0);//商家的分页
             } else {
                 wx.setStorageSync('categoryId', id)
                 this.getShop(value);//根据类型查询商家
@@ -186,20 +192,22 @@ Page({
     },
     onBottom: function() {
         let that = this;
-        if (that.data.allCount / that.data.size < that.data.allPage) {
+        if (this.data.total / this.data.size < this.data.page) {
             that.setData({
                 showNoMore: 0
             });
             return false;
         }
-        that.setData({
-            allPage: that.data.allPage + 1
+        this.setData({
+            page: that.data.page + 1
         });
-        let nowId = that.data.nowId;
-        if (nowId == 0 || nowId == undefined) {
-            that.getCurrentList(0);
-        } else {
-            that.getCurrentList(nowId);
-        }
+        this.shopPage();
+
+        // let nowId = that.data.nowId;
+        // if (nowId == 0 || nowId == undefined) {
+        //     that.shopPage();
+        // } else {
+        //     that.shopPage(nowId);
+        // }
     }
 })
