@@ -269,32 +269,25 @@ Page({
     },
     // “取消订单”点击效果
     cancelOrder: function (e) {
+        let id=e.currentTarget.dataset.index;//订单id
         let that = this;
         wx.showModal({
             title: '',
             content: '确定要取消此订单？',
             success: function (res) {
                 if (res.confirm) {
-                    util.request(api.OrderCancel, {
-                        orderId: that.data.orderId
-                    }, 'POST').then(function (res) {
-                        if (res.errno === 0) {
+                    util.request(api.delOrderList, {
+                        id: id
+                    }).then(function (res) {
+                        if (res> 0) {
                             wx.showToast({
                                 title: '取消订单成功'
                             });
-                            that.setData({
-                                orderList: [],
-                                allOrderList: [],
-                                allPage: 1,
-                                allCount: 0,
-                                size: 8
-                            });
-                            wx.setStorageSync('doRefresh', 1);
-                            let orderTimerID = that.data.wxTimerList.orderTimer.wxIntId;
-                            clearInterval(orderTimerID);
-                            that.getOrderDetail();
+                            setTimeout(function(){
+                                wx.navigateBack();
+                            },2000)
                         } else {
-                            util.showErrorToast(res.errmsg);
+                            util.showErrorToast("订单取消失败，请联系客服");
                         }
                     });
                 }
