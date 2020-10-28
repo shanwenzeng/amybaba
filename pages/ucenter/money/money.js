@@ -82,7 +82,7 @@ Page({
             wx.navigateBack();
       },3000);
     }).catch(res => {
-        util.showErrorToast('充值失败，请联系客服');
+      // 取消了支付
     }); 
   },
   /**

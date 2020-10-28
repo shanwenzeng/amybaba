@@ -102,10 +102,6 @@ Page({
     },
     onUnload: function () {
         let oCancel = this.data.handleOption.cancel;
-        if (oCancel == true) {
-            let orderTimerID = this.data.wxTimerList.orderTimer.wxIntId;
-            clearInterval(orderTimerID);
-        }
     },
     onHide: function () {
         let oCancel = this.data.handleOption.cancel;
