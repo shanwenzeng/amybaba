@@ -338,3 +338,14 @@ page {
     margin-bottom: 4rpx;
     /* font-weight: bold; */
 }
+
+
+/* 分页中的（加载更多）的样式 */
+.show-more {
+    height: 100rpx;
+    line-height: 100rpx;
+    padding-bottom: 100rpx;
+    text-align: center;
+    font-size: 26rpx;
+    color: #52a9e2;
+}

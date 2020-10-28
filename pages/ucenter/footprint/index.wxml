@@ -16,6 +16,7 @@
                 </view>
             </navigator>
         </view>
+        
     </view>
     <view wx:else class="no-print">
         <image src="/images/icon/footprint.png" class="no-print-img"></image>
@@ -24,5 +25,6 @@
             马上去踩踩
         </view>
     </view>
+    <view class="show-more" wx:if="{{showNoMore == 1}}">加载更多</view>
     <view class="no-more-goods {{showNoMore? 'hidden':'show'}}">没有更多足迹了</view>
 </view>
