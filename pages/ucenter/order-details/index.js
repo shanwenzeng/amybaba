@@ -160,7 +160,6 @@ Page({
             customer:{id:wx.getStorageSync('openId')},
             id: that.data.orderId
         }).then(function (res) {
-            console.log(res)
             if (res.length > 0) {
                 res[0].createTime=util.formatTime(new Date(res[0].createTime))//重新设置时间格式
                 //将图片拆分成数组
@@ -186,6 +185,21 @@ Page({
                         productIds:res[0].productIds.split(",")
                     }
                 });
+                if(res[0].status == "待付款"){
+                    that.setData({
+                        handleOption:{
+                            cancel: true,
+                            pay: true
+                        }
+                    })
+                }
+                if(res[0].status == "待发货" || res[0].status == "待收货"){
+                    that.setData({
+                        handleOption:{
+                            confirm: true
+                        }
+                    })
+                }
             }
         });
         wx.hideLoading();
