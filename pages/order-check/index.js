@@ -172,11 +172,12 @@ Page({
         }).then(function(res){
             if(res.code > 0){
                 let orderId="wx_orderId_"+res.data.toString();
+                let order=res.data.toString();//保存到消费记录表(recharge)中的order
                 //检测是否有余额，如果有余额，则优先使用余额支付，否则调用微信支付
                 util.request(api.findMoney,{
                     id:wx.getStorageSync('openId')
                 }).then(function(res){
-                    if(res.code>0 && res.data>=that.data.totalMoney){                        
+                    if(res.code>0 && res.data>=that.data.totalMoney){    
                         wx.showModal({
                             title: "您余额为："+res.data+"元",
                             content: "您确定支付吗？",
@@ -186,7 +187,7 @@ Page({
                                         id:wx.getStorageSync('openId'),
                                         customer:{id:wx.getStorageSync('openId')},
                                         money:that.data.totalMoney,
-                                        order:res.data.toString(),
+                                        order:order,
                                         type:"商品消费"
                                     }).then(function(res){
                                         if(res.code>0){
