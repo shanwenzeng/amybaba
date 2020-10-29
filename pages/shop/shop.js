@@ -23,6 +23,7 @@ Page({
         ApiRootUrl:app.globalData.ApiRootUrl,//项目根目录
     },
     onLoad: function () {
+        this.getCatalog();//获取分类（全部、好评、距离、销量等）
         this.findShop();//查找商家，并进行分页
     },
     onPullDownRefresh: function() {
@@ -48,25 +49,10 @@ Page({
         if(condition=="距离"){
             util.request(api.RecommendShops,obj).then(function (res) {
                 if (res.data.length> 0) {
-                    //向数组中添加距离
-                    for (let i = 0; i < res.data.length; i++) {
-                       util.findXy(res.data[i].latitude,res.data[i].longitude,function(dis){
-                            res.data[i].distance=dis;
-                            if((i+1)==res.data.length){//最后一次循环，进行冒泡排序
-                                //冒泡排序法，按距离从近到远排序
-                                for(let index = res.data.length-1;index>0;index--){
-                                    for(let j=0;j<index;j++){
-                                        if(parseFloat(res.data[j].distance)>parseFloat(res.data[j+1].distance)){
-                                            var temp = res.data[j];
-                                            res.data.splice(j,1,res.data[j+1]);
-                                            res.data.splice(j+1,1,temp);
-                                        }
-                                    }
-                                }
-                                that.setData({shops: res.data,loading:0});
-                            }
-                       });
-                    }
+                     //将数组按距离由近到远排序好返回
+                    util.computeDistance(res.data,function(res){
+                        that.setData({shops: res,loading:0});
+                    });
                 }
             });
         }else{
@@ -77,7 +63,10 @@ Page({
             }
             util.request(url,obj).then(function (res) {
                 if (res.data.length> 0) {
-                    that.setData({shops: res.data,loading:0});
+                      //将数组按距离由近到远排序好返回
+                      util.computeDistance(res.data,function(res){
+                        that.setData({shops: res,loading:0});
+                    });
                 }
             });
         } 
@@ -101,11 +90,15 @@ Page({
             district:wx.getStorageSync('district')
         }).then(function(res) {
             if (res.code >= 0) {
-                that.setData({
-                    total: res.total,//总数
-                    shops: that.data.shops.concat(res.data),
-                    showNoMore: 1, //1为下一页还有记录
-                    loading: 0,
+                let total=res.total;//总记录数
+                 //将数组按距离由近到远排序好返回
+               util.computeDistance(res.data,function(res){
+                    that.setData({
+                        total: total,//总数
+                        shops: that.data.shops.concat(res),
+                        showNoMore: 1, //1为下一页还有记录
+                        loading: 0,
+                    });
                 });
                 if (res.total == 0) {
                     that.setData({
@@ -117,46 +110,7 @@ Page({
         });
     },
     onShow: function(){
-        this.getCatalog();//获取分类（全部、好评、距离、销量等）
     },
-    // onShow: function() {
-        // let id = this.data.nowId;
-        // let nowId = wx.getStorageSync('categoryId');
-        // if(id == 0 && nowId === 0){
-        //     return false
-        // }
-        // else if (nowId == 0 && nowId === '') {
-        //     this.setData({
-        //         shops: [],
-        //         page: 1,
-        //         total: 0,
-        //         size: 8,
-        //         loading: 1
-        //     })
-        //     this.shopPage(0);
-        //     this.setData({
-        //         nowId: 0,
-        //         currentCategory: {}
-        //     })
-        //     wx.setStorageSync('categoryId', 0)
-        // } else if(id != nowId) {
-        //     this.setData({
-        //         shops: [],
-        //         page: 1,
-        //         total: 0,
-        //         size: 8,
-        //         loading: 1
-        //     })
-        //     this.shopPage(nowId);
-        //     this.getCurrentCategory(nowId);
-        //     this.setData({
-        //         nowId: nowId
-        //     })
-        //     wx.setStorageSync('categoryId', nowId)
-        // }
-        // this.getCatalog();//获取分类（全部、好评、距离、销量等）
-        // // this.getShop();//获取商家
-    // },
     switchCate: function(e) {
       let id = e.currentTarget.dataset.id;
       let value = e.currentTarget.dataset.value;

@@ -249,13 +249,14 @@ Page({
                         }
                     })
                 }
-                if(res[0].status == "待发货" || res[0].status == "待收货"){
+                if(res[0].status == "待收货"){
                     that.setData({
                         handleOption:{
                             confirm: true
                         }
                     })
                 }
+                wx.setStorageSync('orderInfo', that.data.orderInfo);//将查询出来的订单放在缓存中，用于再来一单方法中调用
             }
         });
         wx.hideLoading();

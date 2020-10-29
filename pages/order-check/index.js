@@ -369,5 +369,23 @@ Page({
             checkedGoodsList: ids,
         })
         }
+        //再来一单
+        if(addType == 2){
+        let order = wx.getStorageSync('orderInfo');
+        console.log(order)
+            let totalAmount = order.amount;//总数量
+            let totalMoney = order.price; //总金额
+            let freightPrice = 0; //快递费
+            let actualPrice = freightPrice + totalMoney; //订单总价
+            let orderTotalPrice = freightPrice + totalMoney; //实际需要支付的总价
+            that.setData({
+                totalAmount: totalAmount,
+                actualPrice: actualPrice,
+                freightPrice: freightPrice,
+                totalMoney: totalMoney,
+                orderTotalPrice: orderTotalPrice,
+                checkedGoodsList: order,
+            })
+        }
     }
 })

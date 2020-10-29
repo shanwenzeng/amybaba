@@ -16,15 +16,8 @@
 			<view wx:if="{{status.Received > 0 }}" class='list-num'>{{status.Received}}</view>已收货
 		</view>
 	</view>
-<view class="no-order" wx:if="{{orderList.length <= 0}}">
-		<image src="/images/icon/no-order.png" class="no-order-img"></image>
-		<view class="text">您目前没有相关订单</view>
-		<view class="to-index-btn" bindtap="toIndexPage">
-			马上去逛逛
-		</view>
-	</view>
-	<view wx:else class="wrap">
-		<!--  待付款  -->
+<view class="wrap" wx:if="{{orderList.length > 0}}">
+			<!--  待付款  -->
 		<view bindtap='toOrderDetails' class='order-list-wrap' data-id="{{item.id}}" wx:for="{{orderList}}" wx:key="id">
 			<view class='list-top-wrap'>
 				<view class='time'>{{item.createTime}}</view>
@@ -60,5 +53,12 @@
 			</view>
 		</view>
 		<view wx:if="{{showTips}}" class="no-more-goods">没有更多订单啦</view>
+</view>
+	<view wx:else class="no-order">
+		<image src="/images/icon/no-order.png" class="no-order-img"></image>
+		<view class="text">您目前没有相关订单</view>
+		<view class="to-index-btn" bindtap="toIndexPage">
+			马上去逛逛
+		</view>
 	</view>
 </view>

@@ -411,7 +411,7 @@ function getLocation(callback){
             //     longitude: that.data.longitude
             // },
             success: function (res) {
-                // console.log(res)
+                //  console.log(res)
                 // console.log("获取地址成功：" + res.result.ad_info.city);
                 callback(res);//回调函数
             },
@@ -430,7 +430,7 @@ function findXy(lati,long,callback) { //获取用户的经纬度
         wx.getLocation({
         type: 'wgs84',
         success(res) {
-            let distance= that.getDistance(res.latitude, res.longitude,lati,long)
+            let distance= getDistance(res.latitude, res.longitude,lati,long)
             callback(distance);//回调函数
         }
         })
@@ -459,6 +459,36 @@ s = Math.round(s * 10000) / 10000;
 s = s.toFixed(2);
 return s;
 }
+//传递一个数组，返回一个按距离由近到排序的新数组
+function computeDistance(arr,callback){
+    for (let i = 0; i < arr.length; i++) {
+        findXy(arr[i].latitude,arr[i].longitude,function(dis){
+            arr[i].distance=dis;
+            if((i+1)==arr.length){//最后一次循环，进行冒泡排序
+                //冒泡排序法，按距离从近到远排序
+                for(let index = arr.length-1;index>0;index--){
+                    for(let j=0;j<index;j++){
+                        if(parseFloat(arr[j].distance)>parseFloat(arr[j+1].distance)){
+                            var temp = arr[j];
+                            arr.splice(j,1,arr[j+1]);
+                            arr.splice(j+1,1,temp);
+                        }
+                    }
+                }
+                //将10千米之内的商家放入新数绷
+                let array=new Array();
+                for(let i=0;i<arr.length;i++){
+                    if(arr[i].distance<10){
+                        array.push(arr[i]);
+                    }else{
+                        break;
+                    }
+                }
+               callback(array);//回调函数，参数为排好序的数组（由近到远，10千米之内）
+            }
+        });
+    }
+}
 module.exports = {
     formatTime: formatTime,
     formatTimeNum: formatTimeNum,
@@ -482,5 +512,6 @@ module.exports = {
     getLocation,
     findXy,
     getDistance,
-    getDateString
+    getDateString,
+    computeDistance
 }
