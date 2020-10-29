@@ -303,22 +303,25 @@ Page({
         let that = this;
         wx.showModal({
             title: '',
-            content: '收到货了？确认收货？',
+            content: '您确认收货？',
             success: function (res) {
                 if (res.confirm) {
-                    util.request(api.OrderConfirm, {
-                        orderId: that.data.orderId
-                    }, 'POST').then(function (res) {
-                        if (res.errno === 0) {
+                     //付款成功后，修改订态状态为待发货
+                     util.request(api.editOrderList,{
+                        id:that.data.orderInfo.id,
+                        status:'已收货'
+                    }).then(function(res){
+                        if(res.code>0){
                             wx.showToast({
                                 title: '确认收货成功！'
                             });
-                            wx.setStorageSync('doRefresh', 1);
-                            that.getOrderDetail();
-                        } else {
+                            setTimeout(() => {
+                                wx.navigateBack()
+                            }, 2000); 
+                        }else {
                             util.showErrorToast(res.errmsg);
                         }
-                    });
+                    })
                 }
             }
         });
