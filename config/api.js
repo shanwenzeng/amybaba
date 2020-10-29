@@ -1,7 +1,7 @@
 // const ApiRootUrl = 'http://localhost:8360/api/';
 const ApiRootUrl = 'https://www.hiolabs.com/api/';
-// const ApiRootUrlTwo = 'http://localhost:8081/jxambb/';
-const ApiRootUrlTwo = 'https://yfk.qrzyyn.com/jxambb/';
+const ApiRootUrlTwo = 'http://localhost:8081/jxambb/';
+// const ApiRootUrlTwo = 'https://yfk.qrzyyn.com/jxambb/';
 
 module.exports = {
     // 登录
@@ -10,7 +10,7 @@ module.exports = {
     IndexUrl: ApiRootUrl + 'index/appInfo', //首页数据接口
     GoodsCarouselUrl: ApiRootUrlTwo + 'goodscarousel/findGoodsCarousel', //商品轮播
     recommendGoods:ApiRootUrlTwo + 'category/find',//推荐好物
-    RecommendShops:ApiRootUrlTwo + 'shop/findRecommendShop',//推荐商家（前10条）
+    RecommendShops:ApiRootUrlTwo + 'shop/findRecommendShop',//推荐商家
     Advert:ApiRootUrlTwo + 'advert/findAdvert',//广告（前5条）
     // 分类
     // CatalogList: ApiRootUrl + 'catalog/index', //分类目录全部分类数据接口
@@ -47,7 +47,7 @@ module.exports = {
     //商家
     RecommendShop: ApiRootUrlTwo + 'shop/findRecommendShop',
     findShopBySale: ApiRootUrlTwo + 'shop/findShopBySale',//按销量查询商家，由高到底排序
-    shopPage: ApiRootUrlTwo + 'shop/find', //商家分页
+    findShop: ApiRootUrlTwo + 'shop/find', //商家分页
     // 商品
     findGoods: ApiRootUrlTwo + 'goods/find', //查询商品
     GoodsCount: ApiRootUrl + 'goods/count', //统计商品总数

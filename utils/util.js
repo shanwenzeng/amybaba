@@ -411,6 +411,7 @@ function getLocation(callback){
             //     longitude: that.data.longitude
             // },
             success: function (res) {
+                // console.log(res)
                 // console.log("获取地址成功：" + res.result.ad_info.city);
                 callback(res);//回调函数
             },

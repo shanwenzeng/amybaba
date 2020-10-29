@@ -100,31 +100,7 @@ Page({
                 });
             } 
         });  
-        //推荐商家        
-        util.request(api.RecommendShops,{isRecommend:'是',star:'5'}).then(function (res) {
-            if (res.data.length> 0) {
-                //向数组中添加距离
-                 for (let i = 0; i < res.data.length; i++) {
-                    util.findXy(res.data[i].latitude,res.data[i].longitude,function(dis){
-                        res.data[i].distance=dis;
-                        if((i+1)==res.data.length){//最后一次循环，进行冒泡排序
-                            //冒泡排序法，按距离从近到远排序
-                            for(let index = res.data.length-1;index>0;index--){
-                                for(let j=0;j<index;j++){
-                                    if(parseFloat(res.data[j].distance)>parseFloat(res.data[j+1].distance)){
-                                        var temp = res.data[j];
-                                        res.data.splice(j,1,res.data[j+1]);
-                                        res.data.splice(j+1,1,temp);
-                                    }
-                                }
-                            }
-                            that.setData({recommendShops: res.data,loading:1});//所有的距离计算完毕后，进行赋值
-                        }
-                    });
-                }
-            }
-        });
-
+       
     },
     //获取消费者当前位置
     getCurrentLocation:function(){
@@ -133,8 +109,12 @@ Page({
             that.setData({
                 currentLocation:res.result.address
             });
+            let district=res.result.ad_info.district;//当前位置的区县
+            wx.setStorageSync('district', district);//将区县保存在缓存中，方便根据位置查询商家
+            if(district!=undefined && district.length>0){
+                that.findRecommendShop(district);//查询当前区县所在的商家
+            }
         });
-        
     },
     onLoad: function (options) {
         let systemInfo = wx.getStorageSync('systemInfo');
@@ -200,5 +180,36 @@ Page({
         wx.hideNavigationBarLoading() //完成停止加载
         wx.stopPullDownRefresh() //停止下拉刷新
     },
+    //查询本区、县推荐商家，并且为5星级    
+    findRecommendShop:function(district){
+        let that = this;
+         util.request(api.RecommendShops,{
+             isRecommend:'是',
+             star:'5',
+             district:district
+            }).then(function (res) {
+            if (res.data.length> 0) {
+                //向数组中添加距离
+                 for (let i = 0; i < res.data.length; i++) {
+                    util.findXy(res.data[i].latitude,res.data[i].longitude,function(dis){
+                        res.data[i].distance=dis;
+                        if((i+1)==res.data.length){//最后一次循环，进行冒泡排序
+                            //冒泡排序法，按距离从近到远排序
+                            for(let index = res.data.length-1;index>0;index--){
+                                for(let j=0;j<index;j++){
+                                    if(parseFloat(res.data[j].distance)>parseFloat(res.data[j+1].distance)){
+                                        var temp = res.data[j];
+                                        res.data.splice(j,1,res.data[j+1]);
+                                        res.data.splice(j+1,1,temp);
+                                    }
+                                }
+                            }
+                            that.setData({recommendShops: res.data,loading:1});//所有的距离计算完毕后，进行赋值
+                        }
+                    });
+                }
+            }
+        });
 
+    }
 })
