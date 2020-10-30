@@ -151,12 +151,12 @@ Page({
         this.setData({
             productIds: checkedGoodsList1.productIds.toString(),
             amount: checkedGoodsList1.amount.toString()
-
         })
         let customerId = wx.getStorageSync('openId');  //获取用户的id
         util.request(api.generateOrder,{
             id: checkedGoodsList1.id.toString(),                //获取购物车勾选的id
             number: util.getDateString(),    //获取日期字符串，为订单号
+            shop: checkedGoodsList[0].goods.shop.id.toString(), //商家id(目前只能从一家商店购买)
             customer:{id: customerId},
             status:'待付款',
             name: this.data.checkedAddress.name,                //收货人姓名
