@@ -120,9 +120,9 @@ Page({
         let systemInfo = wx.getStorageSync('systemInfo');
         var scene = decodeURIComponent(options.scene);
         this.getIndexData();//获得首页数据
+        this.getCurrentLocation();//获取消费者当前位置
     },
     onShow: function () {    
-        this.getCurrentLocation();//获取消费者当前位置
         var that = this;
         let userInfo = wx.getStorageSync('userInfo');
         if (userInfo != '') {
@@ -196,5 +196,33 @@ Page({
             }
         });
 
+    },
+    //选择位置
+    chooseLocation:function () {
+        let that=this;
+        wx.chooseLocation({
+            latitude: '27.625941',
+            longitude: '113.852813',
+            success: (result) => {
+                console.log(result)
+                that.setData({
+                    currentLocation:result.address
+                });
+                wx.setStorageSync("latitude",result.latitude);//保存玮度到缓存中
+                wx.setStorageSync("longitude",result.longitude);//保存经度到缓存中
+                that.findRecommendShop('安源区');//查询当前区县所在的商家
+            },
+        })
+        
+    },
+    //打开位置
+    openLocation:function(e){
+        let latitude=parseFloat(e.currentTarget.dataset.latitude);
+        let longitude=parseFloat(e.currentTarget.dataset.longitude);
+        wx.openLocation({
+            latitude,
+            longitude,
+            scale: 15//缩放比例
+          })
     }
 })

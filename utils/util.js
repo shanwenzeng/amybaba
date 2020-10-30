@@ -406,35 +406,25 @@ function getLocation(callback){
             key: 'AUFBZ-PBMW3-L343G-YPN7H-NXVK7-QKB6C' // 必填
             });
             qqmapsdk.reverseGeocoder({
-            // location: {
-            //     latitude: that.data.latitude,
-            //     longitude: that.data.longitude
-            // },
             success: function (res) {
                 //  console.log(res)
                 // console.log("获取地址成功：" + res.result.ad_info.city);
+                wx.setStorageSync("latitude",res.result.location.lat);//保存玮度到缓存中
+                wx.setStorageSync("longitude",res.result.location.lng);//保存经度到缓存中
                 callback(res);//回调函数
             },
             fail: function (res) {
                 console.log("获取地址失败" + res);
-            },
-            complete: function (res) {
-                // console.log(res);
             }
             });
         }
     })
 }
+//获取当前位置
 function findXy(lati,long,callback) { //获取用户的经纬度
-    var that = this;
-        wx.getLocation({
-        type: 'wgs84',
-        success(res) {
-            let distance= getDistance(res.latitude, res.longitude,lati,long)
-            callback(distance);//回调函数
-        }
-        })
-    }
+    let distance= getDistance(wx.getStorageSync('latitude') ,wx.getStorageSync('longitude'),lati,long)
+    callback(distance);//回调函数
+}
 //计算距离
 /**
  * @creator swz
@@ -475,10 +465,10 @@ function computeDistance(arr,callback){
                         }
                     }
                 }
-                //将10千米之内的商家放入新数绷
+                //将10千米之内的商家放入新数组
                 let array=new Array();
                 for(let i=0;i<arr.length;i++){
-                    if(arr[i].distance<10){
+                    if(arr[i].distance<20){
                         array.push(arr[i]);
                     }else{
                         break;

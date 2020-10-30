@@ -954,4 +954,20 @@ page {
   .item-right {
     position: relative;
     align-items:center;
-  }  
+  }
+  .distance{
+    display: flex;
+    flex-direction: row;
+    float:right; 
+    font-size: 24rpx;
+    color: #888;
+    margin-top:-180rpx;
+    margin-right:20rpx;
+  }
+  .arrow {
+    width: 10rpx;
+    height: 10rpx;
+    border-top: 4rpx solid #ccc;
+    border-right: 4rpx solid #ccc;
+    transform: rotate(45deg);
+}

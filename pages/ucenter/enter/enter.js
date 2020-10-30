@@ -238,7 +238,7 @@ Page({
                     city: shop.city,
                     district: shop.district,
                     address: shop.address,
-                    status:'禁用',
+                    status:'正常',
                     businessLicense:wx.getStorageSync('photo')
                 }).then(function(res) {
                     if (res.code > 0) {

@@ -1,8 +1,9 @@
 <view class='flex-wrp-row item'>
     <!-- 当前位置 -->
-    <view class='item-left flex-wrp-row'>
+    <view class='item-left flex-wrp-row' bindtap="chooseLocation">
       <image class="icon" src="/images/icon/location.png"  mode='aspectFit'></image>
       <text style="margin-left:8px;font-size:28rpx;color: #999;">{{currentLocation}}</text>
+      <image class="icon" style="margin-left:5rpx;" src="/images/icon/search.png"></image>
     </view>
     <view class='item-right flex-wrp-row'>
         <!-- 众信验证示范企业证书 -->
@@ -71,7 +72,7 @@
         </swiper-item>
     </swiper>
     <!-- 推荐商家 -->
-    <view class="no-more-goods" wx:if="{{recommendShops.length>0}}">---推荐商家---</view>
+    <view bindtap="openLocation" class="no-more-goods" wx:if="{{recommendShops.length>0}}">---推荐商家---</view>
     <view class='list-wrap clearfix'>
         <view class="goods-box {{(index+1)%2 == 0?'no-margin':''}}" wx:for="{{recommendShops}}" wx:for-index="index" wx:for-item="item" wx:key="id" >
             <navigator hover-class='none' class='navi-url' url="/pages/category/index?id={{item.id}}">
@@ -87,8 +88,7 @@
                 </view>
                 <view class="goods-info {{item.goods_number <= 0?'fast-out-status':''}}">
                     <view class="goods-title">{{item.name}}</view>
-                    <view class="goods-intro">{{item.address}}</view>
-                    <view class="goods-intro">距离您：{{item.distance}}千米</view>
+                    <view class="goods-intro">{{item.address}}</view>                    
                     <view class="goods-star" wx:if="{{item.star==5}}">★★★★★</view>
                     <view class="goods-star" wx:if="{{item.star==4}}">★★★★</view>
                     <view class="goods-star" wx:if="{{item.star==3}}">★★★</view>
@@ -98,6 +98,10 @@
                         
                 </view>
             </navigator>
+            <view class="distance" bindtap="openLocation" data-latitude="{{item.latitude}}" data-longitude="{{item.longitude}}">
+                <image class="icon" src="/images/icon/location.png"  mode='aspectFit'></image>
+                {{item.distance}}千米
+            </view>
         </view>
     </view>
     <view class="goods-container">
