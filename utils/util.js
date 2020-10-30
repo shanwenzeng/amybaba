@@ -465,7 +465,7 @@ function computeDistance(arr,callback){
                         }
                     }
                 }
-                //将10千米之内的商家放入新数组
+                //将20千米之内的商家放入新数组
                 let array=new Array();
                 for(let i=0;i<arr.length;i++){
                     if(arr[i].distance<20){
