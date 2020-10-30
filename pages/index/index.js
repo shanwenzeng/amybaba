@@ -120,6 +120,16 @@ Page({
         });
     },
     onLoad: function (options) {
+        let that=this;
+        //位置变化时，改变首页最上面的当前位置
+        wx.onLocationChange(function(res) {
+            util.getPosition(res.latitude,res.longitude,function(res){
+            console.log(res)
+                that.setData({
+                    currentLocation:res.result.address
+                });
+            })
+          })
         let systemInfo = wx.getStorageSync('systemInfo');
         var scene = decodeURIComponent(options.scene);
         this.getIndexData();//获得首页数据

@@ -19,7 +19,9 @@ Page({
             city:'',
             district:'',
             address:'',
-            businessLicense:'/images/icon/add.png'//营业执照
+            businessLicense:'/images/icon/add.png',//商家logo
+            latitude:'',
+            longitude:''
         }
     },
     phoneChange(e) {
@@ -209,14 +211,15 @@ Page({
             util.showErrorToast('请输入手机号码');
             return false;
         }
-        if (shop.district== '') {
-            util.showErrorToast('请输入省市区');
-            return false;
-        }
-        if (shop.address == '' || shop.address == undefined) {
-            util.showErrorToast('请输入详细地址');
-            return false;
-        }
+        // if (shop.district== '') {
+        //     util.showErrorToast('请输入省市区');
+        //     return false;
+        // }
+        // if (shop.address == '' || shop.address == undefined) {
+        //     util.showErrorToast('请输入详细地址');
+        //     return false;
+        // }
+        let location=wx.getStorageSync('location')
         let that = this;
         let url=api.addShop;//新增商家（即商家入驻）
         if(this.data.shop.id!=0){
@@ -238,14 +241,16 @@ Page({
                     city: shop.city,
                     district: shop.district,
                     address: shop.address,
+                    latitude:shop.latitude.toString(),
+                    longitude:shop.longitude.toString(),
                     status:'正常',
-                    businessLicense:wx.getStorageSync('photo')
+                    photo:wx.getStorageSync('photo')
                 }).then(function(res) {
                     if (res.code > 0) {
-                        util.showSuccessToast('保存成功');
+                        util.showSuccessToast('入驻成功，请等待审核！');
                     setTimeout(function(){
                             wx.navigateBack();
-                    },1000);
+                    },3000);
                     }
                 });
             }else{
@@ -314,5 +319,29 @@ Page({
               }
             }
           })
-    }
+    },
+    //选择位置
+    chooseLocation:function () {
+        let that=this;
+        wx.chooseLocation({
+            latitude: wx.getStorageSync('latitude') ,//默认打开的位置
+            longitude:wx.getStorageSync('longitude'),
+            success: (result) => {
+                //根据经纬度查询该地址
+                util.getPosition(result.latitude,result.longitude,function(res){
+                    console.log(res)
+                    let shop = that.data.shop;
+                    shop.province =res.result.address_component.province;
+                    shop.city =res.result.address_component.city;
+                    shop.district =res.result.address_component.district;
+                    shop.address =res.result.address_component.street_number;
+                    shop.latitude =res.result.location.lat;
+                    shop.longitude =res.result.location.lng;
+                    that.setData({
+                        shop: shop
+                    });
+                })
+            },
+        })        
+    },
 })
