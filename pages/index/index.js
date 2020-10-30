@@ -106,6 +106,9 @@ Page({
     getCurrentLocation:function(){
         let that=this;
         util.getLocation(function(res){
+            if(res.result.address!=null && res.result.address.length>16){
+                res.result.address=res.result.address.substr(0,16)+"...";
+            }
             that.setData({
                 currentLocation:res.result.address
             });
@@ -206,6 +209,9 @@ Page({
             latitude: '27.625941',//默认打开的位置
             longitude: '113.852813',
             success: (result) => {
+                if(result.address!=null && result.address.length>16){
+                    result.address=result.address.substr(0,16)+"...";
+                }
                 that.setData({
                     currentLocation:result.address
                 });
