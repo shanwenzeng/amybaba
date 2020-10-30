@@ -193,6 +193,8 @@ Page({
                util.computeDistance(res.data,function(res){
                    that.setData({recommendShops: res,loading:1});
                });
+            }else{
+                util.showErrorToast("您的位置没有商家信息")
             }
         });
 
@@ -201,19 +203,20 @@ Page({
     chooseLocation:function () {
         let that=this;
         wx.chooseLocation({
-            latitude: '27.625941',
+            latitude: '27.625941',//默认打开的位置
             longitude: '113.852813',
             success: (result) => {
-                console.log(result)
                 that.setData({
                     currentLocation:result.address
                 });
                 wx.setStorageSync("latitude",result.latitude);//保存玮度到缓存中
                 wx.setStorageSync("longitude",result.longitude);//保存经度到缓存中
-                that.findRecommendShop('安源区');//查询当前区县所在的商家
+                //根据经纬度查询该地址所在区县
+                util.getPosition(result.latitude,result.longitude,function(res){
+                    that.findRecommendShop(res.result.ad_info.district)//根据区县查询商家
+                })
             },
-        })
-        
+        })        
     },
     //打开位置
     openLocation:function(e){

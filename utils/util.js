@@ -396,31 +396,42 @@ function findDistance(lat,long,callback){
         }
     });
 }
-// 获取位置,得用腾讯地图
+// 获取当前位置,用到腾讯地图
 function getLocation(callback){
     var that = this
     wx.getLocation({
         type: 'wgs84', // 默认为 wgs84 返回 gps 坐标，gcj02 返回可用于 wx.openLocation 的坐标
         success: function (res) {
-            var qqmapsdk = new QQMapWX({
-            key: 'AUFBZ-PBMW3-L343G-YPN7H-NXVK7-QKB6C' // 必填
-            });
+            var qqmapsdk = new QQMapWX({key: 'AUFBZ-PBMW3-L343G-YPN7H-NXVK7-QKB6C'});//腾讯位置开发密钥（key），在腾讯地图中获取//必填
             qqmapsdk.reverseGeocoder({
-            success: function (res) {
-                //  console.log(res)
-                // console.log("获取地址成功：" + res.result.ad_info.city);
-                wx.setStorageSync("latitude",res.result.location.lat);//保存玮度到缓存中
-                wx.setStorageSync("longitude",res.result.location.lng);//保存经度到缓存中
-                callback(res);//回调函数
-            },
-            fail: function (res) {
-                console.log("获取地址失败" + res);
-            }
+                success: function (res) {
+                    //  console.log(res)
+                    // console.log("获取地址成功：" + res.result.ad_info.city);
+                    wx.setStorageSync("latitude",res.result.location.lat);//保存玮度到缓存中
+                    wx.setStorageSync("longitude",res.result.location.lng);//保存经度到缓存中
+                    callback(res);//回调函数
+                },
+                fail: function (res) {
+                    console.log("获取地址失败" + res);
+                }
             });
         }
     })
 }
-//获取当前位置
+//获取指定经纬度所在的位置，并返回地址信息,用到腾讯地图
+function getPosition(latitude,longitude,callback){
+    var qqmapsdk = new QQMapWX({key: 'AUFBZ-PBMW3-L343G-YPN7H-NXVK7-QKB6C'});//腾讯位置开发密钥（key），在腾讯地图中获取// 必填
+    qqmapsdk.reverseGeocoder({
+        location: {
+            latitude: latitude,
+            longitude: longitude
+            },
+        success: function (res) {
+            callback(res);//回调函数,res为返回的地址信息
+        }
+    });
+}
+//获取两个位置的距离
 function findXy(lati,long,callback) { //获取用户的经纬度
     let distance= getDistance(wx.getStorageSync('latitude') ,wx.getStorageSync('longitude'),lati,long)
     callback(distance);//回调函数
@@ -503,5 +514,6 @@ module.exports = {
     findXy,
     getDistance,
     getDateString,
-    computeDistance
+    computeDistance,
+    getPosition
 }
