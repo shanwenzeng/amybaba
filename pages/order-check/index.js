@@ -136,7 +136,6 @@ Page({
         if(postscriptValue == null || postscriptValue == ""){ //如果备注为空，默认输入“无备注”
             postscriptValue = "无";
         }
-        console.log(checkedGoodsList);
         //将获取到的集合分割存入checkedGoodsList1中
         for(let i = 0; i < checkedGoodsList.length; i++){
             checkedGoodsList1.id.push(checkedGoodsList[i].id);                //获取购物车勾选的id
@@ -149,6 +148,11 @@ Page({
             checkedGoodsList1.photo.push(checkedGoodsList[i].photo);          //获取购物车勾选商品的图片路径
             checkedGoodsList1.productIds.push(checkedGoodsList[i].productIds);          //获取购物车勾选商品的id
         }
+        this.setData({
+            productIds: checkedGoodsList1.productIds.toString(),
+            amount: checkedGoodsList1.amount.toString()
+
+        })
         let customerId = wx.getStorageSync('openId');  //获取用户的id
         util.request(api.generateOrder,{
             id: checkedGoodsList1.id.toString(),                //获取购物车勾选的id
@@ -171,6 +175,7 @@ Page({
             photo: checkedGoodsList1.photo.toString(),           //购物车勾选商品的图片路径
         }).then(function(res){
             if(res.code > 0){
+                that.editProductStock();//货物库存改变
                 let orderId="wx_orderId_"+res.data.toString();
                 let order=res.data.toString();//保存到消费记录表(recharge)中的order
                 //检测是否有余额，如果有余额，则优先使用余额支付，否则调用微信支付
@@ -387,5 +392,18 @@ Page({
                 checkedGoodsList: order,
             })
         }
+    },
+
+    //修改产品库存
+    editProductStock: function(){
+        //获取要修改的产品的id
+        let productIds = this.data.productIds;
+        //获取购买的数量
+        let amounts = this.data.amount;
+        util.request(api.batchEditProduct,{
+            id: productIds,
+            stock: amounts
+        }).then(function(res){
+        }) 
     }
 })

@@ -72,10 +72,16 @@ Page({
     },
     inputNumber(event) {
         let number = event.detail.value;
-        this.setData({
-            number: number
-        });
-        this.count();
+        if(number >= 0){
+            this.setData({
+                number: number
+            })
+            this.count();
+        }else{
+            this.setData({
+                number: 1
+            })
+        }
     },
     goIndex: function() {
         wx.switchTab({
@@ -410,17 +416,32 @@ Page({
         });
     },
     switchAttrPop: function() {
+        let goods = this.data.goods;
+        //如果库存开始便为0，则打不开窗口
+        if(goods[0].stock == 0){
+            return false;
+        }
+        if(goods[0].stock > 0){
+            goods[0].stock = parseInt(goods[0].stock)-1;//打开规格窗口，库存 -1
+        }
         if (this.data.openAttr == false) {
             this.count();
             this.setData({
-                openAttr: !this.data.openAttr
+                openAttr: !this.data.openAttr,
+                goods: goods
             });
         }
     },
     closeAttr: function() {
+        let goods = this.data.goods;
+        if(goods[0].stock >= 0 || this.data.number > 1){
+            goods[0].stock = parseInt(goods[0].stock) + parseInt(this.data.number); //关闭规格窗口，库存变回原数
+        }
         this.setData({
             openAttr: false,
-            alone_text: '单独购买'
+            alone_text: '单独购买',
+            goods: goods,
+            number: 1
         });
     },
     goMarketing: function(e) {
@@ -502,19 +523,24 @@ Page({
         if (userInfo == '') {
             return false;
         }
-        that.getShoppingCartInfo();
+        that.getShoppingCartInfo(); //判断购物车里有无这件商品
         if (this.data.openAttr == false ) {
+            if(goods[0].stock > 0){
+                goods[0].stock = parseInt(goods[0].stock)-1;//打开规格窗口，库存 -1
+            }
             that.count();//计算当前总价格
             //打开规格选择窗口
             this.setData({
-                openAttr: !that.data.openAttr
+                openAttr: !that.data.openAttr,
+                goods: goods
             });
             this.setData({
                 alone_text: '加入购物车'
             })
         } else {
+            let goods = that.data.goods;
             //验证库存
-            if (goods[0].stock < this.data.number) {
+            if (goods[0].stock < 0) {
                 //要买的数量比库存多
                 wx.showToast({
                     image: '/images/icon/icon_error.png',
@@ -572,12 +598,15 @@ Page({
             return false;
         }
         var that = this;
-        
         if (this.data.openAttr === false) {
-            that.count();
+            if(goods[0].stock > 0){
+                goods[0].stock = parseInt(goods[0].stock)-1;//打开规格窗口，库存 -1
+            }
+            that.count(); //显示总价格
             //打开规格选择窗口
             this.setData({
-                openAttr: !this.data.openAttr
+                openAttr: !this.data.openAttr,
+                goods: goods
             });
             that.setData({
                 alone_text: '立即购买'
@@ -612,9 +641,9 @@ Page({
         //         return false;
         //     }
 
-
             //验证库存
-            if (goods[0].stock < this.data.number) {
+            let goods = that.data.goods;
+            if (goods[0].stock < 0) {
                 //要买的数量比库存多
                 wx.showToast({
                     image: '/images/icon/icon_error.png',
@@ -656,19 +685,41 @@ Page({
         }
     },
     cutNumber: function() {
-        this.setData({
-            number: (this.data.number - 1 > 1) ? this.data.number - 1 : 1
-        });
-        this.count();
+        let goods = this.data.goods;//获取当前页的商品信息
+        //当选择的数量大于1时，点击（-）按钮，库存加1，
+        if(this.data.number > 1){
+                goods[0].stock = parseInt(goods[0].stock) + 1;
+                this.setData({
+                    number: (this.data.number - 1 > 1) ? this.data.number - 1 : 1,
+                    goods: goods
+                });
+                this.count();
+        }else{
+            wx.showToast({
+                image: '/images/icon/icon_error.png',
+                title: '不能在减了',
+            });
+       }
         this.setData({
             disabled: ''
         });
     },
     addNumber: function() {
-        this.setData({
-            number: Number(this.data.number) + 1
-        });
-        this.count();
+        let goods = this.data.goods;
+        if(goods[0].stock > 0){
+            goods[0].stock = parseInt(goods[0].stock) - 1;
+            this.setData({
+                number: Number(this.data.number) + 1,
+                goods: goods
+            });
+            this.count();
+       }else{
+            wx.showToast({
+                image: '/images/icon/icon_error.png',
+                title: '库存不足',
+            });
+       }
+        
         // let checkedProductArray = this.getCheckedProductItem(this.getCheckedSpecKey());
         // let checkedProduct = checkedProductArray;
         // var check_number = this.data.number + 1;
@@ -680,10 +731,11 @@ Page({
     },
     //计算当时的总金额
     count: function(){
-        let goods = this.data.goods[0]; //获取商品的信息
-        let totalMoney = goods.price * this.data.number;  //计算总金额
+        let goods = this.data.goods; //获取商品的信息
+        let totalMoney = goods[0].price * this.data.number;  //计算总金额
         this.setData({
-            totalMoney: totalMoney
+            totalMoney: totalMoney,
+            goods: goods
         }) 
     }
 })

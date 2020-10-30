@@ -146,9 +146,9 @@
 		<button class='call-service' session-from='{"nickName":"{{userInfo.nickname}}","avatarUrl":"{{userInfo.avatar}}"}' open-type="contact" show-message-card="true" hover-class="none">
             <image class="icon" src="/images/icon/contact.png"></image>
             <view class="text">联系客服</view>
-        </button>
+    </button>
 		<view bindtap='deleteOrder' class="btn-default" wx:if="{{handleOption.delete}}">删除订单</view>
-		<view bindtap='confirmOrder' class='btn-red' wx:if="{{handleOption.confirm}}">确认收货</view>
+		<view bindtap='confirmOrder' data-index="{{orderId}}" class='btn-red' wx:if="{{handleOption.confirm}}">确认收货</view>
 		<view class="btn-red" bindtap="reOrderAgain">再来一单</view>
 	</view>
 </view>

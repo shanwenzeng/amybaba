@@ -8,9 +8,9 @@ Page({
         orderList: [],
         allOrderList: [],
         orderDetail:[],
-        allPage: 1,
-        allCount: 0,
-        size: 8,
+        page: 1,    //当前页
+        size: 8,   //每页显示的条数
+        total: 0,   //数据库里总共的记录
         showType: '全部',
         hasOrder: 0,
         showTips: 0,
@@ -33,8 +33,8 @@ Page({
                 showType: showType,
                 orderList: [],
                 allOrderList: [],
-                allPage: 1,
-                allCount: 0,
+                page: 1,
+                total: 0,
                 size: 8
             });
             that.getOrderList();
@@ -61,7 +61,11 @@ Page({
         let openId=wx.getStorageSync('openId');
         var obj={};//传递给后台的参数
         if(showType==undefined || showType=='全部'){//全部不传递状态，全部查询出来
-            obj={customer:{id: openId }};
+            obj={
+                customer:{id: openId },
+                // page:that.data.page, //当前页面
+                // rowsCount:that.data.size,   //每页显示的条数
+            };
         }else{//待发货或者待收货
             obj={customer:{id:openId },status:showType};
         }
@@ -75,10 +79,11 @@ Page({
                     }
                 }
                 that.setData({
-                    allCount: count,
-                    // allOrderList: that.data.allOrderList.concat(res),
-                    // allPage: res.data.currentPage,
-                    orderList: that.data.allOrderList.concat(res)
+                    total: count,
+                    orderList: res
+                    // total:res.total,//总记录数
+                    // showNoMore: 1,  //1为下一页还有数据了
+                    // orderList: that.data.allOrderList.concat(res)
                 });
                 let hasOrderData = that.data.allOrderList.concat(res);
                 if (count == 0) {
@@ -108,8 +113,8 @@ Page({
         //         showType: showType,
         //         orderList: [],
         //         allOrderList: [],
-        //         allPage: 1,
-        //         allCount: 0,
+        //         page: 1,
+        //         total: 0,
         //         size: 8
         //     });
         //     this.getOrderList();
@@ -126,8 +131,8 @@ Page({
             showType: showType,
             orderList: [],
             allOrderList: [],
-            allPage: 1,
-            allCount: 0,
+            page: 1,
+            total: 0,
             size: 8
         });
         // this.getOrderInfo();
@@ -152,8 +157,8 @@ Page({
                             that.setData({
                                 orderList: [],
                                 allOrderList: [],
-                                allPage: 1,
-                                allCount: 0,
+                                page: 1,
+                                total: 0,
                                 size: 8
                             });
                             that.getOrderList();
@@ -167,14 +172,14 @@ Page({
     },
     onReachBottom: function() {
         let that = this;
-        if (that.data.allCount / that.data.size < that.data.allPage) {
+        if (that.data.total / that.data.size < that.data.page) {
             that.setData({
                 showTips: 1
             });
             return false;
         }
         that.setData({
-            'allPage': that.data.allPage + 1
+            'page': that.data.page + 1
         });
         that.getOrderList();
     },

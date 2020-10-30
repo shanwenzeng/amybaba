@@ -172,7 +172,8 @@ Page({
                     'currentSortOrder': distanceSortOrder,
                     'salesSortOrder': 'asc'
                 });
-                this.findShopByKeyword(wx.getStorageSync('keyword'),'distanceSort',distanceSortOrder);
+                // this.findShopByKeyword(wx.getStorageSync('keyword'),'distanceSort',distanceSortOrder);
+                this.distanceSort();
                 break;
             default:
                 //综合排序
@@ -187,5 +188,41 @@ Page({
     onKeywordConfirm(event) {
         this.getSearchResult(event.detail.value);
         this.addSearchHistory(event.detail.value);//保存搜索记录
+    },
+    //根据距离排序
+    distanceSort: function(){
+        let that = this;
+        //获取所查出来的商家
+        let shopList = this.data.shopList;
+        //获取是升序还是降序
+        let currentSortOrder = this.data.currentSortOrder;
+        //向数组中添加距离
+        for(let i = 0; i < shopList.length; i++){
+            //根据经纬度求出距离
+            util.findXy(shopList[i].latitude,shopList[i].longitude,function(dis){
+                shopList[i].distance = dis; //将每一项的距离加入各自的对象中
+                if((i+1) == shopList.length){//最后一次循环，进行冒泡排序
+                    //冒泡排序法，按距离从近到远排序（升序）
+                    for(let index = shopList.length - 1; index > 0; index--){
+                        for(let j = 0; j < index; j++){
+                            if(parseFloat(shopList[j].distance)>parseFloat(shopList[j+1].distance)){
+                                var temp = shopList[j];
+                                shopList.splice(j,1,shopList[j+1]);
+                                shopList.splice(j+1,1,temp);
+                            }
+                        }
+                    }
+                    if(currentSortOrder == 'asc'){ //如果是升序
+                        shopList = shopList;    
+                    }else if(currentSortOrder == 'desc'){//如果是降序
+                        //reverse() 方法将数组中元素的位置颠倒，并返回该数组。数组的第一个元素会变成最后一个，数组的最后一个元素变成第一个，该方法会改变原来的数组，而不会创建新的数组。
+                        shopList = shopList.reverse();  
+                    }
+                    that.setData({
+                        shopList: shopList
+                    })
+                }
+            })
+        }
     }
 })
