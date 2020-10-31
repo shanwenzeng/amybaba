@@ -22,7 +22,7 @@
                 <image class="img" src="/images/icon/position.png"></image>
             </view>
             <view class="input-wrap" bindtap="chooseLocation">
-                <input cursor-spacing='100' class="a-input" value="{{address.province}}{{address.city}}{{address.district}}" disabled="true" placeholder="请选择省市区" />
+                <input cursor-spacing='100' class="a-input" value="{{address.province}}{{address.city}}{{address.district}}" disabled="true" placeholder="请选择省市区（县）" />
                 <view class="arrow"></view>
             </view>
         </view>
