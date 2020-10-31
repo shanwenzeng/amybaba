@@ -20,7 +20,7 @@ function formatTime(date) {
 Date.prototype.getLongDate=function(value){
     if(value!=undefined) {
         var d=new Date(value);
-        return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getUTCDate()+" "+(d.getUTCHours())+":"+d.getUTCMinutes()+":"+d.getUTCSeconds();
+        return d.getUTCFullYear()+"-"+(d.getUTCMonth()+1)+"-"+d.getUTCDate()+" "+(d.getUTCHours())+":"+d.getUTCMinutes()+":"+d.getUTCSeconds();
     }else{
         return "";
     }
