@@ -1,4 +1,3 @@
-// const ApiRootUrl = 'http://localhost:8360/api/';
 const ApiRootUrl = 'https://www.hiolabs.com/api/';
 // const ApiRootUrlTwo = 'http://localhost:8081/jxambb/';
 const ApiRootUrlTwo = 'https://yfk.qrzyyn.com/jxambb/';

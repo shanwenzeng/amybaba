@@ -17,27 +17,15 @@
                 <input cursor-spacing='100' class='a-input' type='number' bindblur="phoneChange" value="{{address.phone}}" placeholder='手机号码'></input>
             </view>
         </view>
-        <view class="a-item">
+         <view class="a-item">
             <view class="icon">
                 <image class="img" src="/images/icon/position.png"></image>
             </view>
-            <view class="input-wrap" bindtap="translate">
-                <input cursor-spacing='100' class="a-input" value="{{address.province}}{{address.city}}{{address.district}}" disabled="true" placeholder="选择省份、城市、区县" />
-                <template is="areaData" data="{{...item}}"/>
+            <view class="input-wrap" bindtap="chooseLocation">
+                <input cursor-spacing='100' class="a-input" value="{{address.province}}{{address.city}}{{address.district}}{{address.detailAddress}}" disabled="true" placeholder="请选择送货地址" />
                 <view class="arrow"></view>
             </view>
         </view>
-        <view class="a-item">
-            <view class="icon">
-                <image class="img" src="/images/icon/address.png"></image>
-            </view>
-            <view class="input-wrap">
-                <input cursor-spacing='100' class="a-input" bindinput="bindinputAddress" value="{{address.detailAddress}}" placeholder="详细地址, 如街道、小区或写字楼等" />
-            </view>
-        </view>
-        <!-- <view class="a-item">
-            <view class="default-input {{address.is_default == 1 ? 'checked' : 'unchecked'}}" bindtap="bindIsDefault" >点击设为默认地址</view>
-        </view> -->
     </view>
     <view class="default-wrap">
         <view class="text">设为默认地址</view>

@@ -939,6 +939,7 @@ page {
     line-height:25px;
     display: flex;
     flex-direction: row;
+    z-index: 998;
   }
    
   .item {

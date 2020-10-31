@@ -24,7 +24,6 @@ Page({
     },
     onLoad: function () {
         this.getCatalog();//获取分类（全部、好评、距离、销量等）
-        this.findShop();//查找商家，并进行分页
     },
     onPullDownRefresh: function() {
         wx.showNavigationBarLoading()
@@ -53,6 +52,8 @@ Page({
                     util.computeDistance(res.data,function(res){
                         that.setData({shops: res,loading:0});
                     });
+                }else{
+                    that.setData({loading:0});
                 }
             });
         }else{
@@ -67,6 +68,8 @@ Page({
                       util.computeDistance(res.data,function(res){
                         that.setData({shops: res,loading:0});
                     });
+                }else{
+                    that.setData({loading:0});
                 }
             });
         } 
@@ -83,33 +86,30 @@ Page({
     },
     //查找商家，并进行分页
     findShop: function() {
+        this.setData({nowId:0});//页面显示时，设置全部选项卡被选中
         let that = this;
         util.request(api.findShop, {
-            rowsCount: that.data.size, //每页的数量
-            page: that.data.page,    //当前页码
             district:wx.getStorageSync('district')
         }).then(function(res) {
-            if (res.code >= 0) {
+            if (res.data.length >0) {
                 let total=res.total;//总记录数
                  //将数组按距离由近到远排序好返回
                util.computeDistance(res.data,function(res){
                     that.setData({
-                        total: total,//总数
-                        shops: that.data.shops.concat(res),
-                        showNoMore: 1, //1为下一页还有记录
+                        shops: res,
                         loading: 0,
                     });
                 });
-                if (res.total == 0) {
-                    that.setData({
-                        hasInfo: 0,
-                        showNoMore: 0
-                    });
-                }
+            }else{
+                that.setData({
+                    shops: [],
+                    loading: 0,
+                });
             }
         });
     },
     onShow: function(){
+        this.findShop();//查找商家，并进行分页
     },
     switchCate: function(e) {
       let id = e.currentTarget.dataset.id;
@@ -138,16 +138,15 @@ Page({
         }
     },
     onBottom: function() {
-        let that = this;
-        if (this.data.total / this.data.size < this.data.page) {
-            that.setData({
-                showNoMore: 0
-            });
-            return false;
-        }
-        this.setData({
-            page: that.data.page + 1
-        });
-        this.findShop();//查找商家，并进行分页
+    },  
+    //打开位置
+    openLocation:function(e){
+        let latitude=parseFloat(e.currentTarget.dataset.latitude);
+        let longitude=parseFloat(e.currentTarget.dataset.longitude);
+        wx.openLocation({
+            latitude,
+            longitude,
+            scale: 15//缩放比例
+          })
     }
 })

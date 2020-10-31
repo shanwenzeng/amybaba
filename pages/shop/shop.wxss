@@ -452,3 +452,17 @@ page {
   height: 140rpx;
   width: 140rpx;
 }
+.icon {
+  width: 30rpx;
+  height: 30rpx;
+}
+
+.distance{
+  display: flex;
+  flex-direction: row;
+  float:right; 
+  font-size: 24rpx;
+  color: #888;
+  margin-top:-180rpx;
+  margin-right:20rpx;
+}

@@ -23,8 +23,7 @@
                             </view>
                             <view class="goods-info {{item.goods_number <= 0?'fast-out-status':''}}">
                                 <view class="goods-title">{{item.name}}</view>
-                                <view class="goods-intro">{{item.address}}</view>
-                                <view class="goods-intro" wx:if="{{item.distance!='' && item.distance!=undefined}}">距离您：{{item.distance}}千米</view>
+                                <view class="goods-intro">{{item.district}}{{item.address}}</view>
                                 <view class="goods-star" wx:if="{{item.star==5}}">★★★★★</view>
                                 <view class="goods-star" wx:if="{{item.star==4}}">★★★★</view>
                                 <view class="goods-star" wx:if="{{item.star==3}}">★★★</view>
@@ -33,10 +32,13 @@
                                 <view wx:if="{{item.shopSell>0}}" class="goods-intro">(已售{{item.shopSell}}份)</view>
                             </view>
                         </navigator>
+                        <view class="distance" bindtap="openLocation" data-latitude="{{item.latitude}}" data-longitude="{{item.longitude}}">
+                            <image class="icon" src="/images/icon/location.png"  mode='aspectFit'></image>
+                            {{item.distance}}千米
+                        </view>
                     </view>
                 </view>
-                <view class="show-more" bindtap="onBottom" wx:if="{{showNoMore == 1}}">加载更多</view>
-                <view class="no-more" wx:else>没有更多了...</view>
+                <view class="no-more" >没有更多了...</view>
             </block>
             <block wx:else>
                 <view class="loading-wrap">

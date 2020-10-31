@@ -363,12 +363,8 @@ Page({
             util.showErrorToast('请输入手机号码');
             return false;
         }
-        if (address.district== '') {
-            util.showErrorToast('请输入省市区');
-            return false;
-        }
-        if (address. detailAddress == '' || address. detailAddress == undefined) {
-            util.showErrorToast('请输入详细地址');
+        if (address.detailAddress == '' || address. detailAddress == undefined) {
+            util.showErrorToast('请选择送货地址');
             return false;
         }
         let that = this;
@@ -384,6 +380,8 @@ Page({
             city: address.city,
             district: address.district,
             detailAddress: address.detailAddress,
+            latitude:address.latitude.toString(),
+            longitude:address.longitude.toString(),
             isDefault: address.isDefault,
             customer:{id:wx.getStorageSync('openId')}
         }).then(function(res) {
@@ -414,5 +412,28 @@ Page({
     onUnload: function() {
         // 页面关闭
 
-    }
+    },
+      //选择位置
+    chooseLocation:function () {
+        let that=this;
+        wx.chooseLocation({
+            latitude: wx.getStorageSync('latitude') ,//默认打开的位置
+            longitude:wx.getStorageSync('longitude'),
+            success: (result) => {
+                //根据经纬度查询该地址
+                util.getPosition(result.latitude,result.longitude,function(res){
+                    let address = that.data.address;
+                    address.province =res.result.address_component.province;
+                    address.city =res.result.address_component.city;
+                    address.district =res.result.address_component.district;
+                    address.detailAddress =res.result.address_component.street_number;
+                    address.latitude =res.result.location.lat;
+                    address.longitude =res.result.location.lng;
+                    that.setData({
+                        address: address
+                    });
+                })
+            },
+        })        
+    },
 })

@@ -41,15 +41,6 @@ App({
                 that.globalData.hh = hh;
             }
         });
-        //开启小程序进入前后台时均接收位置消息
-        wx.startLocationUpdateBackground({
-            success(res) {
-              console.log('开启后台定位', res)
-            },
-            fail(res) {
-              console.log('开启后台定位失败', res)
-            }
-        })
 
     },
     globalData: {
