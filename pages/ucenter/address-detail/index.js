@@ -70,7 +70,7 @@ Page({
     },
     bindinputAddress(event) {
         let address = this.data.address;
-        address. detailAddress = event.detail.value;
+        address.detailAddress = event.detail.value;
         this.setData({
             address: address
         });
@@ -363,8 +363,12 @@ Page({
             util.showErrorToast('请输入手机号码');
             return false;
         }
+        if(address.district == undefined  || address.district == '') {
+            util.showErrorToast('请选择省市区');
+            return false;
+        }
         if (address.detailAddress == '' || address. detailAddress == undefined) {
-            util.showErrorToast('请选择送货地址');
+            util.showErrorToast('请输入详细地址');
             return false;
         }
         let that = this;
@@ -426,7 +430,6 @@ Page({
                     address.province =res.result.address_component.province;
                     address.city =res.result.address_component.city;
                     address.district =res.result.address_component.district;
-                    address.detailAddress =res.result.address_component.street_number;
                     address.latitude =res.result.location.lat;
                     address.longitude =res.result.location.lng;
                     that.setData({

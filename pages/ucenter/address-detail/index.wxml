@@ -22,8 +22,16 @@
                 <image class="img" src="/images/icon/position.png"></image>
             </view>
             <view class="input-wrap" bindtap="chooseLocation">
-                <input cursor-spacing='100' class="a-input" value="{{address.province}}{{address.city}}{{address.district}}{{address.detailAddress}}" disabled="true" placeholder="请选择送货地址" />
+                <input cursor-spacing='100' class="a-input" value="{{address.province}}{{address.city}}{{address.district}}" disabled="true" placeholder="请选择省市区" />
                 <view class="arrow"></view>
+            </view>
+        </view>
+        <view class="a-item">
+            <view class="icon">
+                <image class="img" src="/images/icon/address.png"></image>
+            </view>
+            <view class="input-wrap">
+                <input cursor-spacing='100' class="a-input" bindinput="bindinputAddress" value="{{address.detailAddress}}" placeholder="详细地址, 如街道、小区或写字楼等" />
             </view>
         </view>
     </view>
