@@ -1,6 +1,6 @@
 const ApiRootUrl = 'https://www.hiolabs.com/api/';
-const ApiRootUrlTwo = 'http://localhost:8081/jxambb/';
-// const ApiRootUrlTwo = 'https://yfk.qrzyyn.com/jxambb/';
+// const ApiRootUrlTwo = 'http://localhost:8081/jxambb/';
+const ApiRootUrlTwo = 'https://yfk.qrzyyn.com/jxambb/';
 
 module.exports = {
     // 登录

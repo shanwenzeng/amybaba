@@ -127,7 +127,7 @@ Page({
                     shopList: res.data,
                 });
             }else{//没有查询到商品
-                util.showErrorToast("没有查询到商品")
+                util.showErrorToast("没有查询到商家")
             }
             //重新获取关键词
             that.findSearchHistory();
