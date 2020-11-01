@@ -98,7 +98,7 @@ button::after {
 .status-wrap .text {
     font-size: 30rpx;
     color: #fff;
-    line-height: 160rpx;
+    /* line-height: 160rpx; */
 }
 
 .address-box {

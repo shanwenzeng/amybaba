@@ -34,10 +34,24 @@ Page({
             city:'',
             district:'',
             address:''
-        }
+        },
+        shopName: "",
+        addShoppingCart: {
+            customer: [],
+            goods: [],
+            product: [],
+            name: [],
+            standard: [],
+            status: [],
+            weight: [],
+            price: [],
+            amount: [],
+            photo: [],
+        },
     },
     reOrderAgain: function () {
-        let orderId = this.data.orderId
+        let orderId = this.data.orderId;
+        this.findOrderDetail(); //点击再来一单，将信息传到提交订单页面
         wx.redirectTo({
             url: '/pages/order-check/index?addtype=2&orderFrom=' + orderId
         })
@@ -217,6 +231,7 @@ Page({
             id: that.data.orderId
         }).then(function (res) {
             if (res.length > 0) {
+                that.findShopName(res[0].shop) //查询商家名称
                 //将图片拆分成数组
                 if(res[0].allImage!=undefined && res[0].allImage!=null && res[0].allImage.length>0){
                     res[0].allImage=res[0].allImage.split(",");
@@ -234,7 +249,7 @@ Page({
                         id:res[0].id,
                         allImage:res[0].allImage,
                         amount: res[0].amount,
-                        price:res[0].price,
+                        price:res[0].totalPrice,
                         createTime:Date.prototype.getLongDate(res[0].createTime) ,//重新设置时间格式
                         number:res[0].number,
                         status:res[0].status,
@@ -300,7 +315,7 @@ Page({
         });
     },
     // “确认收货”点击效果
-    confirmOrder: function () {
+    confirmOrder: function (e) {
         let that = this;
         wx.showModal({
             title: '',
@@ -353,5 +368,60 @@ Page({
                 }
             }
         });
+    },
+
+    //获取商家名称
+    findShopName: function(id){
+        let that = this;
+        util.request(api.findShopName,{id: id}).then(function(res){
+            that.setData({
+                shopName: res.name
+            })
+        })
+    },
+
+    //根据订单的id（orderdetailt中的id）查出商品信息，传给提交订单页面
+    //点击再来一单，将商品批量加入购物车，状态为1(stutas)
+    findOrderDetail:function(){
+        let that = this;
+        //根据订单的id（orderdetailt中的id）查出商品信息，传给提交订单页面
+        util.request(api.findOrderDetail, {
+            order:this.data.orderId
+        }).then(function(res) {
+            if(res.data.length>0){
+                console.log(res.data)
+                wx.setStorageSync('checkedGoodsList', res.data)
+                //点击再来一单，将商品批量加入购物车，状态为1(stutas)
+                let goods = res.data;
+                let status = 1;
+                for(let i = 0; i < goods.length; i++){
+                    that.data.addShoppingCart.customer.push(goods[i].customer.id); //获取顾客id
+                    that.data.addShoppingCart.goods.push(goods[i].goods.id);      // 商品id
+                    that.data.addShoppingCart.product.push(goods[i].product.id);  //获取商品类型id
+                    that.data.addShoppingCart.name.push(goods[i].name);    //获取商品名称  
+                    that.data.addShoppingCart.standard.push(goods[i].standard);   //获取商品类型名称       
+                    that.data.addShoppingCart.status.push(status);              //状态码（为1）
+                    that.data.addShoppingCart.weight.push(goods[i].product.weight); //获取商品规格
+                    that.data.addShoppingCart.price.push(goods[i].price);        //获取商品价格
+                    that.data.addShoppingCart.amount.push(goods[i].amount);          //获取商品的数量
+                    that.data.addShoppingCart.photo.push(goods[i].photo);          //获取商品的图片路径
+                }
+                util.request(api.batchAddShoppingCart, {
+                    customer:that.data.addShoppingCart.customer.toString(),
+                    goods:that.data.addShoppingCart.goods.toString(),
+                    product:that.data.addShoppingCart.product.toString(),
+                    name: that.data.addShoppingCart.name.toString(),
+                    standard: that.data.addShoppingCart.standard.toString(),
+                    status: that.data.addShoppingCart.status.toString(),
+                    weight: that.data.addShoppingCart.weight.toString(),
+                    price: that.data.addShoppingCart.price.toString(),
+                    amount: that.data.addShoppingCart.amount.toString(),
+                    photo: that.data.addShoppingCart.photo.toString()
+                })
+                .then(function(res) {
+                })
+            }
+        });
+        
     },
 })

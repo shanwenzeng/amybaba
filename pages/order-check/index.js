@@ -377,20 +377,24 @@ Page({
         //再来一单
         if(addType == 2){
         let order = wx.getStorageSync('orderInfo');
-        console.log(order)
-            let totalAmount = order.amount;//总数量
-            let totalMoney = order.price; //总金额
-            let freightPrice = 0; //快递费
-            let actualPrice = freightPrice + totalMoney; //订单总价
-            let orderTotalPrice = freightPrice + totalMoney; //实际需要支付的总价
-            that.setData({
-                totalAmount: totalAmount,
-                actualPrice: actualPrice,
-                freightPrice: freightPrice,
-                totalMoney: totalMoney,
-                orderTotalPrice: orderTotalPrice,
-                checkedGoodsList: order,
-            })
+        let checkedGoodsList = wx.getStorageSync('checkedGoodsList');//获取点击再来一单传来的商品信息
+        //把商品类型id修改为productIds，保持传值时的变量名唯一
+        for(let i = 0; i < checkedGoodsList.length; i++){
+            checkedGoodsList[i]['productIds'] = checkedGoodsList[i].product.id;
+        }
+        let totalAmount = order.amount;//总数量
+        let totalMoney = order.price; //总金额
+        let freightPrice = 0; //快递费
+        let actualPrice = freightPrice + totalMoney; //订单总价
+        let orderTotalPrice = freightPrice + totalMoney; //实际需要支付的总价
+        that.setData({
+            totalAmount: totalAmount,
+            actualPrice: actualPrice,
+            freightPrice: freightPrice,
+            totalMoney: totalMoney,
+            orderTotalPrice: orderTotalPrice,
+            checkedGoodsList: checkedGoodsList,
+        })
         }
     },
 

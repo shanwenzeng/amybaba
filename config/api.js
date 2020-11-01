@@ -1,6 +1,6 @@
 const ApiRootUrl = 'https://www.hiolabs.com/api/';
-// const ApiRootUrlTwo = 'http://localhost:8081/jxambb/';
-const ApiRootUrlTwo = 'https://yfk.qrzyyn.com/jxambb/';
+const ApiRootUrlTwo = 'http://localhost:8081/jxambb/';
+// const ApiRootUrlTwo = 'https://yfk.qrzyyn.com/jxambb/';
 
 module.exports = {
     // 登录
@@ -36,6 +36,8 @@ module.exports = {
     Addshoppingcart: ApiRootUrlTwo + 'shoppingcart/add', //将商品加入购物车
     Editshoppingcart: ApiRootUrlTwo + 'shoppingcart/edit', // 更新购物车的商品
     batchEditshoppingcart: ApiRootUrlTwo + 'shoppingcart/batchEdit', //批量修改购物车
+    batchAddShoppingCart: ApiRootUrlTwo + 'shoppingcart/batchAddShoppingCart',//批量增加购物车
+
     //订单
     generateOrder: ApiRootUrlTwo + 'orderList/generateOrder',//生成订单
     editOrderList: ApiRootUrlTwo + 'orderList/edit',//生成订单
@@ -48,6 +50,7 @@ module.exports = {
     RecommendShop: ApiRootUrlTwo + 'shop/findRecommendShop',
     findShopBySale: ApiRootUrlTwo + 'shop/findShopBySale',//按销量查询商家，由高到底排序
     findShop: ApiRootUrlTwo + 'shop/find', //商家分页
+    findShopName: ApiRootUrlTwo + "shop/getMe",//获取商家名称
     // 商品
     findGoods: ApiRootUrlTwo + 'goods/find', //查询商品
     GoodsCount: ApiRootUrl + 'goods/count', //统计商品总数

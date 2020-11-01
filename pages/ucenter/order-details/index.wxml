@@ -2,7 +2,11 @@
 	<!--   TODO 将状态码都去掉！  -->
 	<view class='status-wrap' bindtap='clearTimer'>
 		<view class='status-text'>
-			<view class='text'>订单状态：{{orderInfo.status}}</view>
+			<view class='text'>
+				商家：{{shopName}}
+				<text>\n</text>
+				订单状态：{{orderInfo.status}}
+			</view>
 		</view>
 		<view wx:if="{{textCode.receive == true }}" class='count-wrap'>
 			<view class='time-text'></view>
