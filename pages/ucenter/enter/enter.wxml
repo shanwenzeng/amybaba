@@ -55,7 +55,7 @@
         <view class="a-item">
             <text>请上传商家logo</text>
             <view style="margin-left:10px;">
-                <image style="width:100px;height:100px;" src="{{shop.businessLicense}}" bindtap="chooseImages"></image>
+                <image style="width:100px;height:100px;" src="{{shop.photo}}" bindtap="chooseImages"></image>
             </view>
         </view>
     </view>

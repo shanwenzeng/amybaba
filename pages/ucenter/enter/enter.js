@@ -19,9 +19,9 @@ Page({
             city:'',
             district:'',
             address:'',
-            businessLicense:'/images/icon/add.png',//商家logo
+            photo:'/images/icon/add.png',//商家logo
             latitude:'',
-            longitude:''
+            longitude:'',
         }
     },
     phoneChange(e) {
@@ -197,7 +197,6 @@ Page({
   },
     //保存商家（即商家入驻）
     saveShop() {
-        this.uploadImg();//保存到数据库前，先将图片上传到服务器
         let shop = this.data.shop;
         if (shop.name == '' || shop.name == undefined) {
             util.showErrorToast('请输入商家名称');
@@ -211,14 +210,11 @@ Page({
             util.showErrorToast('请输入手机号码');
             return false;
         }
-        // if (shop.district== '') {
-        //     util.showErrorToast('请输入省市区');
-        //     return false;
-        // }
-        // if (shop.address == '' || shop.address == undefined) {
-        //     util.showErrorToast('请输入详细地址');
-        //     return false;
-        // }
+        if (shop.district== '') {
+            util.showErrorToast('请选择商家位置');
+            return false;
+        }
+        this.uploadImg();//保存到数据库前，先将图片上传到服务器
         let location=wx.getStorageSync('location')
         let that = this;
         let url=api.addShop;//新增商家（即商家入驻）
@@ -227,9 +223,7 @@ Page({
         }
         //检查该商家是否已入住
         util.request(api.shopIsExist,{
-            name: shop.name,
-            boss: shop.boss,
-            phone: shop.phone,}).then(function(res){
+            phone: shop.phone}).then(function(res){
             if(res.code <=0){
                 //保存商家
                 util.request(url, {
@@ -243,18 +237,18 @@ Page({
                     address: shop.address,
                     latitude:shop.latitude.toString(),
                     longitude:shop.longitude.toString(),
-                    status:'正常',
+                    status:'禁用',
                     photo:wx.getStorageSync('photo')
                 }).then(function(res) {
                     if (res.code > 0) {
-                        util.showSuccessToast('入驻成功，请等待审核！');
+                        util.showSuccessToast('入驻成功等待审核');
                     setTimeout(function(){
                             wx.navigateBack();
                     },3000);
                     }
                 });
             }else{
-                util.showErrorToast("商家已存在，不能重复入驻")
+                util.showErrorToast("该手机号已入驻")
             }               
 
         });
@@ -290,7 +284,7 @@ Page({
             success (res) {
                 // tempFilePath可以作为img标签的src属性显示图片
                 // const tempFilePaths = res.tempFilePaths
-                shop.businessLicense = res.tempFilePaths;
+                shop.photo = res.tempFilePaths;
                 that.setData({shop:shop});
             }
             })
@@ -302,17 +296,15 @@ Page({
         var that = this
         wx.uploadFile({
             url: api.uploadImage, //上传图片请求地址
-            filePath: that.data.shop.businessLicense[0],
+            filePath: that.data.shop.photo[0],
             name: 'file',
             formData: {
               'user': '黑柴哥'
             },
             success: function (res) {
-              console.log(res)
               if(res.data!="error"){
                   //成功，保存路径到数据库，res.data为返回的路径
-                //   util.showSuccessToast("图片上传成功！")
-                  wx.setStorageSync('photo', res.data);//将图片路径，保存在缓存中
+                  wx.setStorageSync('photo', res.data.substr(1,res.data.length-2))//截取多余的双隐号，保存到缓存中
 
               }else{
                   util.showErrorToast("图片上传失败，请联系客服")
@@ -329,7 +321,6 @@ Page({
             success: (result) => {
                 //根据经纬度查询该地址
                 util.getPosition(result.latitude,result.longitude,function(res){
-                    console.log(res)
                     let shop = that.data.shop;
                     shop.province =res.result.address_component.province;
                     shop.city =res.result.address_component.city;

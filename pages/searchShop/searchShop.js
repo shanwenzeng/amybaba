@@ -120,7 +120,7 @@ Page({
     },
     findShopByKeyword: function (keyword,orderCondition,orderType) {
         let that = this;
-        util.request(api.findShopByKeyword,{condition:keyword,orderCondition:orderCondition,orderType:orderType}).then(function(res) {
+        util.request(api.findShopByKeyword,{condition:keyword,orderCondition:orderCondition,orderType:orderType,district:wx.getStorageSync('district')}).then(function(res) {
             if (res.data.length > 0) {//查询到产品
                 that.setData({
                     searchStatus: true,
