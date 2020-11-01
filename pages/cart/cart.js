@@ -188,7 +188,13 @@ Page({
             util.showErrorToast('你好像没选中商品');
             return false;
         }
-        
+        //点击去结算，验证是否是同一商家的商品
+        for(let i = 0; i < checkedGoods.length; i++){
+            if(checkedGoods[0].goods.shop.id != checkedGoods[i].goods.shop.id){
+                util.showErrorToast('请选择同一商家的商品');
+                return false;
+            }
+        }
         wx.setStorageSync('checkedGoodsList', checkedGoods);//将选中的商品传到订单页面
         
         wx.navigateTo({
