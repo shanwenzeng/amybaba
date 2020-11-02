@@ -214,7 +214,6 @@ Page({
             util.showErrorToast('请选择商家位置');
             return false;
         }
-        this.uploadImg();//保存到数据库前，先将图片上传到服务器
         let location=wx.getStorageSync('location')
         let that = this;
         let url=api.addShop;//新增商家（即商家入驻）
@@ -286,6 +285,7 @@ Page({
                 // const tempFilePaths = res.tempFilePaths
                 shop.photo = res.tempFilePaths;
                 that.setData({shop:shop});
+                that.uploadImg();//保存到数据库前，先将图片上传到服务器
             }
             })
     },
