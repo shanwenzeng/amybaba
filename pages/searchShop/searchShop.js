@@ -82,27 +82,13 @@ Page({
             keyword: e.detail.value,
             searchStatus: false
         });
-        this.getHelpKeyword();
     },
-    getHelpKeyword: function () {
-        let that = this;
-        util.request(api.SearchHelper, { keyword: that.data.keyword }).then(function (res) {
-            if (res.errno === 0) {
-                that.setData({
-                    helpKeyword: res.data
-                });
-            }
-        });
-    },
+    
     inputFocus: function () {
         this.setData({
             searchStatus: false,
             shopList: []
         });
-
-        if (this.data.keyword) {
-            this.getHelpKeyword();
-        }
     },
     //清除搜索历史记录
     clearHistory: function () {
