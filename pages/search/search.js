@@ -118,9 +118,15 @@ Page({
             searchStatus: false
         });
     },
-    getGoodsList: function (keyword) {
+    //根据商家id和输入框输入信息查找商品,并且根据条件进行排序
+    getGoodsList: function (keyword,shopId,orderCondition,orderType) {
         let that = this;
-        util.request(api.findProductByKeyword,{condition:keyword}).then(function(res) {
+        util.request(api.FindProduct,{
+            condition:keyword, 
+            id:shopId,
+            orderCondition: orderCondition,
+            orderType: orderType
+        }).then(function(res) {
             if (res.data.length > 0) {//查询到产品
                 that.setData({
                     searchStatus: true,
@@ -138,7 +144,6 @@ Page({
         console.log(event.target.dataset.keyword)
     },
     getSearchResult(keyword) {
-        util.showErrorToast(keyword)
         this.setData({
             keyword: keyword,
             page: 1,
@@ -146,7 +151,7 @@ Page({
             goodsList: []
         });
 
-        this.getGoodsList(keyword);
+        this.getGoodsList(keyword,wx.getStorageSync('shopId'));
     },
     openSortFilter: function (event) {
         let currentId = event.currentTarget.id;
@@ -161,7 +166,7 @@ Page({
                     'currentSortOrder': 'asc',
                     'salesSortOrder': _SortOrder
                 });
-                this.getGoodsList();
+                this.getGoodsList(this.data.keyword,wx.getStorageSync('shopId'),'sell',_SortOrder);
                 break;
             case 'priceSort':
                 let tmpSortOrder = 'asc';
@@ -173,7 +178,7 @@ Page({
                     'currentSortOrder': tmpSortOrder,
                     'salesSortOrder': 'asc'
                 });
-                this.getGoodsList();
+                this.getGoodsList(this.data.keyword,wx.getStorageSync('shopId'),'price',tmpSortOrder);
                 break;
             default:
                 //综合排序
@@ -182,7 +187,7 @@ Page({
                     'currentSortOrder': 'desc',
                     'salesSortOrder': 'desc'
                 });
-                this.getGoodsList();
+                this.getGoodsList(this.data.keyword,wx.getStorageSync('shopId'));
         }
     },
     onKeywordConfirm(event) {

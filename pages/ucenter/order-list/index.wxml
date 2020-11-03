@@ -41,7 +41,7 @@
 			<view class='order-price-wrap'>
 				<view class='order-price'>
 					<view class='price-label'>总价：¥</view>
-					<view class='price-sum'>{{item.totalPrice}}</view>
+					<view class='price-sum'>{{item.totalPrice + item.delivery - item.discount}}</view>
 				</view>
 			</view>
 			<!-- 待付款 -->

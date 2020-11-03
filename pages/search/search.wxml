@@ -64,6 +64,7 @@
                             </view>
                             <view class="goods-info {{iitem.goods_number == 0?'fast-out-status':''}}">
                                 <view class="goods-title">{{iitem.standard}}</view>
+                                <view class="goods-intro" style="float: right">销量：{{iitem.sell}}</view>
                                 <view class="goods-intro">{{iitem.goods.name}}</view>
                                 <view class='price-container'>
                                     <view class='l'>

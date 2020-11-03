@@ -59,7 +59,7 @@
 			<view class="bottom-box">
 				<view class="row-label">合计：</view>
 				<view class="right-text price-to-pay">
-					¥{{orderTotalPrice+freightPrice-discount}}
+					¥{{orderTotalPrice}}
 				</view>
 			</view>
 		</view>

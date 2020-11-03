@@ -77,6 +77,7 @@ Page({
                     if(res[i].allImage!=undefined && res[i].allImage!=null && res[i].allImage.length>0){
                         res[i].allImage=res[i].allImage.split(",");
                     }
+                    res[i].delivery = parseFloat(res[i].delivery);//将字符串转化为浮点型（配送费）
                 }
                 that.setData({
                     total: count,

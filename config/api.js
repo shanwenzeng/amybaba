@@ -1,6 +1,6 @@
 const ApiRootUrl = 'https://www.hiolabs.com/api/';
-// const ApiRootUrlTwo = 'http://localhost:8081/jxambb/';
-const ApiRootUrlTwo = 'https://yfk.qrzyyn.com/jxambb/';
+const ApiRootUrlTwo = 'http://localhost:8081/jxambb/';
+// const ApiRootUrlTwo = 'https://yfk.qrzyyn.com/jxambb/';
 
 module.exports = {
     // 登录
@@ -21,7 +21,7 @@ module.exports = {
     findShopByKeyword: ApiRootUrlTwo + 'shop/find', //根据商家id和分类进行商品查询
     CatalogCurrent: ApiRootUrl + 'catalog/current', //分类目录当前分类数据接口
     GetCurrentList: ApiRootUrl + 'catalog/currentlist',
-    batchEditProduct:ApiRootUrlTwo + 'product/batchEditProduct',//批量修改商品库存
+    batchEditProduct:ApiRootUrlTwo + 'product/batchEditProduct',//批量修改商品库存和销量
 
     // 购物车
     CartAdd: ApiRootUrl + 'cart/add', // 添加商品到购物车

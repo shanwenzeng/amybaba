@@ -94,26 +94,18 @@ Page({
     //根据商家id和分类进行商品查询
     findProduct: function(shopId,categoryId) {
         let that = this;
-        let obj={id:shopId, rowsCount: that.data.size,page: that.data.page};
+        let obj={id:shopId};
         if(categoryId!=undefined && categoryId!=0){//categoryId不等于0，代表按分类进行查询
-            // that.setData({list:[]});//清空原来的数据
-            // obj={id:shopId,categoryId:categoryId};
-
-            //传递商家的id，分类id，每页显示的内容条数，当前页码数
-            obj={id:shopId,categoryId:categoryId,rowsCount: that.data.size,page: that.data.page};
+            //传递商家的id，分类id
+            obj={id:shopId,categoryId:categoryId};
         }else if(categoryId==0){//点击全部
-            // that.setData({list:[]});//清空原来的数据
-            //传递商家的id，每页显示的内容条数，当前页码数
-            obj={id:shopId, rowsCount: that.data.size,page: 1};
+            //传递商家的id
+            obj={id:shopId};
         }
         util.request(api.FindProduct,obj).then(function(res) {
             if (res.data.length > 0) {//查询到产品
-                let count = res.total;//总记录数
                 that.setData({
-                    total: count,       //总记录数
-                    page: that.data.page,//每页显示的内容条数
-                    list:that.data.list.concat(res.data),//
-                    showNoMore: 1,//1为下一页还有内容
+                    list:res.data,
                     loading: 0, 
                 });
             }else{//没有查询到商品
@@ -133,36 +125,7 @@ Page({
         if(id == 0 && nowId === 0){
             return false
         }
-        // else if (nowId == 0 && nowId === '') {
-        //     this.setData({
-        //         list: [],
-        //         page: 1,
-        //         total: 0,
-        //         size: 8,
-        //         loading: 1
-        //     })
-        //     this.getCurrentList(0);
-        //     this.setData({
-        //         nowId: 0,
-        //         currentCategory: {}
-        //     })
-        //     wx.setStorageSync('categoryId', 0)
-        // } else if(id != nowId) {
-        //     this.setData({
-        //         list: [],
-        //         page: 1,
-        //         total: 0,
-        //         size: 8,
-        //         loading: 1
-        //     })
-        //     this.getCurrentList(nowId);
-        //     this.getCurrentCategory(nowId);
-        //     this.setData({
-        //         nowId: nowId
-        //     })
-            wx.setStorageSync('categoryId', nowId)
-        // }
-        
+        wx.setStorageSync('categoryId', nowId)
     },
     //按分类查询产品
     switchCate: function(e) {
@@ -174,7 +137,6 @@ Page({
             return false;
         } else{
             this.setData({
-                page: 1,  //设置从第一页查起
                 list:[],  //清空集合里的数据
                 nowId: categoryId,
             })
@@ -213,23 +175,9 @@ Page({
             })
         }
     },
-    onBottom: function() {
-        let that = this;
-        if (that.data.total / that.data.size < that.data.page) {
-            that.setData({
-                showNoMore: 0,
-            });
-            return false;
-        }
-        that.setData({
-            page: that.data.page + 1
-        });
-        let nowId = that.data.nowId;
-        if (nowId == 0 || nowId == undefined) {
-            that.findProduct(0);
-        } else {
-            // that.findProduct(nowId,wx.getStorageSync('categoryId'));
-            that.findProduct(that.data.shopId,nowId);
-        }
+    //点击搜索商品，将该商家的id传递给search页面
+    setShopId: function(){
+        wx.setStorageSync('shopId', this.data.shopId);
+        console.log(this.data.shopId)
     }
 })

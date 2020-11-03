@@ -89,7 +89,7 @@
 		</view>
 		<view class="row-box">
 			<view class="row-label">配送费</view>
-			<view class="right-text">¥{{ship}}</view>
+			<view class="right-text">¥{{freightPrice}}</view>
 		</view>
 		<view class="row-box">
 			<view class="row-label">优惠</view>
@@ -105,7 +105,7 @@
 		<view class="bottom-box">
 			<view class="row-label">合计：</view>
 			<view class="right-text price-to-pay">
-				¥{{ship+orderInfo.price-discount}}
+				¥{{freightPrice+orderInfo.price-discount}}
 			</view>
 			<view wx:if="{{orderInfo.change_price != orderInfo.actual_price }}" class='change-price'>(改价)</view>
 		</view>

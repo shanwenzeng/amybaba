@@ -1,6 +1,6 @@
 <view class="container">
     <view class="search">
-        <navigator url="/pages/search/search" class="input">
+        <navigator url="/pages/search/search" class="input" bindtap="setShopId">
             <image class="icon" src="/images/icon/search.png"></image>
             <text class="txt">搜索商品</text>
         </navigator>

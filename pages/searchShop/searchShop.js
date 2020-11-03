@@ -200,6 +200,7 @@ Page({
         for(let i = 0; i < shopList.length; i++){
             //根据经纬度求出距离
             util.findXy(shopList[i].latitude,shopList[i].longitude,function(dis){
+                console.log(dis)
                 shopList[i].distance = dis; //将每一项的距离加入各自的对象中
                 if((i+1) == shopList.length){//最后一次循环，进行冒泡排序
                     //冒泡排序法，按距离从近到远排序（升序）
