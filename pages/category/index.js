@@ -25,7 +25,7 @@ Page({
     },
     onLoad: function(options) {
         this.data.shopId=options.id;//保存商家id
-        this.getCatalog();//查询商品类别
+        this.findGoods();//查询商品类别
         this.findProduct(options.id);//根据商家id和分类进行商品查询
     },
     // onLoad: function(options) {
@@ -49,9 +49,9 @@ Page({
         wx.stopPullDownRefresh() //停止下拉刷新
     },
     //查询商品类别
-    getCatalog: function() {
+    findGoods: function() {
         let that = this;
-        util.request(api.ProductCatalog).then(function(res) {
+        util.request(api.findGoods,{shop:{id:this.data.shopId.toString()}}).then(function(res) {
             that.setData({
                 navList: res.data
             });
