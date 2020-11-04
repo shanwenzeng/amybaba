@@ -92,13 +92,13 @@ Page({
         });
     },
     //根据商家id和分类进行商品查询
-    findProduct: function(shopId,categoryId) {
+    findProduct: function(shopId,goods) {
         let that = this;
         let obj={id:shopId};
-        if(categoryId!=undefined && categoryId!=0){//categoryId不等于0，代表按分类进行查询
+        if(goods!=undefined && goods!=0){//goods不等于0，代表按分类进行查询
             //传递商家的id，分类id
-            obj={id:shopId,categoryId:categoryId};
-        }else if(categoryId==0){//点击全部
+            obj={id:shopId,goods:{id: goods}};
+        }else if(goods==0){//点击全部
             //传递商家的id
             obj={id:shopId};
         }
@@ -121,58 +121,26 @@ Page({
         // this.getChannelShowInfo();
         // this.getCurrentList(0);
         let id = this.data.nowId;
-        let nowId = wx.getStorageSync('categoryId');
+        let nowId = wx.getStorageSync('goods');
         if(id == 0 && nowId === 0){
             return false
         }
-        wx.setStorageSync('categoryId', nowId)
+        wx.setStorageSync('goods', nowId)
     },
     //按分类查询产品
     switchCate: function(e) {
         let shopId = this.data.shopId;//商家id
-        let categoryId = e.currentTarget.dataset.id;//分类id
-        wx.setStorageSync('categoryId', categoryId);//将分类id存储在缓存中
+        let goods = e.currentTarget.dataset.id;//分类id
+        wx.setStorageSync('goods', goods);//将分类id存储在缓存中
         let nowId = this.data.nowId;//当前选中的分类id
-        if (categoryId == nowId) {//当前选中的分类id与你单击的分类id相同，则不再进行查询
+        if (goods == nowId) {//当前选中的分类id与你单击的分类id相同，则不再进行查询
             return false;
         } else{
             this.setData({
                 list:[],  //清空集合里的数据
-                nowId: categoryId,
+                nowId: goods,
             })
-            this.findProduct(shopId,categoryId);
-            // this.setData({
-            //     nowId: categoryId
-            // })
-        }
-    },
-    switchCate2: function(e) {
-        let id = e.currentTarget.dataset.id;
-        let nowId = this.data.nowId;
-        if (id == nowId) {
-            return false;
-        } else {
-            this.setData({
-                list: [],
-                page: 1,
-                total: 0,
-                size: 8,
-                loading: 1
-            })
-            if (id == 0) {
-                this.getCurrentList(0);
-                this.setData({
-                    currentCategory: {}
-                })
-            } else {
-                wx.setStorageSync('categoryId', id)
-                this.getCurrentList(id);
-                this.getCurrentCategory(id);
-            }
-            wx.setStorageSync('categoryId', id)
-            this.setData({
-                nowId: id
-            })
+            this.findProduct(shopId,goods);
         }
     },
     //点击搜索商品，将该商家的id传递给search页面
