@@ -226,7 +226,8 @@ Page({
          util.request(api.RecommendShops,{
              isRecommend:'是',
              star:'5',
-             district:district
+             district:district,
+             status:'正常'
             }).then(function (res) {
             if (res.data.length> 0) {
                //将数组按距离由近到远排序好返回
