@@ -89,7 +89,8 @@ Page({
         this.setData({nowId:0});//页面显示时，设置全部选项卡被选中
         let that = this;
         util.request(api.findShop, {
-            district:wx.getStorageSync('district')
+            district:wx.getStorageSync('district'),
+            status:'正常'
         }).then(function(res) {
             if (res.data.length >0) {
                 let total=res.total;//总记录数
